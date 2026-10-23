@@ -6,6 +6,7 @@ import useIsBrowser from '@docusaurus/useIsBrowser';
 import { useHistory, useLocation } from '@docusaurus/router';
 import {
   config,
+  detailHref,
   hardwareText,
   launchFacts,
   loadHistory,
@@ -19,12 +20,26 @@ import {
 import { CopyButton, RecipeCard, SourceLinks, SourceState } from './components';
 import { ModelOverviewCard } from './ModelOverviewCard';
 import { useCatalog } from './useCatalog';
-import { catalogReturnTo, legacyRecipeReportHref, reportHref } from './routes';
+import {
+  catalogReturnTo,
+  legacyRecipeReportHref,
+  recipeTab,
+  recipeTabHref,
+  recipeTabs,
+  type RecipeTab,
+} from './routes';
+import ReportPanel from './ReportPanel';
 import styles from './styles.module.css';
 
 export default function DetailPage({ kind }: { kind: 'model' | 'recipe' }) {
   const location = useLocation();
-  return <DetailContent key={kind + location.search} kind={kind} />;
+  const params = new URLSearchParams(location.search);
+  const identity = ['modelId', 'recipeId', 'dataVersion', 'version'].map(
+    (key) => params.get(key),
+  );
+  return (
+    <DetailContent key={JSON.stringify([kind, ...identity])} kind={kind} />
+  );
 }
 function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
   const browser = useIsBrowser(),
@@ -34,7 +49,12 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
     modelId = params.get('modelId') ?? '',
     recipeId = params.get('recipeId') ?? '',
     requestedVersion = params.get('version') ?? '',
+    activeTab = recipeTab(params.get('tab')),
     returnTo = catalogReturnTo(params.get('returnTo'));
+  const [openedPerformance, setOpenedPerformance] = useState(false);
+  useEffect(() => {
+    if (activeTab === 'performance') setOpenedPerformance(true);
+  }, [activeTab]);
   const legacyReport =
     browser && kind === 'recipe'
       ? legacyRecipeReportHref(location.search, location.hash)
@@ -58,7 +78,7 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
   useEffect(() => {
     setRevisions(null);
     setHistoryError('');
-    if (!recipe) return;
+    if (!recipe || state.unavailable) return;
     const abort = new AbortController();
     loadHistory(recipe, abort.signal)
       .then((h) => {
@@ -68,19 +88,31 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
         if (!abort.signal.aborted) setHistoryError('版本历史暂时不可用。');
       });
     return () => abort.abort();
-  }, [recipe?.key, c.commit, retry]);
+  }, [recipe?.key, c.commit, state.unavailable, retry]);
   const revision = requestedVersion
     ? revisions?.revisions.find((r) => r.version === requestedVersion)
     : null;
+  const versionState = !requestedVersion
+    ? 'ready'
+    : !revisions
+      ? historyError
+        ? 'history-error'
+        : 'loading'
+      : revision
+        ? 'ready'
+        : 'missing';
+  const configurationCommit = revision?.commit ?? recipe?.variant.commit;
+  const configurationDigest = revision?.digest ?? recipe?.variant.digest;
   useEffect(() => {
     setText('');
     setError('');
-    if (!recipe) return;
-    if (requestedVersion && !revisions) {
-      if (historyError) setError('历史读取失败，不能确认指定版本。');
+    if (!recipe || state.unavailable) return;
+    if (versionState === 'loading' || versionState === 'history-error') {
+      if (versionState === 'history-error')
+        setError('历史读取失败，不能确认指定版本。');
       return;
     }
-    if (requestedVersion && !revision) {
+    if (versionState === 'missing') {
       setError('指定配方版本不在所选目录的历史中。');
       return;
     }
@@ -88,8 +120,8 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
     loadYaml(
       recipe.variant,
       abort.signal,
-      revision?.commit ?? recipe.variant.commit,
-      revision?.digest ?? recipe.variant.digest,
+      configurationCommit,
+      configurationDigest,
     )
       .then((t) => {
         if (!abort.signal.aborted) setText(t);
@@ -102,11 +134,11 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
   }, [
     recipe?.key,
     c.commit,
-    requestedVersion,
-    revisions,
-    revision,
+    state.unavailable,
+    versionState,
+    configurationCommit,
+    configurationDigest,
     retry,
-    historyError,
   ]);
   const facts = useMemo(() => {
     try {
@@ -123,9 +155,38 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
     else p.delete('version');
     history.push(location.pathname + '?' + p.toString());
   }
+  function chooseTab(tab: RecipeTab) {
+    if (tab !== activeTab) history.push(recipeTabHref(location.search, tab));
+  }
+  function moveTabFocus(event: React.KeyboardEvent<HTMLButtonElement>) {
+    const index = recipeTabs.findIndex(
+      (tab) => tab.id === event.currentTarget.dataset.tab,
+    );
+    const next =
+      event.key === 'ArrowRight'
+        ? (index + 1) % recipeTabs.length
+        : event.key === 'ArrowLeft'
+          ? (index + recipeTabs.length - 1) % recipeTabs.length
+          : event.key === 'Home'
+            ? 0
+            : event.key === 'End'
+              ? recipeTabs.length - 1
+              : null;
+    if (next == null) return;
+    event.preventDefault();
+    const buttons =
+      event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
+        '[role="tab"]',
+      );
+    buttons?.[next]?.focus();
+  }
   return (
     <Layout
-      title={model?.displayName ?? '模型与配方详情'}
+      title={
+        kind === 'recipe' && recipe
+          ? `${recipe.variant.id} · 配方详情`
+          : (model?.displayName ?? '模型与配方详情')
+      }
       description="查阅模型配方、固定版本配置、历史记录与测试来源。"
     >
       <Head>
@@ -137,7 +198,15 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
             <nav aria-label="面包屑">
               <Link to={returnTo}>模型目录</Link>
               <span>/</span>
-              <span>{kind === 'model' ? '模型详情' : '配方与历史'}</span>
+              {kind === 'recipe' && model && !state.unavailable && (
+                <>
+                  <Link to={modelHref(model, c.commit, returnTo)}>
+                    {model.displayName ?? model.name}
+                  </Link>
+                  <span>/</span>
+                </>
+              )}
+              <span>{kind === 'model' ? '模型详情' : '配方详情'}</span>
             </nav>
             <SourceState {...state} />
           </div>
@@ -183,44 +252,49 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
           ) : (
             model && (
               <>
-                <ModelOverviewCard model={model} />
                 {kind === 'model' ? (
-                  <section
-                    className={styles.recipeSection}
-                    aria-labelledby="model-recipes-title"
-                  >
-                    <div className={styles.sectionHeading}>
-                      <h2 id="model-recipes-title">
-                        可用部署配方 ·{' '}
-                        <span className={styles.sectionCount}>
-                          {recipes.length}
-                        </span>
-                      </h2>
-                    </div>
-                    <div className={styles.grid}>
-                      {recipes.map((r) => (
-                        <RecipeCard
-                          key={r.key}
-                          r={r}
-                          context="model"
-                          version={c.commit}
-                          returnTo={returnTo}
-                          copy={() => loadYaml(r.variant)}
-                        />
-                      ))}
-                    </div>
-                  </section>
+                  <>
+                    <ModelOverviewCard model={model} />
+                    <section
+                      className={styles.recipeSection}
+                      aria-labelledby="model-recipes-title"
+                    >
+                      <div className={styles.sectionHeading}>
+                        <h2 id="model-recipes-title">
+                          可用部署配方 ·{' '}
+                          <span className={styles.sectionCount}>
+                            {recipes.length}
+                          </span>
+                        </h2>
+                      </div>
+                      <div className={styles.grid}>
+                        {recipes.map((r) => (
+                          <RecipeCard
+                            key={r.key}
+                            r={r}
+                            context="model"
+                            version={c.commit}
+                            returnTo={returnTo}
+                            copy={() => loadYaml(r.variant)}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  </>
                 ) : (
                   recipe && (
                     <>
-                      <section className={styles.detailBox}>
+                      <header
+                        className={`${styles.detailBox} ${styles.recipeOverview}`}
+                      >
                         <div className={styles.detailTop}>
                           <div>
-                            <h2>{recipe.variant.id}</h2>
+                            <h1 className={styles.recipeTitle}>
+                              {recipe.variant.id}
+                            </h1>
                             <p>
-                              配方版本{' '}
-                              {requestedVersion || recipe.variant.version} ·
-                              来源记录
+                              {model.displayName ?? model.name} · 当前配方版本{' '}
+                              {recipe.variant.version}
                             </p>
                           </div>
                           <Link to={modelHref(model, c.commit, returnTo)}>
@@ -245,17 +319,41 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                             </p>
                           </div>
                         </div>
-                        <p>
-                          {requestedVersion &&
-                          requestedVersion !== recipe.variant.version
-                            ? '上方硬件和引擎摘要为目录当前配方；所选历史版本的准确参数以以下已校验原文为准。'
-                            : recipe.variant.description}
-                        </p>
+                        <p>{recipe.variant.description}</p>
                         <SourceLinks r={recipe} />
-                      </section>
-                      <section className={styles.detailBox}>
+                      </header>
+                      <div
+                        className={styles.recipeTabs}
+                        role="tablist"
+                        aria-label="配方详情"
+                      >
+                        {recipeTabs.map((tab) => (
+                          <button
+                            key={tab.id}
+                            type="button"
+                            role="tab"
+                            id={`recipe-tab-${tab.id}`}
+                            data-tab={tab.id}
+                            aria-controls={`recipe-panel-${tab.id}`}
+                            aria-selected={activeTab === tab.id}
+                            tabIndex={activeTab === tab.id ? 0 : -1}
+                            onClick={() => chooseTab(tab.id)}
+                            onKeyDown={moveTabFocus}
+                          >
+                            {tab.label}
+                          </button>
+                        ))}
+                      </div>
+                      <section
+                        id="recipe-panel-deployment"
+                        role="tabpanel"
+                        aria-labelledby="recipe-tab-deployment"
+                        tabIndex={0}
+                        hidden={activeTab !== 'deployment'}
+                        className={`${styles.detailBox} ${styles.tabPanel}`}
+                      >
                         <div className={styles.detailTop}>
-                          <h2>配置与版本历史</h2>
+                          <h2>部署配置</h2>
                           <label>
                             配方版本{' '}
                             <select
@@ -266,6 +364,11 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                               <option value="">
                                 当前版本 {recipe.variant.version}
                               </option>
+                              {requestedVersion && !revision && (
+                                <option value={requestedVersion}>
+                                  {requestedVersion} · 待确认版本
+                                </option>
+                              )}
                               {revisions?.revisions.map((r) => (
                                 <option value={r.version} key={r.digest}>
                                   {r.version} · {r.releaseDate ?? '日期未提供'}
@@ -274,6 +377,13 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                             </select>
                           </label>
                         </div>
+                        {requestedVersion &&
+                          requestedVersion !== recipe.variant.version && (
+                            <p className={styles.notice}>
+                              当前查看配置版本：{requestedVersion}
+                              。上方硬件和引擎摘要为目录当前配方；此版本的准确参数以已校验原文为准。
+                            </p>
+                          )}
                         {historyError && (
                           <p role="status">
                             {historyError}{' '}
@@ -324,14 +434,74 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                             )}
                           </>
                         )}
-                        <details className={styles.more}>
-                          <summary>查看历史提交</summary>
+                      </section>
+                      <section
+                        id="recipe-panel-performance"
+                        role="tabpanel"
+                        aria-labelledby="recipe-tab-performance"
+                        tabIndex={0}
+                        hidden={activeTab !== 'performance'}
+                        className={styles.tabPanel}
+                      >
+                        {reportUrl(recipe) ? (
+                          <>
+                            {requestedVersion && (
+                              <p className={styles.notice}>
+                                当前选择的配置版本：{requestedVersion}
+                                。报告对应测量版本：
+                                {recipe.tuning[0]?.optimized}
+                                ；配置版本选择不改变测量记录。
+                              </p>
+                            )}
+                            {(openedPerformance ||
+                              activeTab === 'performance') && (
+                              <ReportPanel r={recipe} commit={c.commit} />
+                            )}
+                          </>
+                        ) : (
+                          <div className={styles.detailBox}>
+                            <h2>性能对照</h2>
+                            <p className={styles.notice} role="status">
+                              该配方暂无可用对照报告，可继续查看部署配置与版本历史。
+                            </p>
+                          </div>
+                        )}
+                      </section>
+                      <section
+                        id="recipe-panel-history"
+                        role="tabpanel"
+                        aria-labelledby="recipe-tab-history"
+                        tabIndex={0}
+                        hidden={activeTab !== 'history'}
+                        className={`${styles.detailBox} ${styles.tabPanel}`}
+                      >
+                        <h2>版本历史</h2>
+                        {historyError ? (
+                          <p role="status">
+                            {historyError}{' '}
+                            <button onClick={() => setRetry((n) => n + 1)}>
+                              重试
+                            </button>
+                          </p>
+                        ) : !revisions ? (
+                          <p role="status">正在读取版本历史…</p>
+                        ) : (
                           <ol className={styles.history}>
                             {revisions?.revisions.map((r) => (
                               <li key={r.digest}>
                                 <strong>v{r.version}</strong>
                                 <span>{r.releaseDate ?? '日期未提供'}</span>
                                 <p>{r.subject}</p>
+                                <Link
+                                  to={detailHref(
+                                    recipe,
+                                    c.commit,
+                                    r.version,
+                                    returnTo,
+                                  )}
+                                >
+                                  查看 v{r.version} 配置 →
+                                </Link>{' '}
                                 {r.commit && (
                                   <a
                                     href={`${config.repository}/blob/${r.commit}/${recipe.variant.path}`}
@@ -344,15 +514,11 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                               </li>
                             ))}
                           </ol>
-                        </details>
+                        )}
                       </section>
-                      {reportUrl(recipe) && (
-                        <div className={styles.actions}>
-                          <Link to={reportHref(recipe, c.commit, returnTo)}>
-                            查看对照报告 →
-                          </Link>
-                        </div>
-                      )}
+                      <div className={styles.actions}>
+                        <Link to={returnTo}>返回模型目录</Link>
+                      </div>
                     </>
                   )
                 )}

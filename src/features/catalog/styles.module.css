@@ -458,6 +458,10 @@
   font: 600 13px/1.5 var(--font-code);
   color: var(--color-feedback-success-foreground);
 }
+.gainLink:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .gain > a {
   display: block;
   font: 10px/1.7 var(--font-code);
@@ -1079,6 +1083,63 @@
   align-items: center;
   padding: 24px 0 20px;
   font-family: var(--font-body);
+}
+.recipeOverview {
+  margin-top: 0;
+}
+.recipeTitle {
+  margin: 0;
+  font: 700 clamp(22px, 3vw, 32px) / 1.4 var(--font-heading);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 767px) {
+  .recipeOverview .conditionGrid {
+    gap: 8px;
+  }
+  .recipeOverview .conditionGrid > div {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 10px 12px;
+  }
+  .recipeOverview .conditionGrid strong {
+    flex: 0 0 76px;
+  }
+  .recipeOverview .conditionGrid p {
+    margin: 0;
+    min-width: 0;
+  }
+}
+.recipeTabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--color-border-default);
+}
+.recipeTabs > button {
+  flex: 1;
+  max-width: 160px;
+  min-height: 48px;
+  padding: 12px 8px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+}
+.recipeTabs > button:hover,
+.recipeTabs > button[aria-selected='true'] {
+  color: var(--color-brand-primary);
+}
+.recipeTabs > button[aria-selected='true'] {
+  border-bottom-color: var(--color-brand-primary);
+}
+.tabPanel[hidden] {
+  display: none;
+}
+.tabPanel:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
 }
 .modelOverview {
   padding: 28px 32px 0;

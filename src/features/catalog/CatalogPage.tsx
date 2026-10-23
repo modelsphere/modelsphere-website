@@ -387,7 +387,7 @@ export default function CatalogPage() {
                         <th>配方 / 引擎</th>
                         <th>硬件</th>
                         <th>源记录最佳增幅</th>
-                        <th>配置</th>
+                        <th>配方详情</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -405,22 +405,26 @@ export default function CatalogPage() {
                           </td>
                           <td>{hardwareText(r.variant)}</td>
                           <td>
-                            {r.quotedGain == null
-                              ? '未提供'
-                              : `${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`}
+                            {r.quotedGain != null && reportUrl(r) ? (
+                              <Link
+                                to={reportHref(r, c.commit, returnTo)}
+                                aria-label={`查看 ${r.variant.id} 性能对照`}
+                              >
+                                {`${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`}
+                              </Link>
+                            ) : r.quotedGain == null ? (
+                              '未提供'
+                            ) : (
+                              `${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`
+                            )}
                             <small>{r.workload}</small>
                           </td>
                           <td>
                             <Link
                               to={detailHref(r, c.commit, undefined, returnTo)}
                             >
-                              详情与历史
+                              查看配方详情
                             </Link>
-                            {reportUrl(r) && (
-                              <Link to={reportHref(r, c.commit, returnTo)}>
-                                查看对照报告
-                              </Link>
-                            )}
                           </td>
                         </tr>
                       ))}

@@ -18,9 +18,16 @@ export default function SkipToContent() {
   useEffect(() => {
     const previous = previousLocation.current;
     previousLocation.current = location;
-    // Catalog filters update the URL in place; keep the active control focused.
+    // Catalog filters and recipe tabs update the URL in place.
+    const sameRecipe =
+      location.pathname === '/models/recipe' &&
+      ['modelId', 'recipeId', 'dataVersion'].every(
+        (key) =>
+          new URLSearchParams(location.search).get(key) ===
+          new URLSearchParams(previous.search).get(key),
+      );
     const catalogQueryChange =
-      location.pathname === '/models' &&
+      (location.pathname === '/models' || sameRecipe) &&
       previous.pathname === location.pathname &&
       previous.hash === location.hash;
     if (

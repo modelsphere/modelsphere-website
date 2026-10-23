@@ -1,5 +1,25 @@
 import type { Recipe } from './data';
 
+export const recipeTabs = [
+  { id: 'deployment', label: '部署配置' },
+  { id: 'performance', label: '性能对照' },
+  { id: 'history', label: '版本历史' },
+] as const;
+export type RecipeTab = (typeof recipeTabs)[number]['id'];
+
+export function recipeTab(value: string | null): RecipeTab {
+  return recipeTabs.find((tab) => tab.id === value)?.id ?? 'deployment';
+}
+
+export function recipeTabHref(search: string, tab: RecipeTab) {
+  const params = new URLSearchParams(search);
+  if (tab === 'deployment') params.delete('tab');
+  else params.set('tab', tab);
+  if (params.has('returnTo'))
+    params.set('returnTo', catalogReturnTo(params.get('returnTo')));
+  return '/models/recipe?' + params.toString();
+}
+
 export function catalogReturnTo(value: string | null | undefined): string {
   if (
     !value ||
@@ -28,7 +48,7 @@ function reportRoute(
   const params = new URLSearchParams({ modelId, recipeId });
   if (dataVersion) params.set('dataVersion', dataVersion);
   if (returnTo) params.set('returnTo', catalogReturnTo(returnTo));
-  return '/models/report?' + params.toString();
+  return recipeTabHref(params.toString(), 'performance');
 }
 
 export function legacyCatalogReportHref(search: string): string | null {
@@ -46,11 +66,5 @@ export function legacyCatalogReportHref(search: string): string | null {
 
 export function legacyRecipeReportHref(search: string, hash: string) {
   if (hash !== '#benchmark') return null;
-  const params = new URLSearchParams(search);
-  return reportRoute(
-    params.get('modelId') ?? '',
-    params.get('recipeId') ?? '',
-    params.get('dataVersion') ?? '',
-    params.get('returnTo') ?? undefined,
-  );
+  return recipeTabHref(search, 'performance');
 }

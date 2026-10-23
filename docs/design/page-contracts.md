@@ -46,8 +46,8 @@ Catalog 的目录、详情、配方历史和报告绑定其数据版本；门户
 | 社区与生态 | `/community` | 社区生态 | 保留本契约功能；本次未审阅其视觉稿 |
 | 站内文章详情 | `/blog/{slug}` | 博客保持当前项 | 保留第 8 节阅读契约；本次未审阅其视觉稿 |
 | 模型详情 | `/models/detail?modelId={id}` | 模型目录保持当前项 | 自定义 React 页面；继承 Catalog 的双主题 |
-| 配方与历史 | `/models/recipe?modelId={id}&recipeId={id}` | 模型目录保持当前项 | 配置与版本历史，提供独立报告入口，双主题 |
-| 对照报告 | `/models/report?modelId={id}&recipeId={id}&dataVersion={commit}` | 模型目录保持当前项 | 独立报告页面，保留来源版本和目录返回上下文 |
+| 配方详情 | `/models/recipe?modelId={id}&recipeId={id}` | 模型目录保持当前项 | 部署配置、性能对照、版本历史三个 Tab，双主题 |
+| 性能对照 | `/models/recipe?modelId={id}&recipeId={id}&tab=performance&dataVersion={commit}` | 模型目录保持当前项 | 配方详情的性能 Tab，保留来源版本和目录返回上下文；旧 report 路由重定向至此 |
 | 文档正文 | `/docs/{docSlug}` | 文档指南 | Docusaurus 侧栏、正文与标题目录，双主题 |
 | 未找到页面 | 未匹配的路径 | 无当前项 | 共享导航与双主题空态 |
 
@@ -88,7 +88,7 @@ Catalog 的目录、详情、配方历史和报告绑定其数据版本；门户
 | 3 `fault-tolerance` | 断流续写的探测、上下文接续、前提与限制 | SectionHeading、DiagramFrame、分步说明 | 条件：有可核实的机制资料与 Claim；不承诺无条件零中断 |
 | 4 `qos-scaling` | QoS 限流与 SLO 弹性伸缩两项机制 | SectionHeading、2 个机制卡与图示 | 条件：有实现资料；区分目标、示意与实测，不输出模拟实时遥测 |
 | 5 `autotune-evolution` | 线上服务、流量收集、空闲算力调优、配置验证、自动上线的五步闭环 | SectionHeading、DiagramFrame、步骤说明 | 条件：有对应实现资料；标明适用范围，不把调优闭环当作请求执行流程 |
-| 6 `benchmarks` | 最多 4 条有完整条件的 baseline/candidate 比较记录 | 紧凑 BenchmarkTable、ActionLink | 条件：至少 1 条合格记录；指标、条件、来源同表可读，入口指向 `/models/report?modelId={modelId}&recipeId={recipeId}&dataVersion={sourceVersion}` |
+| 6 `benchmarks` | 最多 4 条有完整条件的 baseline/candidate 比较记录 | 紧凑 BenchmarkTable、ActionLink | 条件：至少 1 条合格记录；指标、条件、来源同表可读，入口指向 `/models/recipe?modelId={modelId}&recipeId={recipeId}&tab=performance&dataVersion={sourceVersion}` |
 | 7 `get-started` | 居中接入邀请与社区入口，手机纵排操作组 | CtaBlock | 必填邀请；真实快速开始就绪后使用 `docsQuickstartHref`，否则显示准备说明和 `/community` |
 
 Hero 只展示新版单张完整系统架构图，浅深主题表达相同信息并保持同一框尺寸；不预置监控标签、双 Tab、隐藏面板、Live UI 或轮播。真实产品截图属于后续修订规格的事项。首页不再设置独立 `features` 四项 Tab、`request-flow`、`audiences` 或推荐文章区块；架构页及其他页面的既定功能保留。
@@ -120,13 +120,13 @@ Hero 只展示新版单张完整系统架构图，浅深主题表达相同信息
 | --- | --- | --- |
 | `/models` 概览 | 搜索、家族/引擎/标签/硬件/拓扑筛选、排序、卡片/表格切换、模型/配方视图 | 默认展示配方；模型和配方是不同实体；显示数据版本及更新时间 |
 | 模型详情 | 模型说明、来源、可用配方、硬件与引擎组合 | 主标题链接到模型详情；构建后新增模型无需重发主站即可访问 |
-| 配方详情 | 配置、部署资料、版本选择、版本历史 | 保留稳定模型/配方 id 和精确版本；不在网站仓库另建权威编辑源 |
-| 独立对照报告页 `/models/report` | baseline/candidate、指标口径、BenchmarkTable、测试条件弹层和报告入口 | 只有来源支持时展示提升结论；未知条件明确标注，不填造数据 |
+| 配方详情 | 统一配方摘要与部署配置、性能对照、版本历史三个 Tab | 保留稳定模型/配方 id 和精确版本；不在网站仓库另建权威编辑源 |
+| 配方“性能对照”Tab | baseline/candidate、指标口径、BenchmarkTable、测试条件与原报告入口；无报告时显示空态 | 只有来源支持时展示提升结论；未知条件明确标注，不填造数据 |
 | 贡献入口 | 已核实的仓库贡献指引 | 官网只读，不增加公开写入或发布模型能力 |
 
-视觉结构：标题与数据版本 → 可核实统计 → 搜索/筛选工具栏 → 目录/配方卡片或表格；对照报告通过独立页面阅读。统计最多 5 项，模型数/配方数从同版集合计算；优化组合数、中位/最高提升只有口径、样本集合和可比性均有依据时展示，否则省略，不混合不同硬件/负载得出营销结论。
+视觉结构：标题与数据版本 → 可核实统计 → 搜索/筛选工具栏 → 目录/配方卡片或表格；对照报告在对应配方详情的性能 Tab 阅读。统计最多 5 项，模型数/配方数从同版集合计算；优化组合数、中位/最高提升只有口径、样本集合和可比性均有依据时展示，否则省略，不混合不同硬件/负载得出营销结论。
 
-Catalog 卡片桌面最多 4 列、平板 2 列、手机 1 列；硬件使用 checkbox 多选语义与可换行 chip 外观，选中项有文字及勾选状态。卡片标题进入对应模型或配方详情；“查看对照报告”使用原生链接进入统一的 `/models/report` 页面，不再在目录或配方页内展开报告。复制为独立按钮，卡片有多个操作时禁止整卡点击。浅深主题都有相同测评入口和详情能力。
+Catalog 卡片桌面最多 4 列、平板 2 列、手机 1 列；硬件使用 checkbox 多选语义与可换行 chip 外观，选中项有文字及勾选状态。卡片标题进入对应模型或配方详情；主入口统一为“查看配方详情”，默认打开部署配置；源记录增幅使用原生链接直达同一配方的性能 Tab。复制为独立按钮，卡片有多个操作时禁止整卡点击。浅深主题都有相同测评入口和详情能力。
 
 顶部新版未画出的模型/配方视图切换、拓扑筛选、硬件多选状态、分页及完整测评详情属于保留的工程补充，实施时仍需覆盖，不因静态稿省略而删除。默认配方卡片与四列密度沿用新版视觉。
 
@@ -138,9 +138,10 @@ Catalog 卡片桌面最多 4 列、平板 2 列、手机 1 列；硬件使用 ch
 - `view`：`models / recipes`，默认 recipes；`layout`：`cards / table`，默认 cards；切换不丢失共同筛选条件。
 - `sort` 默认 `improvement-desc`，本期只比较已明确标注的源记录最佳负载百分比，保留条件和测量版本，不解释为统一吞吐性能排名；另支持 name-asc/name-desc/updated-desc。无值置后，同值按稳定 id。模型视图不挑最大提升作为代表，规则以工程规范第 5.1 节为准。
 - `page`：默认 1，每页 12 条；先过滤再排序和分页。初始 HTML 提供完整精简列表与原生详情链接，增强成功后接管交互。
-- 报告页：`modelId`、`recipeId` 定位优化配方，`dataVersion` 固定目录提交；展示该目录中配方最新测量版本关联的首份报告，不支持任意配方比较或历史报告选择。参数不完整、记录不存在、无关联报告和目录版本不可用分别提示，不替换为其他记录。
+- 配方页：`tab` 为 deployment / performance / history，缺省或未知值显示部署配置。切换保留配方身份、`version`、`dataVersion` 与 `returnTo`，支持分享、刷新及前进后退；方向键和 Home/End 移动 Tab 焦点，Enter/Space 激活。
+- 性能 Tab：`modelId`、`recipeId` 定位优化配方，`dataVersion` 固定目录提交；展示该目录中配方最新测量版本关联的首份报告，不支持任意配方比较或历史报告选择。参数不完整、记录不存在、无关联报告和目录版本不可用分别提示，不替换为其他记录。
 - `returnTo`：模型、配方和报告页传递原目录查询，仅允许站内 `/models` 地址，保留搜索、筛选、视图、排序及页码；缺省或无效时返回 `/models`。报告的 `dataVersion` 不写回原目录查询。
-- 旧 `/models?benchmark={modelId}/{recipeId}…#benchmark` 和 `/models/recipe?…#benchmark` 链接以 history.replace 转入独立报告页；移除返回地址中的旧 benchmark，避免返回循环。
+- 旧 `/models/report?…`、`/models?benchmark={modelId}/{recipeId}…#benchmark` 和 `/models/recipe?…#benchmark` 链接以 history.replace 转入配方性能 Tab；移除返回地址中的旧 benchmark，避免返回循环。
 - 配方页 `version` 固定配方历史版本；可选 `dataVersion` 固定目录快照。省略时读取当前公开版本并展示解析到的版本；固定版本不可用时明确报错，不静默切到最新；公开源完整快照能力限制以工程规范第 5.1 节为准。
 
 “按性能提升排序”表示各记录相对各自基线的已核验吞吐增幅，不是跨模型绝对性能排行；来源版本、指标口径及可比性判断遵循[内容与证据规范](content-policy.md#5-性能测评)。不得把不同模型、硬件或工作负载排序结果宣传为同条件比较。

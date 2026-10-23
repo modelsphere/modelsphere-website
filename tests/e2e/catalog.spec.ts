@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import baseline from '../../content/catalog/baseline.json';
 import { parseCatalog } from '../../src/features/catalog/data';
 import report from '../fixtures/catalog/mimo-report.json';
@@ -314,23 +315,42 @@ test('skip-to-content still focuses main content and cross-page navigation start
   await expect(page.locator('main').first()).toBeFocused();
 });
 for (const layout of ['cards', 'table'])
-  test(`report opens in its own page from ${layout} and restores the list`, async ({
+  test(`recipe details consolidate deployment, performance and history from ${layout}`, async ({
     page,
   }) => {
     const catalog = `/models?q=mimo-v2.5&sort=name-asc&layout=${layout}`;
     await page.goto(catalog);
     await expect(page.locator('[data-catalog-enhanced="true"]')).toBeVisible();
     await expect(
+      page.getByRole('link', { name: '查看配方详情', exact: true }),
+    ).toHaveCount(2);
+    await expect(
       page.getByRole('link', { name: '查看对照报告', exact: true }),
-    ).toHaveCount(1);
-    await page.getByRole('link', { name: '查看对照报告', exact: true }).click();
-    await expect(page).toHaveURL(/\/models\/report\?/);
+    ).toHaveCount(0);
+    const recipe =
+      layout === 'cards'
+        ? page.locator(`[data-recipe-id="${m.name}/${variant.id}"]`)
+        : page.getByRole('row').filter({ hasText: variant.id });
+    await recipe
+      .getByRole('link', { name: '查看配方详情', exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/models\/recipe\?/);
     expect(new URL(page.url()).searchParams.get('dataVersion')).toBe(
       baseline.commit,
     );
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'MiMo-V2.5 · 对照报告',
+      variant.id,
     );
+    await expect(
+      page.getByRole('tab', { name: '部署配置', selected: true }),
+    ).toBeVisible();
+    await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
+    await page.getByRole('tab', { name: '版本历史' }).click();
+    await expect(
+      page.getByRole('tabpanel', { name: '版本历史' }),
+    ).toContainText('Published source revision');
+    await page.getByRole('tab', { name: '性能对照' }).click();
+    await expect(page).toHaveURL(/tab=performance/);
     await expect(page.getByRole('search')).toHaveCount(0);
     await expect(page.locator('#benchmark')).toContainText(
       'NVIDIA H100 80GB HBM3',
@@ -341,6 +361,9 @@ for (const layout of ['cards', 'table'])
       false,
     );
     await page.reload();
+    await expect(
+      page.getByRole('tab', { name: '性能对照', selected: true }),
+    ).toBeVisible();
     await expect(page.locator('#benchmark')).toContainText('119.9%');
     await page.getByRole('link', { name: '返回模型目录', exact: true }).click();
     expect(new URL(page.url()).pathname + new URL(page.url()).search).toBe(
@@ -351,10 +374,10 @@ for (const layout of ['cards', 'table'])
       'mimo-v2.5',
     );
     await page.goBack();
-    await expect(page).toHaveURL(/\/models\/report\?/);
+    await expect(page).toHaveURL(/\/models\/recipe\?.*tab=performance/);
   });
 
-test('model and recipe entries share a report route and preserve the catalog context', async ({
+test('model recipe entries and performance gains lead into the same recipe details', async ({
   page,
 }) => {
   const catalog = '/models?q=mimo-v2.5&sort=name-asc';
@@ -365,16 +388,15 @@ test('model and recipe entries share a report route and preserve the catalog con
     .first()
     .click();
   await expect(page).toHaveURL(/\/models\/detail\?/);
-  await page.getByRole('link', { name: '查看对照报告', exact: true }).click();
-  await expect(page).toHaveURL(/\/models\/report\?/);
   await page
-    .getByRole('link', { name: '查看部署配方与历史 →', exact: true })
+    .getByRole('link', { name: `查看 ${variant.id} 性能对照`, exact: true })
     .click();
-  await expect(page).toHaveURL(/\/models\/recipe\?/);
+  await expect(page).toHaveURL(/\/models\/recipe\?.*tab=performance/);
+  await expect(page.locator('#benchmark')).toContainText('119.9%');
+  await page.getByRole('tab', { name: '部署配置' }).click();
   await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
-  await expect(page.locator('#benchmark')).toHaveCount(0);
-  await page.getByRole('link', { name: '查看对照报告 →', exact: true }).click();
-  await expect(page).toHaveURL(/\/models\/report\?/);
+  await expect(page.locator('#benchmark')).toBeHidden();
+  await page.getByRole('tab', { name: '性能对照' }).click();
   await expect(page.locator('#benchmark')).toContainText('119.9%');
   await page.getByRole('link', { name: '返回模型目录', exact: true }).click();
   expect(new URL(page.url()).pathname + new URL(page.url()).search).toBe(
@@ -391,10 +413,10 @@ test('returning from a report restores pagination and hardware filters', async (
     page.getByRole('navigation', { name: '目录分页' }),
   ).toContainText('第 2 /');
   await page
-    .getByRole('link', { name: '查看对照报告', exact: true })
+    .getByRole('link', { name: /性能对照$/ })
     .first()
     .click();
-  await expect(page).toHaveURL(/\/models\/report\?/);
+  await expect(page).toHaveURL(/\/models\/recipe\?.*tab=performance/);
   await page.getByRole('link', { name: '返回模型目录', exact: true }).click();
   expect(new URL(page.url()).pathname + new URL(page.url()).search).toBe(
     catalog,
@@ -407,24 +429,210 @@ test('returning from a report restores pagination and hardware filters', async (
 for (const legacy of [
   `/models?q=mimo-v2.5&benchmark=mimo-v2.5%2F${variant.id}&dataVersion=${baseline.commit}#benchmark`,
   `/models/recipe?modelId=mimo-v2.5&recipeId=${variant.id}&dataVersion=${baseline.commit}#benchmark`,
+  `/models/report?modelId=mimo-v2.5&recipeId=${variant.id}&dataVersion=${baseline.commit}`,
 ])
   test(`legacy report link redirects: ${legacy.split('?')[0]}`, async ({
     page,
   }) => {
     await page.goto('/community');
     await page.goto(legacy);
-    await expect(page).toHaveURL(/\/models\/report\?/);
+    await expect(page).toHaveURL(/\/models\/recipe\?.*tab=performance/);
     await expect(page.locator('#benchmark')).toContainText('119.9%');
     await page.goBack();
     await expect(page).toHaveURL(/\/community$/);
   });
+
+for (const width of [320, 1440])
+  test(`recipe tabs keep keyboard focus, URL history and loaded data at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 1000 });
+    const counts = { yaml: 0, history: 0, report: 0, catalog: 0 };
+    page.on('request', (request) => {
+      const url = request.url();
+      if (url.endsWith('.yaml')) counts.yaml++;
+      if (url.endsWith('.history.json')) counts.history++;
+      if (url.endsWith('mimo-v2.5-h100-report.html')) counts.report++;
+      if (url.endsWith('index-v2.json')) counts.catalog++;
+    });
+    await page.goto(
+      `/models/recipe?modelId=mimo-v2.5&recipeId=${variant.id}&dataVersion=${baseline.commit}`,
+    );
+    await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
+    await expect(page.getByText('公开目录 ·', { exact: false })).toBeVisible();
+    await expect(
+      page.getByRole('combobox', { name: '配方版本' }).getByRole('option'),
+    ).toHaveCount(2);
+    const before = { ...counts };
+    expect(before.report).toBe(0);
+    const deployment = page.getByRole('tab', { name: '部署配置' });
+    const performance = page.getByRole('tab', { name: '性能对照' });
+    const history = page.getByRole('tab', { name: '版本历史' });
+    await deployment.focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(performance).toBeFocused();
+    await expect(deployment).toHaveAttribute('aria-selected', 'true');
+    await page.keyboard.press('Enter');
+    await expect(performance).toBeFocused();
+    await expect(page.locator('#benchmark')).toContainText('119.9%');
+    await expect(performance).toHaveAttribute('aria-selected', 'true');
+    expect(counts.report).toBe(1);
+    const top = await page.evaluate(() => window.scrollY);
+    await page.keyboard.press('End');
+    await expect(history).toBeFocused();
+    await page.keyboard.press('Space');
+    await expect(history).toBeFocused();
+    await expect(
+      page.getByRole('tabpanel', { name: '版本历史' }),
+    ).toContainText('Published source revision');
+    await expect(page).toHaveURL(/tab=history/);
+    expect(await page.evaluate(() => window.scrollY)).toBeCloseTo(top, 0);
+    await page.goBack();
+    await expect(performance).toHaveAttribute('aria-selected', 'true');
+    await page.goForward();
+    await expect(history).toHaveAttribute('aria-selected', 'true');
+    await page.reload();
+    await expect(history).toHaveAttribute('aria-selected', 'true');
+    // Reload starts a new page lifecycle; verify tab reuse within that lifecycle.
+    await history.focus();
+    await page.keyboard.press('Home');
+    await expect(deployment).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
+    const afterReload = { ...counts };
+    await performance.click();
+    await expect(page.locator('#benchmark')).toContainText('119.9%');
+    await history.click();
+    await deployment.click();
+    await performance.click();
+    expect(counts).toEqual({ ...afterReload, report: afterReload.report + 1 });
+    expect(new URL(page.url()).searchParams.get('dataVersion')).toBe(
+      baseline.commit,
+    );
+  });
+
+test('history opens the exact configuration and keeps reports bound to their measured version', async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const oldVersion = '0.9.0';
+  const oldCommit = 'c'.repeat(40);
+  const oldYaml = yaml.replace(
+    `version: ${variant.version}`,
+    `version: ${oldVersion}`,
+  );
+  const oldDigest =
+    'sha256:' + createHash('sha256').update(oldYaml).digest('hex');
+  await page.route('**/*.history.json', (route) =>
+    route.fulfill({
+      json: {
+        model: m.name,
+        id: variant.id,
+        path: variant.path,
+        revisions: [
+          {
+            version: variant.version,
+            commit: variant.commit,
+            digest: variant.digest,
+            subject: 'Current revision',
+          },
+          {
+            version: oldVersion,
+            commit: oldCommit,
+            digest: oldDigest,
+            subject: 'Historical revision',
+          },
+        ],
+      },
+    }),
+  );
+  await page.route(`**/${oldCommit}/**/*.yaml`, (route) =>
+    route.fulfill({ body: oldYaml, contentType: 'text/plain' }),
+  );
+  const returnTo = '/models?q=mimo&layout=table&page=2';
+  await page.goto(
+    `/models/recipe?modelId=${m.name}&recipeId=${variant.id}&dataVersion=${baseline.commit}&tab=history&returnTo=${encodeURIComponent(returnTo)}`,
+  );
+  await page
+    .getByRole('link', { name: `查看 v${oldVersion} 配置 →`, exact: true })
+    .click();
+  await expect(
+    page.getByRole('tab', { name: '部署配置', selected: true }),
+  ).toBeVisible();
+  await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
+  await expect(page.getByRole('combobox', { name: '配方版本' })).toHaveValue(
+    oldVersion,
+  );
+  await page.getByRole('button', { name: '复制完整配方' }).click();
+  await expect(page.getByText('已复制', { exact: true })).toBeVisible();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    oldYaml,
+  );
+  await page.getByRole('tab', { name: '性能对照' }).click();
+  await expect(page.locator('#benchmark')).toContainText('119.9%');
+  await expect(page.getByRole('tabpanel', { name: '性能对照' })).toContainText(
+    `报告对应测量版本：${variant.id}@${variant.version}`,
+  );
+  expect(new URL(page.url()).searchParams.get('version')).toBe(oldVersion);
+  await page.reload();
+  await expect(
+    page.getByRole('tab', { name: '性能对照', selected: true }),
+  ).toBeVisible();
+  await page.getByRole('tab', { name: '部署配置' }).click();
+  await expect(
+    page.getByRole('tabpanel', { name: '部署配置' }).locator('pre').first(),
+  ).toHaveText(oldYaml);
+  await page.getByRole('link', { name: '返回模型目录', exact: true }).click();
+  expect(new URL(page.url()).pathname + new URL(page.url()).search).toBe(
+    returnTo,
+  );
+});
+
+test('configuration and history failures leave performance available and support retry', async ({
+  page,
+}) => {
+  let historyFailed = true;
+  await page.route('**/*.history.json', async (route) => {
+    if (historyFailed) return route.abort();
+    await route.fallback();
+  });
+  await page.goto(
+    `/models/recipe?modelId=${m.name}&recipeId=${variant.id}&version=99.0.0&tab=history`,
+  );
+  const history = page.getByRole('tabpanel', { name: '版本历史' });
+  await expect(history).toContainText('版本历史暂时不可用');
+  historyFailed = false;
+  await history.getByRole('button', { name: '重试' }).click();
+  await expect(history).toContainText('Published source revision');
+  await page.getByRole('tab', { name: '部署配置' }).click();
+  await expect(page.getByRole('alert')).toContainText('不在所选目录');
+  await page.getByRole('tab', { name: '性能对照' }).click();
+  await expect(page.locator('#benchmark')).toContainText('119.9%');
+  await expect(page.getByRole('alert')).toBeHidden();
+});
+
+test('an unknown tab falls back to deployment without discarding the configuration version', async ({
+  page,
+}) => {
+  await page.goto(
+    `/models/recipe?modelId=${m.name}&recipeId=${variant.id}&version=${variant.version}&tab=unknown`,
+  );
+  await expect(
+    page.getByRole('tab', { name: '部署配置', selected: true }),
+  ).toBeVisible();
+  await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
+  await expect(page.getByRole('combobox', { name: '配方版本' })).toHaveValue(
+    variant.version,
+  );
+});
 
 test('report routes distinguish incomplete, missing, unassociated and unavailable records', async ({
   page,
 }) => {
   await page.goto('/models/report');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    '报告参数不完整',
+    '详情参数不完整',
   );
   await page.goto('/models/report?modelId=mimo-v2.5&recipeId=missing');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
@@ -445,9 +653,9 @@ test('report routes distinguish incomplete, missing, unassociated and unavailabl
   );
   await expect(page.locator('#benchmark')).toHaveCount(0);
   await page.goto('/models?benchmark=missing');
-  await expect(page).toHaveURL(/\/models\/report\?/);
+  await expect(page).toHaveURL(/\/models\/recipe\?.*tab=performance/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    '报告参数不完整',
+    '详情参数不完整',
   );
 });
 
@@ -467,26 +675,44 @@ test('a report keeps its marked baseline when the catalog is offline and rejects
   ).toHaveAttribute('href', '/models');
 });
 
-for (const width of [390, 1440])
+for (const width of [320, 390, 768, 1440])
   for (const colorScheme of ['light', 'dark'] as const)
-    test(`report stays readable at ${width}px in ${colorScheme}`, async ({
+    test(`recipe tabs stay readable at ${width}px in ${colorScheme}`, async ({
       page,
     }, info) => {
       await page.setViewportSize({ width, height: 1000 });
       await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
       await page.goto(
-        `/models/report?modelId=mimo-v2.5&recipeId=${variant.id}`,
+        `/models/recipe?modelId=mimo-v2.5&recipeId=${variant.id}&tab=performance`,
       );
       await expect(page.locator('#benchmark')).toContainText('119.9%');
-      expect(
-        await page.evaluate(
-          () => document.documentElement.scrollWidth <= innerWidth + 1,
-        ),
-      ).toBe(true);
-      await page.screenshot({
-        path: info.outputPath(`report-${width}-${colorScheme}.png`),
-        fullPage: true,
-      });
+      for (const [tab, name] of [
+        ['performance', '性能对照'],
+        ['deployment', '部署配置'],
+        ['history', '版本历史'],
+      ]) {
+        await page.getByRole('tab', { name, exact: true }).click();
+        await expect(
+          page.getByRole('tabpanel', { name, exact: true }),
+        ).toBeVisible();
+        if (tab === 'deployment')
+          await expect(
+            page.getByText('原始 YAML · SHA-256 校验通过'),
+          ).toBeVisible();
+        if (tab === 'history')
+          await expect(
+            page.getByText('Published source revision'),
+          ).toBeVisible();
+        expect(
+          await page.evaluate(
+            () => document.documentElement.scrollWidth <= innerWidth + 1,
+          ),
+        ).toBe(true);
+        await page.screenshot({
+          path: info.outputPath(`recipe-${tab}-${width}-${colorScheme}.png`),
+          fullPage: true,
+        });
+      }
     });
 
 test('recipe details validate YAML, expose history and report missing versions explicitly', async ({
@@ -501,7 +727,7 @@ test('recipe details validate YAML, expose history and report missing versions e
   await page.getByRole('button', { name: '复制完整配方', exact: true }).click();
   await expect(page.getByText('已复制', { exact: true })).toBeVisible();
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(yaml);
-  await page.getByText('查看历史提交').click();
+  await page.getByRole('tab', { name: '版本历史' }).click();
   await expect(page.getByText('Published source revision')).toBeVisible();
   await page.goto(
     `/models/recipe?modelId=mimo-v2.5&recipeId=${variant.id}&version=99.0.0`,
@@ -545,7 +771,7 @@ for (const width of [390, 1440])
         recipes.getByRole('button', { name: '复制完整配方' }),
       ).toHaveCount(model.variants.length);
       for (const link of await recipes
-        .getByRole('link', { name: '配置与版本历史', exact: false })
+        .getByRole('link', { name: '查看配方详情', exact: true })
         .all()) {
         const url = new URL(
           (await link.getAttribute('href'))!,
@@ -635,6 +861,9 @@ test('static HTML contains the entire baseline and parameter detail routes work 
   await expect(
     page.getByText('对照报告需要 JavaScript。', { exact: false }),
   ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: '阅读原始目录', exact: true }),
+  ).toHaveAttribute('href', 'https://modelsphere.github.io/model-catalog/');
   await context.close();
 });
 

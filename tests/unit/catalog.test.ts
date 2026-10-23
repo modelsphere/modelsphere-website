@@ -21,6 +21,8 @@ import {
   legacyCatalogReportHref,
   legacyRecipeReportHref,
   reportHref,
+  recipeTab,
+  recipeTabHref,
 } from '../../src/features/catalog/routes';
 import {
   initialQuery,
@@ -223,7 +225,7 @@ describe('configuration integrity and history ownership', () => {
   });
 });
 
-describe('catalog report navigation', () => {
+describe('unified recipe navigation', () => {
   const recipe = recipesOf(baseline).find(
     (r) => r.key === 'mimo-v2.5/sglang-tp8-h100-optimized',
   )!;
@@ -234,7 +236,8 @@ describe('catalog report navigation', () => {
       reportHref(recipe, baseline.commit, returnTo),
       'https://site.test',
     );
-    expect(url.pathname).toBe('/models/report');
+    expect(url.pathname).toBe('/models/recipe');
+    expect(url.searchParams.get('tab')).toBe('performance');
     expect(url.searchParams.get('modelId')).toBe(recipe.model.name);
     expect(url.searchParams.get('recipeId')).toBe(recipe.variant.id);
     expect(url.searchParams.get('dataVersion')).toBe(baseline.commit);
@@ -265,7 +268,8 @@ describe('catalog report navigation', () => {
       )!,
       'https://site.test',
     );
-    expect(url.pathname).toBe('/models/report');
+    expect(url.pathname).toBe('/models/recipe');
+    expect(url.searchParams.get('tab')).toBe('performance');
     expect(url.searchParams.get('recipeId')).toBe(recipe.variant.id);
     expect(url.searchParams.get('returnTo')).toBe(
       '/models?q=mimo&page=2&dataVersion=' + baseline.commit,
@@ -278,7 +282,7 @@ describe('catalog report navigation', () => {
     expect(missing.searchParams.get('modelId')).toBe('unknown');
     expect(missing.searchParams.get('recipeId')).toBe('');
   });
-  it('redirects only legacy recipe report anchors, without treating recipe versions as report versions', () => {
+  it('redirects legacy recipe report anchors while retaining the selected configuration version', () => {
     const search =
       '?modelId=mimo-v2.5&recipeId=sglang-tp8-h100-optimized&version=1.0.0&dataVersion=' +
       baseline.commit;
@@ -286,9 +290,35 @@ describe('catalog report navigation', () => {
       legacyRecipeReportHref(search, '#benchmark')!,
       'https://site.test',
     );
-    expect(url.pathname).toBe('/models/report');
+    expect(url.pathname).toBe('/models/recipe');
+    expect(url.searchParams.get('tab')).toBe('performance');
     expect(url.searchParams.get('dataVersion')).toBe(baseline.commit);
-    expect(url.searchParams.has('version')).toBe(false);
+    expect(url.searchParams.get('version')).toBe('1.0.0');
     expect(legacyRecipeReportHref(search, '')).toBeNull();
+  });
+  it('round trips tabs without losing recipe, configuration or catalog context', () => {
+    const params = new URLSearchParams({
+      modelId: recipe.model.name,
+      recipeId: recipe.variant.id,
+      version: '1.0.0',
+      dataVersion: baseline.commit,
+      returnTo: '/models?q=mimo&layout=table&page=2',
+    });
+    for (const tab of ['deployment', 'performance', 'history'] as const) {
+      const url = new URL(
+        recipeTabHref(params.toString(), tab),
+        'https://site.test',
+      );
+      expect(recipeTab(url.searchParams.get('tab'))).toBe(tab);
+      for (const [key, value] of params)
+        expect(url.searchParams.get(key)).toBe(value);
+    }
+    expect(recipeTab('unknown')).toBe('deployment');
+    expect(recipeTab(null)).toBe('deployment');
+    const unsafe = new URL(
+      recipeTabHref('?returnTo=https://evil.test', 'history'),
+      'https://site.test',
+    );
+    expect(unsafe.searchParams.get('returnTo')).toBe('/models');
   });
 });

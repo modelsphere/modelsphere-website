@@ -201,8 +201,7 @@ export function RecipeCard({
   copy: () => Promise<string>;
   context?: 'catalog' | 'model';
 }) {
-  const badge = role(r),
-    url = reportUrl(r);
+  const badge = role(r);
   const Heading = context === 'model' ? 'h3' : 'h2';
   return (
     <article
@@ -235,15 +234,25 @@ export function RecipeCard({
         <div className={styles.gain}>
           <div>
             <span>源报告记录 · 最佳负载</span>
-            <strong
-              className={
-                r.quotedGain == null ? styles.unavailableGain : undefined
-              }
-            >
-              {r.quotedGain == null
-                ? '未提供'
-                : `${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`}
-            </strong>
+            {r.quotedGain != null && reportUrl(r) ? (
+              <Link
+                className={styles.gainLink}
+                to={reportHref(r, version, returnTo)}
+                aria-label={`查看 ${r.variant.id} 性能对照`}
+              >
+                <strong>{`${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`}</strong>
+              </Link>
+            ) : (
+              <strong
+                className={
+                  r.quotedGain == null ? styles.unavailableGain : undefined
+                }
+              >
+                {r.quotedGain == null
+                  ? '未提供'
+                  : `${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`}
+              </strong>
+            )}
           </div>
           {r.quotedGain != null && (
             <div className={styles.bar}>
@@ -299,30 +308,14 @@ export function RecipeCard({
           </div>
         </dl>
         <div className={styles.cardActions}>
-          {url ? (
-            <Link
-              className={styles.secondary}
-              to={reportHref(r, version, returnTo)}
-            >
-              <Icon name="report" />
-              查看对照报告
-            </Link>
-          ) : (
-            <Link
-              className={styles.secondary}
-              to={detailHref(r, version, undefined, returnTo)}
-            >
-              查看部署配方
-            </Link>
-          )}
+          <Link
+            className={styles.secondary}
+            to={detailHref(r, version, undefined, returnTo)}
+          >
+            查看配方详情
+          </Link>
           <CopyButton getText={copy} />
         </div>
-        <Link
-          className={styles.detailLink}
-          to={detailHref(r, version, undefined, returnTo)}
-        >
-          配置与版本历史 <span aria-hidden="true">↗</span>
-        </Link>
       </div>
     </article>
   );
