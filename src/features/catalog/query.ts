@@ -19,7 +19,6 @@ export interface Query {
   layout: string;
   sort: string;
   page: number;
-  benchmark: string;
   dataVersion: string;
   hidedep: boolean;
 }
@@ -36,7 +35,6 @@ export const initialQuery: Query = {
   layout: 'cards',
   sort: 'improvement-desc',
   page: 1,
-  benchmark: '',
   dataVersion: '',
   hidedep: false,
 };
@@ -87,7 +85,6 @@ export function parseQuery(search: string, c: Catalog): Query {
       /^[1-9]\d*$/.test(rawPage) && Number.isSafeInteger(+rawPage)
         ? +rawPage
         : 1,
-    benchmark: p.get('benchmark') ?? '',
     dataVersion: p.get('dataVersion') ?? '',
     hidedep: p.get('hidedep') === '1',
   };
@@ -103,7 +100,6 @@ export function queryHref(q: Query) {
     'layout',
     'sort',
     'page',
-    'benchmark',
     'dataVersion',
   ] as const)
     if (q[k] && q[k] !== initialQuery[k]) p.set(k, String(q[k]));

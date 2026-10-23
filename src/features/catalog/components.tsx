@@ -15,6 +15,7 @@ import {
   type Catalog,
   type Recipe,
 } from './data';
+import { reportHref } from './routes';
 import styles from './styles.module.css';
 
 export function Icon({
@@ -190,21 +191,22 @@ export function CopyButton({
 export function RecipeCard({
   r,
   version,
-  selected,
-  onReport,
+  returnTo,
   copy,
+  context = 'catalog',
 }: {
   r: Recipe;
   version: string;
-  selected?: boolean;
-  onReport: (r: Recipe) => void;
+  returnTo?: string;
   copy: () => Promise<string>;
+  context?: 'catalog' | 'model';
 }) {
   const badge = role(r),
     url = reportUrl(r);
+  const Heading = context === 'model' ? 'h3' : 'h2';
   return (
     <article
-      className={`${styles.recipeCard} ${selected ? styles.selected : ''}`}
+      className={`${styles.recipeCard}${context === 'model' ? ` ${styles.modelRecipe}` : ''}`}
       data-recipe-id={r.key}
     >
       <div className={styles.cardBody}>
@@ -214,11 +216,11 @@ export function RecipeCard({
               {r.model.family ?? '模型'}{' '}
               <span>· {topologyLabel(r.variant)}</span>
             </p>
-            <h2>
-              <Link to={modelHref(r.model, version)}>
+            <Heading>
+              <Link to={modelHref(r.model, version, returnTo)}>
                 {r.model.displayName ?? r.model.name}
               </Link>
-            </h2>
+            </Heading>
           </div>
           <span
             className={badge === 'optimized' ? styles.optimized : styles.badge}
@@ -233,7 +235,11 @@ export function RecipeCard({
         <div className={styles.gain}>
           <div>
             <span>源报告记录 · 最佳负载</span>
-            <strong>
+            <strong
+              className={
+                r.quotedGain == null ? styles.unavailableGain : undefined
+              }
+            >
               {r.quotedGain == null
                 ? '未提供'
                 : `${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`}
@@ -248,7 +254,9 @@ export function RecipeCard({
               />
             </div>
           )}
-          <Link to={detailHref(r, version)}>{r.variant.id}</Link>
+          <Link to={detailHref(r, version, undefined, returnTo)}>
+            {r.variant.id}
+          </Link>
         </div>
         <div className={styles.chips}>
           <span>{hardwareText(r.variant)}</span>
@@ -292,21 +300,27 @@ export function RecipeCard({
         </dl>
         <div className={styles.cardActions}>
           {url ? (
-            <button
-              className={selected ? styles.primary : styles.secondary}
-              onClick={() => onReport(r)}
+            <Link
+              className={styles.secondary}
+              to={reportHref(r, version, returnTo)}
             >
               <Icon name="report" />
-              {selected ? '当前报告' : '查看对照报告'}
-            </button>
+              查看对照报告
+            </Link>
           ) : (
-            <Link className={styles.secondary} to={detailHref(r, version)}>
+            <Link
+              className={styles.secondary}
+              to={detailHref(r, version, undefined, returnTo)}
+            >
               查看部署配方
             </Link>
           )}
           <CopyButton getText={copy} />
         </div>
-        <Link className={styles.detailLink} to={detailHref(r, version)}>
+        <Link
+          className={styles.detailLink}
+          to={detailHref(r, version, undefined, returnTo)}
+        >
           配置与版本历史 <span aria-hidden="true">↗</span>
         </Link>
       </div>

@@ -40,9 +40,7 @@ export default function ReportPanel({
           <span className={styles.kicker}>
             PERFORMANCE REPORT · 来源实测记录
           </span>
-          <h2 id="benchmark-title">
-            {r.model.displayName ?? r.model.name} · 对照报告
-          </h2>
+          <h2 id="benchmark-title">基线与调优对照</h2>
           <p>
             {r.tuning[0]?.baseline} → {r.tuning[0]?.optimized}
           </p>

@@ -109,8 +109,8 @@
 1. 使用标准 URL 查询参数编码；空值、page=1 以及 view/layout/sort 的默认值省略，禁止手工拼接未经编码的搜索词。
 2. 单值参数重复时取首值；hardware 收集全部合法值、去重并按稳定 id 排序序列化；未知参数移除。fragment 单独处理，不作为筛选条件。
 3. page 只接受十进制正整数；超出可安全表示范围按非法值处理。非正整数归一为 1，超出末页归一到末页，零结果归一为 1。
-4. 家族、引擎、标签（包括博客 tag）、拓扑和分类非法时忽略该项并提示；hardware 仅移除非法值；view/layout/sort 非法时回到页面契约默认值 recipes/cards/improvement-desc。benchmark、version 或 dataVersion 显式无效时保留请求值并展示错误，不能换成最新。
-5. 未指定 benchmark 时按页面契约选择默认记录，不强制向 URL 写入默认 id；用户主动选择后保留明确 id，便于稳定分享。
+4. 家族、引擎、标签（包括博客 tag）、拓扑和分类非法时忽略该项并提示；hardware 仅移除非法值；view/layout/sort 非法时回到页面契约默认值 recipes/cards/improvement-desc。报告的 modelId/recipeId、配方 version 或 dataVersion 显式无效时保留请求值并展示错误，不能换成其他记录或最新版本。
+5. 报告页必须明确提供 modelId 和 recipeId；参数缺失时提示不完整，不自动选择默认报告。目录不再保存 benchmark 状态。
 6. 页面显示与 URL 必须使用同一份规范化查询；不能显示已纠正结果却复制出原非法参数。
 
 历史记录：
@@ -121,7 +121,7 @@
 - 普通链接保留浏览器原生的新窗口、复制链接和修饰键行为；只增强当前窗口的正常导航。
 - 首次直达含参数页面，不应先闪现默认列表再替换为查询结果；工程方案必须处理这一初始化条件。
 
-同页目录操作保留原有 fragment；它不触发滚动。翻页后的滚动由第 6 节负责。通过链接进入 `/models?benchmark={id}#benchmark` 时，先解析测评，再定位测评标题。
+同页目录操作保留原有 fragment；它不触发滚动。翻页后的滚动由第 6 节负责。“查看对照报告”进入 `/models/report?modelId={id}&recipeId={id}&dataVersion={commit}`，按普通跨页导航处理。旧 `/models?benchmark={modelId}/{recipeId}#benchmark` 与配方页 `#benchmark` 链接替换当前历史项进入报告页，返回目录时恢复 returnTo 中的查询并移除旧报告选择。
 
 ## 5 博客推荐与分页
 

@@ -1,3 +1,7 @@
+/* Hallmark · scope: app · theme: ModelSphere (existing brand) · copy: verbatim · v2.0.0
+ * pre-emit critique: P4 H4 E4 S4 R5 V3 · weakest: V; preserve the approved catalog grid and distinguish the model overview through one shared surface.
+ * Existing catalog styles are retained; detail presentation is scoped to detailPage and modelRecipe.
+ */
 .page {
   background: var(--color-background-subtle);
   color: var(--color-text-primary);
@@ -1068,6 +1072,240 @@
   }
 }
 
+.detailPage > .container {
+  max-width: 1280px;
+}
+.detailPage .topbar {
+  align-items: center;
+  padding: 24px 0 20px;
+  font-family: var(--font-body);
+}
+.modelOverview {
+  padding: 28px 32px 0;
+  background: var(--color-background-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-card);
+  margin-bottom: 32px;
+  min-width: 0;
+}
+.modelOverviewTitle {
+  font: 700 32px/1.3 var(--font-heading);
+  letter-spacing: -0.025em;
+  margin: 0 0 16px;
+  min-width: 0;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+.modelOverviewDescription {
+  max-width: 96ch;
+  margin: 0 0 24px;
+  font: 400 16px/1.8 var(--font-body);
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
+}
+.modelOverviewFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  padding: 20px 0;
+  border-top: 1px solid var(--color-border-default);
+}
+.modelOverviewTags {
+  margin: 0;
+  gap: 8px;
+  min-width: 0;
+}
+.modelOverviewTags > span {
+  font: 400 12px/1.6 var(--font-body);
+}
+.modelOverviewSource {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  max-width: 100%;
+  font: 400 13px/1.6 var(--font-body);
+  overflow-wrap: anywhere;
+}
+.modelOverviewSource > span:first-child {
+  min-width: 0;
+}
+.modelOverviewSource > span:last-child {
+  flex-shrink: 0;
+}
+.recipeSection {
+  padding: 24px;
+  background: var(--color-background-elevated);
+}
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 0 16px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--color-border-default);
+}
+.sectionHeading h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font: 600 22px/1.5 var(--font-heading);
+}
+.sectionCount {
+  padding: 4px 8px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-small);
+  background: var(--color-background-surface);
+  color: var(--color-text-secondary);
+  font: 500 13px/1.6 var(--font-body);
+  font-variant-numeric: tabular-nums;
+}
+.modelRecipe {
+  border-radius: var(--radius-card);
+}
+.modelRecipe .cardBody {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px 0;
+}
+.modelRecipe .cardHeading {
+  order: 1;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.modelRecipe .cardHeading > div {
+  flex: 1 1 144px;
+}
+.modelRecipe .cardHeading h3 {
+  margin: 0;
+  font: 600 18px/1.4 var(--font-heading);
+  letter-spacing: -0.025em;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+.modelRecipe .cardHeading h3 a {
+  color: inherit;
+}
+.modelRecipe .cardHeading h3 a:hover {
+  color: var(--color-brand-primary);
+  text-decoration: none;
+}
+.modelRecipe .kicker,
+.modelRecipe .badge,
+.modelRecipe .optimized {
+  font: 400 11px/1.6 var(--font-body);
+  letter-spacing: normal;
+}
+.modelRecipe .chips {
+  order: 2;
+  margin-bottom: 16px;
+}
+.modelRecipe .chips > span {
+  font-size: 11px;
+}
+.modelRecipe .gain {
+  order: 3;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid var(--color-border-default);
+  border-radius: 0;
+  background: transparent;
+  margin-bottom: 8px;
+}
+.modelRecipe .gain > div:first-child {
+  align-items: baseline;
+  flex-wrap: wrap;
+  font: 400 11px/1.6 var(--font-body);
+}
+.modelRecipe .gain strong {
+  font-size: 16px;
+}
+.modelRecipe .gain .unavailableGain {
+  font: 400 13px/1.6 var(--font-body);
+  color: var(--color-text-muted);
+}
+.modelRecipe .gain > a {
+  font-size: 11px;
+  line-height: 1.7;
+}
+.modelRecipe .measurement {
+  order: 4;
+  font: 400 11px/1.7 var(--font-body);
+  margin-bottom: 12px;
+}
+.modelRecipe .description {
+  order: 5;
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 4px 0 0;
+}
+.modelRecipe .cardFooter {
+  padding: 0 16px 16px;
+  margin-top: 20px;
+}
+.modelRecipe .cardFooter dl {
+  font-size: 11px;
+  padding: 12px 0;
+}
+.modelRecipe .cardFooter dt {
+  min-width: 42px;
+}
+.modelRecipe .cardActions {
+  align-items: center;
+}
+.modelRecipe .secondary {
+  min-height: 44px;
+}
+.modelRecipe .detailLink {
+  font-size: 12px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 1279px) {
+  .detailPage .topbar {
+    align-items: flex-start;
+  }
+}
+@media (max-width: 767px) {
+  .detailPage .topbar {
+    padding: 20px 0 16px;
+    font-size: 12px;
+  }
+  .modelOverview {
+    padding: 20px 20px 0;
+    margin-bottom: 24px;
+  }
+  .modelOverviewTitle {
+    font-size: 26px;
+    margin-bottom: 12px;
+  }
+  .modelOverviewDescription {
+    margin-bottom: 20px;
+  }
+  .modelOverviewFooter {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 0;
+  }
+  .sectionHeading {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .recipeSection {
+    padding: 16px 12px;
+  }
+  .sectionHeading h2 {
+    font-size: 20px;
+  }
+}
+
 /* Catalog surfaces follow the light Stitch reference; tokens stay local to this page. */
 .catalog {
   --color-brand-primary: #0284c7;
@@ -1231,47 +1469,6 @@
   display: flex;
   align-items: center;
 }
-.catalog .select > svg {
-  position: absolute;
-  pointer-events: none;
-  right: 10px;
-  width: 15px;
-  height: 15px;
-  color: var(--catalog-muted);
-}
-.catalog .toolbar select {
-  appearance: none;
-  min-height: 36px;
-  border-radius: 5px;
-  padding: 7px 30px 7px 11px;
-  font-size: 12px;
-  background: var(--color-background-subtle);
-  transition:
-    background 160ms,
-    border-color 160ms;
-  text-overflow: ellipsis;
-}
-.catalog .toolbar select:hover {
-  border-color: color-mix(
-    in srgb,
-    var(--color-brand-primary) 35%,
-    var(--color-border-default)
-  );
-  background: var(--color-background-surface);
-}
-.catalog .toolbar select[data-active='true'] {
-  color: var(--color-brand-primary);
-  border-color: color-mix(
-    in srgb,
-    var(--color-brand-primary) 40%,
-    var(--color-border-default)
-  );
-  background: color-mix(
-    in srgb,
-    var(--color-brand-primary) 5%,
-    var(--color-background-surface)
-  );
-}
 .catalog .tools {
   grid-column: 2;
   grid-row: 2 / 4;
@@ -1379,8 +1576,11 @@
   font-size: 12px;
   padding-bottom: 0;
 }
-.catalog .more select {
-  appearance: auto;
+.catalog .moreSelect {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  width: 264px;
+  max-width: 100%;
 }
 .catalog .grid {
   gap: 16px;
@@ -1687,10 +1887,6 @@
   .catalog .filters {
     grid-template-columns: 1fr;
   }
-  .catalog .toolbar select {
-    font-size: 16px;
-    min-height: 44px;
-  }
   .catalog .hardware {
     gap: 7px;
   }
@@ -1718,6 +1914,9 @@
     min-height: 36px;
     display: flex;
     align-items: center;
+  }
+  .catalog .moreSelect {
+    width: 100%;
   }
   .catalog .more summary::before {
     content: '+';

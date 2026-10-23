@@ -12,7 +12,6 @@ import {
   modelHref,
   recipesOf,
   reportUrl,
-  type Recipe,
 } from './data';
 import {
   facets,
@@ -24,7 +23,8 @@ import {
 } from './query';
 import { Icon, RecipeCard, SourceState, Stats } from './components';
 import { useCatalog } from './useCatalog';
-import ReportPanel from './ReportPanel';
+import { legacyCatalogReportHref, reportHref } from './routes';
+import CatalogSelect from './CatalogSelect';
 import styles from './styles.module.css';
 
 export default function CatalogPage() {
@@ -43,7 +43,13 @@ export default function CatalogPage() {
   const f = useMemo(() => facets(c), [c]),
     result = useMemo(() => queryRecipes(c, q), [c, q]);
   const all = useMemo(() => recipesOf(c), [c]);
-  const selected = all.find((r) => r.key === q.benchmark);
+  const returnTo = location.pathname + location.search;
+  const legacyReport = browser
+    ? legacyCatalogReportHref(location.search)
+    : null;
+  useEffect(() => {
+    if (legacyReport) history.replace(legacyReport);
+  }, [history, legacyReport]);
   const [draft, setDraft] = useState(''),
     search = useRef<HTMLInputElement>(null),
     filters = useRef<HTMLFormElement>(null),
@@ -86,7 +92,7 @@ export default function CatalogPage() {
         !e.isComposing &&
         !composing.current &&
         !t.closest(
-          'input,textarea,select,[contenteditable="true"],dialog[open]',
+          'input,textarea,select,[role="combobox"],[role="listbox"],[contenteditable="true"],dialog[open]',
         )
       ) {
         e.preventDefault();
@@ -96,14 +102,6 @@ export default function CatalogPage() {
     document.addEventListener('keydown', key);
     return () => document.removeEventListener('keydown', key);
   }, [browser]);
-  useEffect(() => {
-    if (q.benchmark && location.hash === '#benchmark')
-      requestAnimationFrame(() =>
-        document
-          .getElementById('benchmark')
-          ?.scrollIntoView({ block: 'start' }),
-      );
-  }, [q.benchmark, location.hash]);
   function update(patch: Partial<Query>, page = false) {
     const next = { ...q, ...patch, ...(page ? {} : { page: 1 }) };
     const href = queryHref(next) + location.hash;
@@ -112,35 +110,24 @@ export default function CatalogPage() {
       history.push(href);
     }
   }
-  function report(r: Recipe) {
-    history.push(
-      queryHref({ ...q, benchmark: r.key, dataVersion: c.commit }) +
-        '#benchmark',
-    );
-  }
   const items = browser ? result.items : result.all;
   const select = (
     key: 'family' | 'engine' | 'tag',
     label: string,
     values: string[],
   ) => (
-    <label className={styles.select}>
-      <span className="sr-only">{label}</span>
-      <select
-        aria-label={label}
-        data-active={Boolean(q[key])}
+    <span className={styles.select}>
+      <CatalogSelect
+        label={label}
+        active={Boolean(q[key])}
         value={q[key]}
-        onChange={(e) => update({ [key]: e.target.value })}
-      >
-        <option value="">{label}</option>
-        {values.map((x) => (
-          <option key={x} value={x}>
-            {x}
-          </option>
-        ))}
-      </select>
-      <Icon name="chevron" />
-    </label>
+        onValueChange={(value) => update({ [key]: value })}
+        options={[
+          { value: '', label },
+          ...values.map((value) => ({ value, label: value })),
+        ]}
+      />
+    </span>
   );
   return (
     <Layout
@@ -235,22 +222,22 @@ export default function CatalogPage() {
                       共 <strong>{result.total}</strong> 个
                       {q.view === 'recipes' ? '配方' : '模型'}
                     </span>
-                    <label className={styles.select}>
-                      <span className="sr-only">排序方式</span>
-                      <select
-                        aria-label="排序方式"
+                    <span className={styles.select}>
+                      <CatalogSelect
+                        label="排序方式"
                         value={q.sort}
-                        onChange={(e) => update({ sort: e.target.value })}
-                      >
-                        <option value="improvement-desc">
-                          按源报告记录增幅排序
-                        </option>
-                        <option value="name-asc">按模型名称 A–Z</option>
-                        <option value="name-desc">按模型名称 Z–A</option>
-                        <option value="updated-desc">按配方发布日期</option>
-                      </select>
-                      <Icon name="chevron" />
-                    </label>
+                        onValueChange={(value) => update({ sort: value })}
+                        options={[
+                          {
+                            value: 'improvement-desc',
+                            label: '按源报告记录增幅排序',
+                          },
+                          { value: 'name-asc', label: '按模型名称 A–Z' },
+                          { value: 'name-desc', label: '按模型名称 Z–A' },
+                          { value: 'updated-desc', label: '按配方发布日期' },
+                        ]}
+                      />
+                    </span>
                     <div className={styles.viewButtons}>
                       <button
                         type="button"
@@ -314,11 +301,7 @@ export default function CatalogPage() {
                     className={styles.reset}
                     onClick={() => {
                       setDraft('');
-                      update({
-                        ...initialQuery,
-                        benchmark: q.benchmark,
-                        dataVersion: q.dataVersion,
-                      });
+                      update({ ...initialQuery, dataVersion: q.dataVersion });
                     }}
                   >
                     重置筛选
@@ -327,43 +310,49 @@ export default function CatalogPage() {
                 <details className={styles.more}>
                   <summary>视图与更多筛选</summary>
                   <div>
-                    <label>
-                      内容视图{' '}
-                      <select
-                        aria-label="内容视图"
+                    <label className={styles.moreSelect}>
+                      <span>内容视图</span>
+                      <CatalogSelect
+                        label="内容视图"
+                        active={q.view !== initialQuery.view}
                         value={q.view}
-                        onChange={(e) => update({ view: e.target.value })}
-                      >
-                        <option value="recipes">部署配方</option>
-                        <option value="models">模型</option>
-                      </select>
+                        onValueChange={(value) => update({ view: value })}
+                        options={[
+                          { value: 'recipes', label: '部署配方' },
+                          { value: 'models', label: '模型' },
+                        ]}
+                      />
                     </label>
-                    <label>
-                      配方角色{' '}
-                      <select
-                        aria-label="配方角色"
+                    <label className={styles.moreSelect}>
+                      <span>配方角色</span>
+                      <CatalogSelect
+                        label="配方角色"
+                        active={Boolean(q.role)}
                         value={q.role}
-                        onChange={(e) => update({ role: e.target.value })}
-                      >
-                        <option value="">全部角色</option>
-                        <option value="optimized">有调优记录</option>
-                        <option value="baseline">基线</option>
-                        <option value="default">默认配方</option>
-                        <option value="recipe">其他部署配方</option>
-                      </select>
+                        onValueChange={(value) => update({ role: value })}
+                        options={[
+                          { value: '', label: '全部角色' },
+                          { value: 'optimized', label: '有调优记录' },
+                          { value: 'baseline', label: '基线' },
+                          { value: 'default', label: '默认配方' },
+                          { value: 'recipe', label: '其他部署配方' },
+                        ]}
+                      />
                     </label>
-                    <label>
-                      部署拓扑{' '}
-                      <select
-                        aria-label="部署拓扑"
+                    <label className={styles.moreSelect}>
+                      <span>部署拓扑</span>
+                      <CatalogSelect
+                        label="部署拓扑"
+                        active={Boolean(q.topology)}
                         value={q.topology}
-                        onChange={(e) => update({ topology: e.target.value })}
-                      >
-                        <option value="">全部拓扑</option>
-                        <option value="single-node">单节点</option>
-                        <option value="lws">多节点 LWS</option>
-                        <option value="pd">Prefill / Decode 分离</option>
-                      </select>
+                        onValueChange={(value) => update({ topology: value })}
+                        options={[
+                          { value: '', label: '全部拓扑' },
+                          { value: 'single-node', label: '单节点' },
+                          { value: 'lws', label: '多节点 LWS' },
+                          { value: 'pd', label: 'Prefill / Decode 分离' },
+                        ]}
+                      />
                     </label>
                     <label>
                       <input
@@ -405,7 +394,7 @@ export default function CatalogPage() {
                       {items.map((r) => (
                         <tr key={r.key}>
                           <th>
-                            <Link to={modelHref(r.model, c.commit)}>
+                            <Link to={modelHref(r.model, c.commit, returnTo)}>
                               {r.model.displayName ?? r.model.name}
                             </Link>
                           </th>
@@ -422,11 +411,15 @@ export default function CatalogPage() {
                             <small>{r.workload}</small>
                           </td>
                           <td>
-                            <Link to={detailHref(r, c.commit)}>详情与历史</Link>
+                            <Link
+                              to={detailHref(r, c.commit, undefined, returnTo)}
+                            >
+                              详情与历史
+                            </Link>
                             {reportUrl(r) && (
-                              <button onClick={() => report(r)}>
+                              <Link to={reportHref(r, c.commit, returnTo)}>
                                 查看对照报告
-                              </button>
+                              </Link>
                             )}
                           </td>
                         </tr>
@@ -444,8 +437,7 @@ export default function CatalogPage() {
                       key={r.key}
                       r={r}
                       version={c.commit}
-                      selected={selected?.key === r.key}
-                      onReport={report}
+                      returnTo={returnTo}
                       copy={() => loadYaml(r.variant)}
                     />
                   ))}
@@ -470,22 +462,6 @@ export default function CatalogPage() {
                   </button>
                 </nav>
               )}
-              {q.benchmark &&
-                (selected && reportUrl(selected) ? (
-                  <ReportPanel
-                    key={selected.key + c.commit}
-                    r={selected}
-                    commit={c.commit}
-                  />
-                ) : (
-                  <section
-                    id="benchmark"
-                    className={styles.notice}
-                    role="status"
-                  >
-                    所选测评不存在或没有可用报告，请选择其他配方。
-                  </section>
-                ))}
             </>
           )}
           <footer className={styles.catalogFoot}>

@@ -6,7 +6,6 @@ import useIsBrowser from '@docusaurus/useIsBrowser';
 import { useHistory, useLocation } from '@docusaurus/router';
 import {
   config,
-  detailHref,
   hardwareText,
   launchFacts,
   loadHistory,
@@ -14,13 +13,13 @@ import {
   modelHref,
   recipesOf,
   reportUrl,
-  safeUrl,
   topologyLabel,
   type History,
 } from './data';
 import { CopyButton, RecipeCard, SourceLinks, SourceState } from './components';
+import { ModelOverviewCard } from './ModelOverviewCard';
 import { useCatalog } from './useCatalog';
-import ReportPanel from './ReportPanel';
+import { catalogReturnTo, legacyRecipeReportHref, reportHref } from './routes';
 import styles from './styles.module.css';
 
 export default function DetailPage({ kind }: { kind: 'model' | 'recipe' }) {
@@ -34,7 +33,15 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
   const params = new URLSearchParams(browser ? location.search : ''),
     modelId = params.get('modelId') ?? '',
     recipeId = params.get('recipeId') ?? '',
-    requestedVersion = params.get('version') ?? '';
+    requestedVersion = params.get('version') ?? '',
+    returnTo = catalogReturnTo(params.get('returnTo'));
+  const legacyReport =
+    browser && kind === 'recipe'
+      ? legacyRecipeReportHref(location.search, location.hash)
+      : null;
+  useEffect(() => {
+    if (legacyReport) history.replace(legacyReport);
+  }, [history, legacyReport]);
   const state = useCatalog(params.get('dataVersion') ?? ''),
     c = state.catalog;
   const model = c.models.find((m) => m.name === modelId),
@@ -124,11 +131,11 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
       <Head>
         <meta name="robots" content="noindex,follow" />
       </Head>
-      <main id="main-content" className={styles.page}>
+      <main id="main-content" className={`${styles.page} ${styles.detailPage}`}>
         <div className={styles.container}>
           <div className={styles.topbar}>
             <nav aria-label="面包屑">
-              <Link to="/models">模型目录</Link>
+              <Link to={returnTo}>模型目录</Link>
               <span>/</span>
               <span>{kind === 'model' ? '模型详情' : '配方与历史'}</span>
             </nav>
@@ -146,7 +153,7 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
             <div className={styles.empty}>
               <h1>详情参数不完整</h1>
               <p>请从目录中的模型或配方入口访问。</p>
-              <Link to="/models">返回模型目录</Link>
+              <Link to={returnTo}>返回模型目录</Link>
             </div>
           ) : state.unavailable ? (
             <div className={styles.empty}>
@@ -171,56 +178,38 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                 所选标识：{modelId}
                 {recipeId && ` / ${recipeId}`}
               </p>
-              <Link to="/models">返回模型目录</Link>
+              <Link to={returnTo}>返回模型目录</Link>
             </div>
           ) : (
             model && (
               <>
-                <header className={styles.detailHero}>
-                  <span className={styles.eyebrow}>
-                    {kind === 'model' ? 'MODEL OVERVIEW' : 'DEPLOYMENT RECIPE'}
-                  </span>
-                  <h1>{model.displayName ?? model.name}</h1>
-                  <p>{model.description ?? '来源未提供模型说明。'}</p>
-                  <div className={styles.chips}>
-                    {model.family && <span>{model.family}</span>}
-                    {model.tags.map((t) => (
-                      <span key={t}>{t}</span>
-                    ))}
-                  </div>
-                  {model.source?.hf && (
-                    <p>
-                      <a
-                        href={
-                          safeUrl(
-                            `https://huggingface.co/${model.source.hf}`,
-                          ) ?? '#'
-                        }
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Hugging Face：{model.source.hf} ↗
-                      </a>
-                    </p>
-                  )}
-                </header>
+                <ModelOverviewCard model={model} />
                 {kind === 'model' ? (
-                  <>
-                    <h2>可用部署配方 · {recipes.length}</h2>
-                    <section className={styles.grid}>
+                  <section
+                    className={styles.recipeSection}
+                    aria-labelledby="model-recipes-title"
+                  >
+                    <div className={styles.sectionHeading}>
+                      <h2 id="model-recipes-title">
+                        可用部署配方 ·{' '}
+                        <span className={styles.sectionCount}>
+                          {recipes.length}
+                        </span>
+                      </h2>
+                    </div>
+                    <div className={styles.grid}>
                       {recipes.map((r) => (
                         <RecipeCard
                           key={r.key}
                           r={r}
+                          context="model"
                           version={c.commit}
-                          onReport={(x) =>
-                            history.push(detailHref(x, c.commit) + '#benchmark')
-                          }
+                          returnTo={returnTo}
                           copy={() => loadYaml(r.variant)}
                         />
                       ))}
-                    </section>
-                  </>
+                    </div>
+                  </section>
                 ) : (
                   recipe && (
                     <>
@@ -234,7 +223,7 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                               来源记录
                             </p>
                           </div>
-                          <Link to={modelHref(model, c.commit)}>
+                          <Link to={modelHref(model, c.commit, returnTo)}>
                             全部模型配方 →
                           </Link>
                         </div>
@@ -358,11 +347,11 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                         </details>
                       </section>
                       {reportUrl(recipe) && (
-                        <ReportPanel
-                          key={recipe.key + c.commit}
-                          r={recipe}
-                          commit={c.commit}
-                        />
+                        <div className={styles.actions}>
+                          <Link to={reportHref(recipe, c.commit, returnTo)}>
+                            查看对照报告 →
+                          </Link>
+                        </div>
                       )}
                     </>
                   )

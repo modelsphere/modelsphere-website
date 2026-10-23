@@ -17,6 +17,12 @@ import {
   type Catalog,
 } from '../../src/features/catalog/data';
 import {
+  catalogReturnTo,
+  legacyCatalogReportHref,
+  legacyRecipeReportHref,
+  reportHref,
+} from '../../src/features/catalog/routes';
+import {
   initialQuery,
   parseQuery,
   queryRecipes,
@@ -131,7 +137,7 @@ describe('catalog queries', () => {
     expect(all[0].quotedGain).toBe(195.3);
     expect(compare(all[0], all[0], 'improvement-desc')).toBe(0);
   });
-  it('normalizes invalid parameters and clamps pages without dropping the independent report selection', () => {
+  it('normalizes invalid parameters and keeps report selection out of list state', () => {
     const q = parseQuery(
       '?engine=nope&hardware=missing&page=-2&layout=bad&benchmark=mimo-v2.5%2Fx',
       baseline,
@@ -139,7 +145,8 @@ describe('catalog queries', () => {
     expect(q.engine).toBe('');
     expect(q.page).toBe(1);
     expect(q.layout).toBe('cards');
-    expect(q.benchmark).toBe('mimo-v2.5/x');
+    expect(q).not.toHaveProperty('benchmark');
+    expect(queryHref(q)).not.toContain('benchmark');
     expect(queryRecipes(baseline, { ...q, page: 999 }).page).toBe(6);
   });
   it('supports new source records without adding site routes and processes 5000 recipes', () => {
@@ -213,5 +220,75 @@ describe('configuration integrity and history ownership', () => {
         ),
     );
     await expect(loadHistory(r)).rejects.toThrow('不属于');
+  });
+});
+
+describe('catalog report navigation', () => {
+  const recipe = recipesOf(baseline).find(
+    (r) => r.key === 'mimo-v2.5/sglang-tp8-h100-optimized',
+  )!;
+  it('keeps the report snapshot separate from the original list query', () => {
+    const returnTo =
+      '/models?q=mimo&layout=table&page=2&hardware=NVIDIA-H100-80GB-HBM3';
+    const url = new URL(
+      reportHref(recipe, baseline.commit, returnTo),
+      'https://site.test',
+    );
+    expect(url.pathname).toBe('/models/report');
+    expect(url.searchParams.get('modelId')).toBe(recipe.model.name);
+    expect(url.searchParams.get('recipeId')).toBe(recipe.variant.id);
+    expect(url.searchParams.get('dataVersion')).toBe(baseline.commit);
+    expect(url.searchParams.get('returnTo')).toBe(returnTo);
+    expect(url.searchParams.has('benchmark')).toBe(false);
+  });
+  it('only restores catalog queries and removes legacy report selection', () => {
+    expect(catalogReturnTo('/models?q=mimo&benchmark=old#benchmark')).toBe(
+      '/models?q=mimo',
+    );
+    for (const value of [
+      null,
+      '',
+      'https://evil.test/models',
+      '//evil.test/models',
+      '/models/report',
+      '/models-extra',
+      '/models\\evil',
+      '/models?x=\n',
+    ])
+      expect(catalogReturnTo(value)).toBe('/models');
+  });
+  it('redirects old catalog report links while preserving their list context', () => {
+    const url = new URL(
+      legacyCatalogReportHref(
+        '?q=mimo&page=2&benchmark=mimo-v2.5%2Fsglang-tp8-h100-optimized&dataVersion=' +
+          baseline.commit,
+      )!,
+      'https://site.test',
+    );
+    expect(url.pathname).toBe('/models/report');
+    expect(url.searchParams.get('recipeId')).toBe(recipe.variant.id);
+    expect(url.searchParams.get('returnTo')).toBe(
+      '/models?q=mimo&page=2&dataVersion=' + baseline.commit,
+    );
+    expect(legacyCatalogReportHref('?q=mimo')).toBeNull();
+    const missing = new URL(
+      legacyCatalogReportHref('?benchmark=unknown')!,
+      'https://site.test',
+    );
+    expect(missing.searchParams.get('modelId')).toBe('unknown');
+    expect(missing.searchParams.get('recipeId')).toBe('');
+  });
+  it('redirects only legacy recipe report anchors, without treating recipe versions as report versions', () => {
+    const search =
+      '?modelId=mimo-v2.5&recipeId=sglang-tp8-h100-optimized&version=1.0.0&dataVersion=' +
+      baseline.commit;
+    const url = new URL(
+      legacyRecipeReportHref(search, '#benchmark')!,
+      'https://site.test',
+    );
+    expect(url.pathname).toBe('/models/report');
+    expect(url.searchParams.get('dataVersion')).toBe(baseline.commit);
+    expect(url.searchParams.has('version')).toBe(false);
+    expect(legacyRecipeReportHref(search, '')).toBeNull();
   });
 });

@@ -159,6 +159,9 @@ Docusaurus blog 插件负责文章详情与正文；通过 `blogListComponent` �
 | 目录 | `/models` | 字段筛选、视图、排序和分页由 URL 驱动 |
 | 模型详情 | `/models/detail?modelId={id}&dataVersion={version}` | 读取指定模型；省略 dataVersion 时解析当前公开版本 |
 | 配方与历史 | `/models/recipe?modelId={id}&recipeId={id}&version={recipeVersion}&dataVersion={version}` | 精确配方与可选历史版本；无 version 时读取解析到的数据版本内当前配方 |
+| 对照报告 | `/models/report?modelId={id}&recipeId={id}&dataVersion={version}` | 独立展示该目录中优化配方关联的报告；不嵌入目录或配方页 |
+
+模型、配方和报告页使用 `returnTo` 传递原目录查询，仅接受站内 `/models` 地址，返回时恢复筛选、视图、排序和页码。报告 `dataVersion` 与返回目录查询独立。旧目录 `benchmark` 参数和配方 `#benchmark` 地址使用 history.replace 转到报告页，返回地址剔除旧报告选择。
 
 固定页面均在构建时生成。新增模型无需添加网站路径或重建博客即可直接访问、刷新；参数使用 URLSearchParams 编码，不能手拼未编码 id。页面与数据源都验证模型和配方归属。
 
@@ -168,7 +171,7 @@ Docusaurus blog 插件负责文章详情与正文；通过 `blogListComponent` �
 
 `/models` 构建时读取固定的公开基线快照，输出精简目录、数据版本和时间；没有可用基线时显示“目录数据暂未就绪”，不把故障伪装为空目录。客户端增强后读取当前数据，明确展示实际版本，失败可保留标明时间的基线供阅读。
 
-博客和文档无脚本可阅读全文；Catalog 无脚本仅保证基线目录可读。模型/配方实时详情提示需要 JavaScript，并提供目录返回入口和已核实的静态来源链接；不能承诺实时详情也在初始 HTML 中。构建后新增记录不会出现在旧基线中，但启用脚本后可查询并打开。
+博客和文档无脚本可阅读全文；Catalog 无脚本仅保证基线目录可读。模型/配方/报告实时详情提示需要 JavaScript，并提供目录返回入口和已核实的静态来源链接；不能承诺实时详情也在初始 HTML 中。构建后新增记录不会出现在旧基线中，但启用脚本后可查询并打开。
 
 目录以 5,000 条配方验证筛选与按需加载，详情和报告按需读取；这只是测试样本，不代表真实规模。数据更新、请求失败、固定版本不可用和乱序响应都需测试。
 

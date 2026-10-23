@@ -3,6 +3,7 @@ import { parse as parseYaml } from 'yaml';
 import baselineInput from '../../../content/catalog/baseline.json';
 import baselineSource from '../../../content/catalog/baseline-source.json';
 import source from '../../../content/catalog/source.json';
+import { catalogReturnTo } from './routes';
 
 const id = z.string().regex(/^[a-z0-9][a-z0-9._-]*$/);
 const sha = z.string().regex(/^[a-f0-9]{40}$/);
@@ -220,7 +221,12 @@ export function role(r: Recipe) {
 export function isDefault(r: Recipe) {
   return r.variant.id === (r.model.defaultVariant ?? r.model.variants[0]?.id);
 }
-export function detailHref(r: Recipe, version: string, recipeVersion?: string) {
+export function detailHref(
+  r: Recipe,
+  version: string,
+  recipeVersion?: string,
+  returnTo?: string,
+) {
   return (
     '/models/recipe?' +
     new URLSearchParams({
@@ -228,13 +234,18 @@ export function detailHref(r: Recipe, version: string, recipeVersion?: string) {
       recipeId: r.variant.id,
       dataVersion: version,
       ...(recipeVersion ? { version: recipeVersion } : {}),
+      ...(returnTo ? { returnTo: catalogReturnTo(returnTo) } : {}),
     })
   );
 }
-export function modelHref(m: Model, version: string) {
+export function modelHref(m: Model, version: string, returnTo?: string) {
   return (
     '/models/detail?' +
-    new URLSearchParams({ modelId: m.name, dataVersion: version })
+    new URLSearchParams({
+      modelId: m.name,
+      dataVersion: version,
+      ...(returnTo ? { returnTo: catalogReturnTo(returnTo) } : {}),
+    })
   );
 }
 export function stats(c: Catalog) {
