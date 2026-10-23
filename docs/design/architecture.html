@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ModelSphere 官网门户架构设计</title>
+<style>
+:root{
+  --bg:#f2f4f7;--surface:#fff;--surface-2:#e9ecf2;--surface-3:#f7f8fa;
+  --ink:#12151c;--muted:#5b6472;--rule:#d7dbe3;--accent:#1d3f8f;--accent-soft:#e4e9f6;
+  --ok:#1c6349;--ok-bg:#e2efe9;--warn:#8a5a0b;--warn-bg:#f5ecd8;--bad:#9b2c2c;--bad-bg:#f6e3e3;
+  --font-prose:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,"Songti SC","Noto Serif CJK SC",serif;
+  --font-ui:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0d1016;--surface:#151922;--surface-2:#1d222c;--surface-3:#11151d;
+  --ink:#e6e9ef;--muted:#98a1b0;--rule:#2a3140;--accent:#8aabf2;--accent-soft:#1a2340;
+  --ok:#5cbd90;--ok-bg:#16302a;--warn:#d6a54c;--warn-bg:#332a15;--bad:#e28c8c;--bad-bg:#361d1d;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-prose);font-size:17px;line-height:1.8;overflow-x:hidden}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(1.1rem,4vw,2.5rem)}
+.masthead{border-bottom:2px solid var(--ink);padding:clamp(2.2rem,5vw,3.6rem) 0 1.5rem}
+.eyebrow{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 1rem}
+h1{font-size:clamp(1.8rem,4.6vw,2.9rem);line-height:1.18;margin:0 0 .7rem;font-weight:600;letter-spacing:-.01em;text-wrap:balance}
+.dek{font-size:clamp(1rem,2.2vw,1.14rem);color:var(--muted);margin:0;max-width:70ch}
+.meta-strip{display:flex;flex-wrap:wrap;gap:1.4rem 2.4rem;margin-top:1.9rem;font-family:var(--font-ui);font-size:.8rem}
+.meta-strip div{display:flex;flex-direction:column;gap:.22rem}.meta-strip dt{font-family:var(--font-mono);font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.meta-strip dd{margin:0;font-variant-numeric:tabular-nums}
+nav.toc{margin:2rem 0 0;padding:1rem 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;font-family:var(--font-mono);font-size:.76rem}
+nav.toc a{color:var(--muted);text-decoration:none;border-bottom:1px solid transparent}nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);border-bottom-color:var(--accent)}
+section{padding:clamp(2.4rem,6vw,4rem) 0;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:6.5rem minmax(0,1fr);gap:0 2.4rem;align-items:start}
+.rail{position:sticky;top:1.4rem;font-family:var(--font-mono);font-size:.66rem;color:var(--muted)}.rail .num{display:block;font-size:1.9rem;line-height:1;color:var(--accent);font-weight:500;margin-bottom:.45rem}.rail .tag{display:block;letter-spacing:.13em;text-transform:uppercase;line-height:1.7}
+.body{min-width:0}.body>*:first-child{margin-top:0}
+h2.sec{font-size:clamp(1.3rem,2.9vw,1.8rem);line-height:1.28;margin:0 0 1.2rem;font-weight:600;text-wrap:balance}
+h3{font-family:var(--font-ui);font-size:1rem;font-weight:600;margin:2.2rem 0 .85rem;line-height:1.5;text-wrap:balance}
+h4{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:1.8rem 0 .65rem;font-weight:600}
+p{margin:0 0 1rem;max-width:74ch}ul,ol{max-width:74ch;padding-left:1.25rem}li{margin-bottom:.45rem}a{color:var(--accent)}strong{font-weight:600}
+code,.mono{font-family:var(--font-mono);font-size:.86em}code{background:var(--surface-2);padding:.1em .38em;border-radius:2px;word-break:break-word}
+.tw{overflow-x:auto;margin:1.3rem 0 1.5rem;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-family:var(--font-ui);font-size:.82rem;line-height:1.6}th,td{text-align:left;padding:.62rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}thead th{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2);white-space:nowrap}tbody tr:last-child td{border-bottom:none}.selected-row{background:var(--ok-bg)}
+.chip{display:inline-block;font-family:var(--font-mono);font-size:.65rem;letter-spacing:.05em;padding:.15em .48em;border-radius:2px;white-space:nowrap;font-weight:600}.chip.ok{background:var(--ok-bg);color:var(--ok)}.chip.warn{background:var(--warn-bg);color:var(--warn)}.chip.bad{background:var(--bad-bg);color:var(--bad)}.chip.neutral{background:var(--surface-2);color:var(--muted)}.chip.role{background:var(--accent-soft);color:var(--accent)}
+.note{border:1px solid var(--rule);border-left:3px solid var(--muted);background:var(--surface);padding:.95rem 1.1rem;margin:1.4rem 0;max-width:76ch}.note.bad{border-left-color:var(--bad)}.note.warn{border-left-color:var(--warn)}.note.ok{border-left-color:var(--ok)}.note.info{border-left-color:var(--accent)}.note p:last-child{margin-bottom:0}.note .lbl{display:block;font-family:var(--font-mono);font-size:.65rem;letter-spacing:.13em;text-transform:uppercase;margin-bottom:.45rem;font-weight:600;color:var(--muted)}.note.bad .lbl{color:var(--bad)}.note.warn .lbl{color:var(--warn)}.note.ok .lbl{color:var(--ok)}.note.info .lbl{color:var(--accent)}
+.stages{display:grid;gap:.9rem;margin:1.4rem 0;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}.stage{border:1px solid var(--rule);background:var(--surface);padding:.9rem 1rem}.stage .st-n{font-family:var(--font-mono);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.4rem;font-weight:600}.stage h5{font-family:var(--font-ui);font-size:.9rem;margin:0 0 .45rem;font-weight:600}.stage p{font-family:var(--font-ui);font-size:.79rem;line-height:1.6;margin:0;color:var(--muted)}
+figure{margin:1.7rem 0;border:1px solid var(--rule);background:var(--surface);padding:1.1rem}.svg-scroll{overflow-x:auto}figure svg{display:block;min-width:720px;max-width:100%;height:auto;color:var(--ink)}figcaption{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);margin-top:.85rem;line-height:1.65}
+.n{fill:var(--surface-2);stroke:currentColor;stroke-width:1}.n-a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.3}.n-ok{fill:var(--ok-bg);stroke:var(--ok);stroke-width:1.3}.n-bad{fill:var(--bad-bg);stroke:var(--bad);stroke-width:1.3}.n-warn{fill:var(--warn-bg);stroke:var(--warn);stroke-width:1.3}.n-ghost{fill:none;stroke:currentColor;stroke-width:1;stroke-dasharray:3 3;opacity:.55}.tb{font-family:var(--font-ui);font-size:13px;font-weight:600;fill:var(--ink)}.ts{font-family:var(--font-mono);font-size:10px;fill:var(--muted)}.tl{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.09em;fill:var(--accent)}.e{stroke:currentColor;stroke-width:1.3;fill:none;opacity:.62}.e-hot{stroke:var(--accent);stroke-width:1.7;fill:none}.e-ok{stroke:var(--ok);stroke-width:1.7;fill:none}.e-bad{stroke:var(--bad);stroke-width:1.7;fill:none}.grp{fill:none;stroke:var(--rule);stroke-width:1.4;stroke-dasharray:6 4}.grp-base{fill:var(--accent-soft);fill-opacity:.22;stroke:var(--accent);stroke-width:1.4;stroke-opacity:.5}.grp-ome{fill:var(--ok-bg);fill-opacity:.25;stroke:var(--ok);stroke-width:1.4;stroke-opacity:.55}.grp-risk{fill:var(--bad-bg);fill-opacity:.25;stroke:var(--bad);stroke-width:1.4;stroke-opacity:.55}
+pre{font-family:var(--font-mono);font-size:.775rem;line-height:1.6;background:var(--surface);border:1px solid var(--rule);padding:1rem 1.1rem;overflow-x:auto;margin:1.2rem 0;color:var(--ink)}pre code{background:none;padding:0;font-size:1em;white-space:pre;font-family:inherit}.cw{position:relative;margin:1rem 0}.cw>.lbl{position:absolute;top:0;left:0;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);padding:.18em .5em;border:1px solid var(--rule);border-bottom:none}.cw>button{position:absolute;top:0;right:0;font-family:var(--font-mono);font-size:.62rem;color:var(--muted);background:var(--surface-2);border:1px solid var(--rule);border-bottom:none;padding:.2em .6em;cursor:pointer}.cw>pre{margin:0;padding-top:1.9rem}pre.yml{border-left:3px solid var(--ok)}pre.flow{border-left:3px solid var(--accent)}
+footer{padding:2.4rem 0 4rem;font-family:var(--font-ui);font-size:.78rem;color:var(--muted)}:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:900px){section{grid-template-columns:1fr;gap:1.1rem}.rail{position:static}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+td{overflow-wrap:anywhere;min-width:115px}
+.stage h3{font-size:.95rem;margin:0 0 .45rem}
+.source-list{font-family:var(--font-ui);font-size:.85rem}
+@media print{
+ :root{--bg:#fff;--surface:#fff;--surface-2:#f1f2f4;--surface-3:#fff;--ink:#111;--muted:#444;--rule:#ccc;--accent:#234578;--accent-soft:#eef1f6;--ok:#245b43;--ok-bg:#eef5f0;--warn:#76520c;--warn-bg:#faf4e8;--bad:#8a3333;--bad-bg:#fbefef}
+ @page{size:A4;margin:16mm}
+ body{background:#fff;color:#111;font-size:10pt;overflow:visible}.wrap{max-width:none;padding:0}
+ .rail{position:static}nav.toc{display:none}section{display:block;padding:20pt 0;break-inside:auto}
+ .rail .num{display:inline;font-size:13pt}.rail .tag{display:inline;margin-left:10pt}
+ h2,h3{break-after:avoid}figure,.note,.stage,tr{break-inside:avoid}
+ .tw,.svg-scroll{overflow:visible}figure svg{min-width:0;width:100%}
+ table{font-size:8pt}td{min-width:0}thead{display:table-header-group}
+ pre{white-space:pre-wrap;overflow:visible}pre code{white-space:pre-wrap}
+ a{color:inherit;text-decoration:underline}
+}
+</style>
+</head>
+<body><div class="wrap">
+<header class="masthead"><p class="eyebrow">Architecture Design · 2026-10-21</p>
+<h1>ModelSphere 官网门户架构设计</h1>
+<p class="dek">Docusaurus 统一门户、博客与文档。内容通过 Markdown/Git 维护，网站以一个静态镜像交付；Catalog 使用自定义 React 界面与独立更新的数据源。</p>
+<dl class="meta-strip"><div><dt>Decision</dt><dd>统一全站 · Git 博客已确认</dd></div><div><dt>Delivery</dt><dd>Nginx / Docker / Kubernetes</dd></div><div><dt>Content</dt><dd>博客 Git · 文档源 commit · Catalog 数据版本</dd></div><div><dt>Status</dt><dd>本地功能已实现 · 生产接入待完成</dd></div></dl></header>
+<nav class="toc" aria-label="目录"><a href="#s1">01 当前决策</a><a href="#s2">02 输入与归属</a><a href="#s3">03 页面与内容</a><a href="#s4">04 博客维护</a><a href="#s5">05 开发者文档</a><a href="#s6">06 模型目录</a><a href="#s7">07 发布流程</a><a href="#s8">08 生产部署</a><a href="#s9">09 撤回与恢复</a><a href="#s10">10 实施与验证</a></nav>
+<main>
+<section id="s1"><div class="rail"><span class="num">01</span><span class="tag">当前决策<br />DECISION</span></div><div class="body"><h2 class="sec">一个 Docusaurus 站点，Git 内容发布，Catalog 独立取数</h2>
+<p>门户、博客、社区和开发者文档使用一个 Docusaurus + React + TypeScript 应用。门户与 Catalog 使用自定义 React 页面，博客由 Markdown/Git 维护，文档采用标准侧栏与正文布局。所有网站内容统一生成静态文件，封装一个 Nginx 镜像，部署到现有 Kubernetes。</p>
+<p>Catalog 模型、配方、测评与历史仍由源系统维护。首期按用户决定直接读取公开 GitHub Pages / raw GitHub，来源地址集中配置，后续再接自有服务。内容更新与网站代码发布可以分开；不嵌入 <code>&lt;model-catalog&gt;</code> 或 iframe。</p>
+<div class="note ok"><span class="lbl">已确认的范围</span><p>博客首期通过 Markdown/Git 发布。无需内容管理后台、数据库、素材上传服务或自建发布队列。文档内容仓库可以独立，但文档网页与门户属于同一个部署产物。</p></div>
+<p>当前仓库已本地实现首页、博客、文档试点与 Catalog 公开源接入。本图仍包含后续目标；真实内容同步与生产部署尚未实施，远程 CI 未验证。Catalog 数据边界见 <a href="../development/catalog-implementation.md">信息可靠性清单</a>。</p>
+<div class="tw"><table><thead><tr><th>职责</th><th>技术</th><th>边界</th></tr></thead>
+<tbody><tr><td>门户与社区</td><td>React + TypeScript + CSS</td><td>遵循已有视觉、组件与交互规范</td></tr>
+<tr><td>博客</td><td>Git Markdown + Docusaurus blog 插件</td><td>自定义列表，保留 I05；正文预生成</td></tr>
+<tr><td>文档</td><td>指定 Git commit + docs 插件</td><td>站内 /docs，朴素阅读布局</td></tr>
+<tr><td>Catalog</td><td>自定义 React + 独立只读源</td><td>动态数据不进入第二套编辑系统</td></tr>
+<tr><td>生产交付</td><td>静态 build/ + Nginx + Docker/Kubernetes</td><td>Node.js 仅构建时使用</td></tr></tbody>
+</table></div></div></section>
+<section id="s2"><div class="rail"><span class="num">02</span><span class="tag">输入与归属<br />OWNERSHIP</span></div><div class="body"><h2 class="sec">内容分来源维护，网站合为一个发布版本</h2><div class="tw"><table><thead><tr><th>输入</th><th>维护方式</th><th>更新如何生效</th></tr></thead>
+<tbody><tr><td>门户文案、页面配置、博客与图片</td><td>网站仓库提交</td><td>网站 PR 检查、合并、全站构建发布</td></tr>
+<tr><td>开发者文档</td><td>独立 Markdown 仓库</td><td>更新网站锁定文件中的完整 commit，重新构建全站</td></tr>
+<tr><td>Catalog 实时数据</td><td>Catalog 维护方</td><td>首期读取公开目录；不新增同步或推送链路</td></tr>
+<tr><td>Catalog 无脚本基线</td><td>网站锁定数据版本及 hash</td><td>网站构建时导入；显示版本与时间</td></tr>
+<tr><td>品牌 tokens 与组件</td><td>网站代码仓库</td><td>单一来源，不因框架变化重写视觉值</td></tr></tbody>
+</table></div>
+<p>网站 release 绑定代码与博客提交、文档源 commit、构建用 Catalog 基线、依赖、配置和镜像 digest。实时 Catalog 数据版本另行追溯；首页或博客的性能结论引用固定来源版本，不随目录刷新自动改写。</p>
+<figure><div class="svg-scroll"><svg viewBox="0 0 900 370" role="img" aria-label="网站 Git 与文档仓库固定提交进入同一个 Docusaurus 构建和静态网站镜像；浏览器单独读取 Catalog 数据">
+<defs><marker id="system-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+<rect class="n" x="20" y="25" width="220" height="75" rx="4"/><text class="tb" x="130" y="55" text-anchor="middle">网站 Git 提交</text><text class="ts" x="130" y="78" text-anchor="middle">代码 · 博客 · 图片 · 页面配置</text>
+<rect class="n" x="20" y="135" width="220" height="75" rx="4"/><text class="tb" x="130" y="165" text-anchor="middle">开发者 Markdown 仓库</text><text class="ts" x="130" y="188" text-anchor="middle">按锁定 commit 同步正文与图片</text>
+<rect class="n-a" x="330" y="80" width="230" height="100" rx="4"/><text class="tb" x="445" y="119" text-anchor="middle">Docusaurus 统一构建</text><text class="ts" x="445" y="146" text-anchor="middle">校验 → 静态 HTML / JS / 搜索</text>
+<rect class="n-ok" x="650" y="80" width="230" height="100" rx="4"/><text class="tb" x="765" y="119" text-anchor="middle">一个 Nginx 网站镜像</text><text class="ts" x="765" y="146" text-anchor="middle">门户 · 博客 · 文档 · Catalog UI</text>
+<path class="e-hot" d="M240 62H280V110H330M240 172H280V150H330M560 130H650" marker-end="url(#system-arrow)"/>
+<rect class="n" x="330" y="265" width="230" height="75" rx="4"/><text class="tb" x="445" y="295" text-anchor="middle">Catalog 公开只读源</text><text class="ts" x="445" y="318" text-anchor="middle">独立数据版本 · 模型 / 配方 / 报告</text>
+<rect class="n-a" x="650" y="265" width="230" height="75" rx="4"/><text class="tb" x="765" y="295" text-anchor="middle">访客浏览器</text><text class="ts" x="765" y="318" text-anchor="middle">加载静态页面后读取当前数据</text>
+<path class="e-ok" d="M765 180V265M650 302H560" marker-end="url(#system-arrow)"/>
+</svg></div><figcaption>图 1 · 文档内容独立维护，网站统一部署。Catalog 的公开基线参与网站构建，实时数据由浏览器单独读取。</figcaption></figure>
+</div></section>
+<section id="s3"><div class="rail"><span class="num">03</span><span class="tag">页面与内容<br />RENDERING</span></div><div class="body"><h2 class="sec">门户定制外观，文档保留标准阅读结构</h2><div class="tw"><table><thead><tr><th>路径</th><th>生成方式</th><th>无脚本表现</th></tr></thead>
+<tbody><tr><td>/、/architecture、/community</td><td>自定义 React 页面静态生成</td><td>正文、导航与图示可读</td></tr>
+<tr><td>/blog、/blog/{slug}</td><td>博客插件与自定义列表</td><td>完整摘要列表与文章正文可读</td></tr>
+<tr><td>/docs、/docs/{docSlug}</td><td>文档插件</td><td>标准侧栏、正文、标题目录；搜索依赖脚本</td></tr>
+<tr><td>/models</td><td>自定义 React + 构建基线</td><td>基线摘要可读，标记版本与时间</td></tr>
+<tr><td>/models/detail、/models/recipe</td><td>固定 React 页面 + 身份查询参数</td><td>提示实时详情需要 JavaScript</td></tr></tbody>
+</table></div>
+<p>全站同域，<code>baseUrl: '/'</code>、<code>trailingSlash: false</code>，首期中文无语言前缀。共用导航和品牌配置，文档正文不套用营销 hero 或装饰入场。图片、字体、脚本、代码高亮和搜索资源随构建或自托管交付。</p>
+<p>首页按 hero → 四张同时展开的能力卡 → 断流续写 → SLO → Tuning-Agent → 最多四条合格测评 → 渐变 CTA 排列；不强制增加四项能力标签、五步请求、三类受众或文章网格。门户 Footer 四组统一为“开源代码／社区与生态／开发者资源／法律与开源”，博客入口仅放社区组；已实现文档双层 Footer 保留为既定特例。</p>
+<p>网站根目录 <code>docs/design/</code> 与 <code>docs/development/</code> 是内部规范，不能成为 docs 插件的默认公开输入。插件只读取经过校验的生成目录；主题只做必要包装与定制。</p>
+</div></section>
+<section id="s4"><div class="rail"><span class="num">04</span><span class="tag">博客维护<br />BLOG</span></div><div class="body"><h2 class="sec">博客通过文件、预览与 Git 发布</h2>
+<p>作者在本地编辑器或 Git 平台维护 <code>content/blog/&lt;id&gt;/index.md</code> 和相对图片。frontmatter 描述标题、摘要、日期、slug、作者、分类、真实标签、技术关键词、PR 引用与来源；已有 Markdown 可按同一约定加入仓库。没有网站后台上传、账号管理或发布 API。</p>
+<p>Docusaurus blog 插件负责正文和详情路由，自定义列表保留网站设计与 I05。使用 <code>postsPerPage: 'ALL'</code> 和自定义 <code>blogListComponent</code>，初始摘要索引包含标题、摘要、作者、关键词、PR、分类与标签等列表及查询字段；不得导入全文或正文组件。推荐文章优先展示，不另加独立视觉 hero，页面 h1 可视觉隐藏但保持可访问。微信／知乎侧栏仅在真实资源配置后展示。</p>
+<div class="tw"><table><thead><tr><th>内容规则</th><th>行为</th></tr></thead>
+<tbody><tr><td>未筛选列表</td><td>所有页排除推荐文章，每页 12 篇，推荐区仅第一页显示</td></tr>
+<tr><td>搜索、分类或标签</td><td>从全部文章匹配，推荐文章可作为普通结果出现；分类与 tag 为 AND</td></tr>
+<tr><td>搜索字段</td><td>标题、摘要、作者、关键词、标签名及 PR 编号／owner/repo#编号；无需加载正文</td></tr>
+<tr><td>封面</td><td>无审核裁剪预览时 contain；审核后推荐 16:9、列表 3:2；正文完整，hover 不放大</td></tr>
+<tr><td>无脚本</td><td>全部公开摘要与原生链接可读；增强成功后再分页</td></tr>
+<tr><td>草稿</td><td>保留工作分支或通过构建前过滤排除；不能只隐藏列表入口</td></tr>
+<tr><td>修改已上线文章</td><td>新草稿留在分支，主分支保留线上正文，避免其他发布意外撤下</td></tr>
+<tr><td>撤回和恢复</td><td>Git 变更、全站校验和构建；检查详情、摘要、引用、搜索与资源</td></tr></tbody>
+</table></div>
+<p>正式内容只接受普通 Markdown；拒绝原始 HTML、可执行 JSX、import 和表达式，校验链接协议及相对路径。普通 Markdown 模式不等于自动完成安全检查。源码、fixtures、草稿图片和审核记录不能进入公开产物。</p>
+</div></section>
+<section id="s5"><div class="rail"><span class="num">05</span><span class="tag">开发者文档<br />DOCS</span></div><div class="body"><h2 class="sec">固定文档源提交，随网站统一发布</h2>
+<p>独立文档仓库由开发者维护。网站的 <code>content/docs-source.lock.json</code> 记录仓库地址、完整 commit 和内容子目录。源仓库合并后，由维护者更新网站锁定文件并提交 PR，首期不假定跨仓库自动触发已存在。</p>
+<p>构建只同步正文、图片及约定导航元数据到 <code>.generated/docs/</code>，拒绝越界路径和符号链接，不执行源仓库提供的插件或脚本。源仓库分支的后续变化不能改变当前已锁定的构建输入。</p>
+<div class="tw"><table><thead><tr><th>情况</th><th>处理</th></tr></thead>
+<tbody><tr><td>目前没有真实文档</td><td>/docs 为准备页，不生成假教程，不加入搜索与站点地图</td></tr>
+<tr><td>首批真实文档到位</td><td>移除准备页路由注册，由 docs 插件接管，避免路由冲突</td></tr>
+<tr><td>源 commit 更新</td><td>统一构建门户、博客和文档；正文、资源与搜索索引同版</td></tr>
+<tr><td>文档校验或构建失败</td><td>整个候选停止发布，线上旧网站保持可用</td></tr>
+<tr><td>网站回滚</td><td>同时恢复博客和文档，保留各来源 commit 以便追溯</td></tr></tbody>
+</table></div>
+<p>只在内容需要时启用多版本、多语言，首期没有空版本目录。快速开始与生产部署链接只在真实页面存在时显示。</p>
+</div></section>
+<section id="s6"><div class="rail"><span class="num">06</span><span class="tag">模型目录<br />CATALOG</span></div><div class="body"><h2 class="sec">自定义 React 保留功能，参数路由适配静态部署</h2>
+<p>按源系统建立功能映射，覆盖模型/配方视图、搜索、家族/引擎/标签/硬件多选/拓扑筛选、排序、卡片与表格、模型和配方详情、历史、配置复制、测试条件与报告。数据协议和复用许可在实现时核验，不能把几张模型卡片当作集成完成。</p>
+<p>默认 <code>view=recipes</code>、<code>layout=cards</code>、<code>sort=improvement-desc</code>，q 包含配方、模型、镜像与硬件。新稿未展示的模型视图、拓扑、历史及详情等作为工程功能补充。排序引用源报告记录的最佳负载增幅，保留测量版本与条件；无值置后，不补零，不表示统一吞吐或跨模型同条件排名。统计卡不发布全目录中位或最高提升宣传。</p>
+<p>浏览器先读取公开索引，配方按不可变 commit 下载并校验摘要，报告按目录 commit 解析 JSON。列表链接携带 <code>dataVersion</code>；当前公开源没有任意历史快照接口，只支持基线、当前与会话缓存版本，固定版本不可用明确报错。后续自有服务上线时再切换适配器配置。</p>
+<div class="tw"><table><thead><tr><th>入口</th><th>参数与行为</th></tr></thead>
+<tbody><tr><td>/models/detail</td><td>modelId 必填；dataVersion 可选；固定页面支持构建后新增模型</td></tr>
+<tr><td>/models/recipe</td><td>modelId、recipeId 必填；version、dataVersion 可选；校验配方归属</td></tr>
+<tr><td>参数不存在或记录缺失</td><td>页面分别显示参数错误或未找到；静态入口 HTTP 200</td></tr>
+<tr><td>来源不可用</td><td>真实错误、重试或明确标注时间的已有数据；不能伪装为空集合</td></tr>
+<tr><td>无脚本目录</td><td>可读构建基线，显示版本和时间；实时详情提示脚本要求</td></tr></tbody>
+</table></div>
+<div class="note warn"><span class="lbl">静态部署的明确边界</span><p>首期不承诺动态模型逐条搜索收录、独立分享预览图、按查询参数返回 HTTP 404 或实时无脚本详情。详情入口预生成 noindex；未知网站路径、未知博客和文档仍返回真正 HTTP 404。</p></div>
+<p>Catalog 数据更新不触发博客发布。基线更新需要网站构建；构建基线未更新不阻止客户端访问新数据。网站回滚前须确认旧界面与当前数据协议仍兼容。</p>
+</div></section>
+<section id="s7"><div class="rail"><span class="num">07</span><span class="tag">发布流程<br />RELEASE</span></div><div class="body"><h2 class="sec">合并后验证实际提交，部署同一个候选镜像</h2>
+<p>使用现有 CI 与部署环境记录检查、预览、镜像和上线状态，不自建数据库发布状态机。作者可以自行核对内容，不额外增加第二人审批；实际权限仍遵循仓库和环境保护规则。</p>
+<ol>
+<li>分支修改 → PR 内容校验与代码检查 → 全站预览。预览对应明确 SHA，不因源分支移动而无声改变。</li>
+<li>合并后针对实际提交重新检查，锁定文档 commit、Catalog 基线、依赖和配置，构建正式候选。</li>
+<li>验证候选页面与资源，记录 digest；部署时复用同一镜像，不重新拉取内容或安装依赖。</li>
+<li>每环境串行发布，切换前确认候选仍是选定提交，较旧任务不能覆盖已经上线的新版本。</li>
+<li>就绪检查后切换入口，核验公开路由、版本和资源；成功才记已上线，失败保留或恢复旧网站。</li>
+</ol>
+<p>PR SHA 与合并 SHA 不同时，旧检查和旧产物不能充当正式发布证据。完整候选预览保护 HTML、数据与素材，设置 noindex；只隐藏链接不能保护未公开内容。</p>
+<div class="tw"><table><thead><tr><th>内部发布清单</th><th>目的</th></tr></thead>
+<tbody><tr><td>网站完整 Git SHA</td><td>绑定代码、博客、配置和文档锁定文件</td></tr>
+<tr><td>文档仓库 / commit / 路径</td><td>追溯外部内容输入；无真实文档时为空</td></tr>
+<tr><td>Catalog 基线版本 / hash / 契约版本</td><td>保证构建基线可重现，独立于实时版本</td></tr>
+<tr><td>锁文件 / 配置 / 产物摘要</td><td>防止候选输入无声变化</td></tr>
+<tr><td>镜像 digest 与 CI/部署记录</td><td>证明验证和上线的是同一产物</td></tr></tbody>
+</table></div></div></section>
+<section id="s8"><div class="rail"><span class="num">08</span><span class="tag">生产部署<br />DEPLOYMENT</span></div><div class="body"><h2 class="sec">生产仅运行静态网站，复用已有基础设施</h2><div class="tw"><table><thead><tr><th>组成</th><th>职责</th><th>待核验</th></tr></thead>
+<tbody><tr><td>Nginx 网站镜像</td><td>提供 Docusaurus build/，非 root，无数据库密钥</td><td>实际生成文件布局、直达路由、404、缓存</td></tr>
+<tr><td>Ingress 与 TLS</td><td>统一站点入口，可转发同源 /catalog-data/</td><td>正式域名、路由、集群配置</td></tr>
+<tr><td>CI 与受控预览</td><td>GitHub Actions 文档试点检查已配置；全站流水线后续扩展</td><td>远程运行、仓库权限、预览保护</td></tr>
+<tr><td>Catalog 数据托管</td><td>版本化静态文件或只读接口</td><td>数据协议、同步方式、维护方和 CORS</td></tr>
+<tr><td>私有镜像与产物归档</td><td>发布追溯和恢复</td><td>现有镜像仓库、保留策略</td></tr></tbody>
+</table></div>
+<p>首期不新增 PostgreSQL、Redis、对象存储上传服务或常驻发布消费者。图片随 Git 和构建交付；后续存在真实大文件需求时再接独立存储，不能预设某种存储协议。</p>
+<p>生产 Nginx 按实际输出查找静态页面，未命中返回 404；不配置全站首页回退。Node.js 仅用于构建，版本与 CI、Docker 构建阶段一致。国内外访问均不依赖海外字体、图片、脚本或实时 GitHub 请求。</p>
+</div></section>
+<section id="s9"><div class="rail"><span class="num">09</span><span class="tag">撤回与恢复<br />RECOVERY</span></div><div class="body"><h2 class="sec">网站整体回滚，撤回同时处理内容资源</h2>
+<p>网站回滚恢复同一个历史镜像中的门户、博客和文档；Catalog 实时数据不随网站回滚。回滚前验证旧界面对当前数据契约的兼容性，并阻止已经撤回的文章或声明重新出现。没有旧版本的首次发布失败保持未上线。</p>
+<p>撤回通过 Git 变更和全站重建完成，清理原文、摘要、推荐、相关文章、搜索与 RSS。Docusaurus 的内容也可能存在于客户端 JS 中，因此不能只删除 HTML。保留旧代码块供旧页面使用时，必须识别并移除带撤回正文或素材的资源。</p>
+<div class="tw"><table><thead><tr><th>资源</th><th>规则</th></tr></thead>
+<tbody><tr><td>HTML 与内容数据</td><td>可重新验证缓存，撤回时清理代理缓存</td></tr>
+<tr><td>正文 JS、图片、搜索与 RSS</td><td>纳入公开产物审计，撤回后不能由旧 URL 继续提供</td></tr>
+<tr><td>纯代码、字体与图标</td><td>按内容 hash 缓存；确认不携带正文后才长期保留</td></tr>
+<tr><td>历史镜像与发布清单</td><td>私有归档，不公开历史站点目录</td></tr></tbody>
+</table></div>
+<p>用户已经下载的内容与第三方转载无法追回。Git 历史也不提供保密能力，不能提交私密资料后依赖普通撤回消除；修改历史和删除归档属于另行确认的操作。</p>
+</div></section>
+<section id="s10"><div class="rail"><span class="num">10</span><span class="tag">实施与验证<br />VALIDATION</span></div><div class="body"><h2 class="sec">先验证内容和数据两条流程，再铺开页面</h2>
+<ol>
+<li>延续已完成的两篇 Mock 文档试点、依赖锁定、Nginx 路由及本地验证；远程 CI 尚未验证，搜索插件仍待接入。</li>
+<li>用隔离的一篇示例文章验证文件输入、摘要索引、分类/标签查询、PR 预览和统一构建；示例不作为正式内容发布。</li>
+<li>用真实 Catalog 样例验证协议、自定义界面、版本读取、固定详情页和构建后新增模型访问。</li>
+<li>接入真实文档仓库前先约定源格式与锁定文件；有真实内容后接管 /docs，不公开内部设计规范。</li>
+<li>按顶部三张新版与当前页面契约实施门户，完成浅/深主题、跟随系统、响应式、键盘、减少动效、资源失败与实际静态服务测试；本次规范修订不表示这些页面已实现。</li>
+</ol>
+<div class="tw"><table><thead><tr><th>验收重点</th><th>通过条件</th></tr></thead>
+<tbody><tr><td>博客 I05</td><td>25 篇含 1 推荐，无筛选两页各 12，无重复遗漏</td></tr>
+<tr><td>静态基础</td><td>文章/文档无脚本可读，未知静态路由真实 404</td></tr>
+<tr><td>Catalog 动态能力</td><td>构建后新增记录可直达，版本固定、失败与乱序正确反馈</td></tr>
+<tr><td>统一主题</td><td>首访系统偏好与太阳／月亮切换由 Docusaurus 统一管理；首帧正确，跨页与切换不丢查询/输入/阅读位置，代码和图表均适配浅深色</td></tr>
+<tr><td>统一发布</td><td>文档更新产生全站候选，回滚同步恢复博客和文档</td></tr>
+<tr><td>产物隔离</td><td>草稿、fixture、私有资料不进入 HTML、JS、素材或索引</td></tr>
+<tr><td>CI 证据</td><td>核验实际最终 SHA 和所有适用检查，不用本地结果代替远程 CI</td></tr></tbody>
+</table></div>
+<div class="note info"><span class="lbl">证据边界</span><p>当前应用已锁定依赖并配置本地检查与 CI；Node 24.22.0、pnpm 10.22.0、Docusaurus 3.10.2、React 19.3.1、TypeScript 5.9.3 及构建参数校验已落地。Catalog 已完成公开源接入，验证记录见实施清单；远程 CI 尚未验证。真实内容同步与生产部署仍待实施，本地预览不代表已经发布。</p></div>
+<p>视觉依据：<a href="https://stitch.withgoogle.com/projects/3601238558355976464">当前 Stitch 项目</a> 顶部“首页-更新”“模型目录”“博客洞见-更新”三张；底部旧稿仅补充 dark mode 色彩。Header 保留 <a href="https://stitch.withgoogle.com/projects/14815301483114557678">独立项目覆盖</a>，文档双层 Footer 保留既定特例，不继续读取旧页面结构。全站统一 Space Grotesk / Geist / JetBrains Mono，Header 的 Inter 为既定例外；同一结构与语义变量映射 Docusaurus、Prism 和自定义 Catalog。报告自身排版不作为产品 UI 模板。</p>
+<p>实现依据：<a href="../development/engineering.md">开发准则</a>、<a href="page-contracts.md">页面契约</a>、<a href="content-policy.md">内容与证据规范</a>、<a href="interactions.md">交互规范</a>。</p>
+</div></section>
+</main><footer><p>ModelSphere · 当前架构说明 · 2026-10-21。规范原地维护，不保留并行版本。</p>
+<p class="source-list">官方依据：<a href="https://docusaurus.io/docs/creating-pages">React 页面</a> · <a href="https://docusaurus.io/docs/advanced/routing">内容路由</a> · <a href="https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog">博客插件</a> · <a href="https://docusaurus.io/docs/api/docusaurus-config#markdown">Markdown 配置</a> · <a href="https://docusaurus.io/docs/deployment">静态部署</a>。工程流程、参数路由与发布约束为本项目设计，未宣称是工具默认行为。</p>
+</footer></div></body></html>

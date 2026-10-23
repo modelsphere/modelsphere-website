@@ -1,0 +1,13 @@
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
+const sidebars: SidebarsConfig = {
+  guide: [
+    {
+      type: 'category',
+      label: '开始阅读',
+      collapsed: false,
+      collapsible: false,
+      items: ['example-overview', 'example-quickstart'],
+    },
+  ],
+};
+export default sidebars;

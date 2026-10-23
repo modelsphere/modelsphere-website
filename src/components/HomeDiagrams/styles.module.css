@@ -1,0 +1,693 @@
+.architecture,
+.mechanism,
+.autotune {
+  color: var(--color-text-primary);
+  margin: 0;
+  min-width: 0;
+}
+
+@font-face {
+  font-family: 'ModelSphere Architecture Symbols';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/material-symbols-architecture.ttf') format('truetype');
+}
+
+.architecture {
+  padding: 24px 16px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-feature);
+  background: var(--color-background-surface);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -4px rgb(0 0 0 / 10%);
+}
+
+.ecosystem {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.ecosystemTier {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid
+    color-mix(in srgb, var(--color-border-default) 90%, transparent);
+  border-radius: 6px;
+  background: var(--color-background-subtle);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%);
+  transition: border-color 150ms;
+}
+.ecosystemTier:hover {
+  border-color: var(--color-home-architecture-hover-border);
+}
+.ecosystemTier:nth-child(2) {
+  border-color: var(--color-home-tag-active-border);
+  background: color-mix(
+    in srgb,
+    var(--color-feedback-info-background) 60%,
+    transparent
+  );
+}
+
+.tierTitle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: -0.01em;
+  color: var(--color-home-architecture-heading);
+}
+.tierTitle strong {
+  font-weight: 600;
+}
+.diagramIcon {
+  display: inline-block;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  overflow: hidden;
+  color: var(--color-brand-primary);
+  font-family: 'ModelSphere Architecture Symbols';
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  font-feature-settings: 'liga';
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0;
+  -webkit-font-smoothing: antialiased;
+}
+.ecosystemTier:nth-child(2) .diagramIcon {
+  color: var(--color-home-success);
+}
+.ecosystemTier p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.005em;
+}
+
+.topology {
+  padding: 16px;
+  background: var(--color-background-subtle);
+  border: 1px solid var(--color-border-default);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%);
+}
+.topologyHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 12px;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: -0.01em;
+  color: var(--color-home-architecture-heading);
+}
+.topologyHeading > strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+.topologyHeading .diagramIcon {
+  width: 20px;
+  height: 20px;
+  flex-basis: 20px;
+  font-size: 20px;
+}
+.topologyStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-family: var(--font-code);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+}
+.topologyStatus::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-home-tag-green);
+}
+@keyframes topologyPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .topologyStatus::before {
+    animation: topologyPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+.topologyBody {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 16px;
+  background: var(--color-home-architecture-image-background);
+  border: 1px solid
+    color-mix(in srgb, var(--color-border-default) 80%, transparent);
+  border-radius: 6px;
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 5%);
+}
+.topologyBody img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  border-radius: 6px;
+  object-fit: contain;
+}
+.autotuneSteps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mechanism {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-card);
+  background: var(--color-background-subtle);
+}
+
+.diagramHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border-default);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.infoBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--color-brand-primary) 25%,
+      var(--color-border-default)
+    );
+  border-radius: var(--radius-pill);
+  color: var(--color-feedback-info-foreground);
+  background: var(--color-feedback-info-background);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.qosFlow {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr) 36px minmax(
+      0,
+      1.6fr
+    );
+  align-items: center;
+  padding: 16px 0;
+  min-height: 216px;
+}
+
+.flowNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 6px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-card);
+  background: var(--color-background-surface);
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.flowNode > span:last-child {
+  color: var(--color-text-muted);
+}
+
+.nodeSymbol {
+  color: var(--color-brand-primary);
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.flowCheck {
+  border-color: color-mix(
+    in srgb,
+    var(--color-brand-primary) 35%,
+    var(--color-border-default)
+  );
+  background: var(--color-feedback-info-background);
+}
+
+.flowArrow {
+  text-align: center;
+  color: var(--color-brand-primary);
+}
+
+.branchLines {
+  width: 100%;
+  height: 136px;
+  overflow: visible;
+}
+
+.routePath,
+.backoffPath {
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.routePath {
+  stroke: var(--color-feedback-success-foreground);
+}
+
+.backoffPath {
+  stroke: var(--color-feedback-warning-foreground);
+  stroke-dasharray: 4 3;
+}
+
+.flowOutcomes {
+  display: grid;
+  gap: 12px;
+}
+
+.routeOutcome,
+.backoffOutcome {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-small);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.routeOutcome {
+  color: var(--color-feedback-success-foreground);
+  background: var(--color-feedback-success-background);
+}
+
+.backoffOutcome {
+  color: var(--color-feedback-warning-foreground);
+  background: var(--color-feedback-warning-background);
+}
+
+.chartLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 12px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.chartLegend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chartLegend i {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+}
+
+.demandLegend {
+  border-top: 2px dashed var(--color-feedback-warning-foreground);
+}
+
+.replicaLegend {
+  border-top: 2px solid var(--color-brand-primary);
+}
+
+.scalingChart {
+  flex: 1;
+  padding: 8px 0 12px;
+}
+
+.chartAxis {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.scalingChart svg {
+  display: block;
+  width: 100%;
+  height: 144px;
+}
+
+.gridLine,
+.axisLine,
+.demandPath,
+.replicaPath {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.gridLine {
+  stroke: var(--color-border-default);
+  stroke-dasharray: 4 4;
+}
+
+.axisLine {
+  stroke: var(--color-border-control);
+  stroke-width: 1;
+}
+
+.demandPath {
+  stroke: var(--color-feedback-warning-foreground);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.replicaPath {
+  stroke: var(--color-brand-primary);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.chartStages {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.mechanismCaption {
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border-default);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.autotuneFlow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 136px minmax(0, 1fr);
+  grid-template-rows: auto minmax(140px, auto) auto;
+  gap: 14px;
+}
+
+.autotuneSteps {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-row: 1 / 4;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+}
+
+.autotuneStep {
+  margin: 0;
+  padding: 12px;
+  min-width: 0;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-card);
+  background: var(--color-background-surface);
+}
+
+.autotuneStep:nth-child(1) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: min(100%, 360px);
+  border-color: color-mix(
+    in srgb,
+    var(--color-brand-primary) 30%,
+    var(--color-border-default)
+  );
+}
+
+.autotuneStep:nth-child(2) {
+  grid-row: 2;
+  grid-column: 3;
+}
+
+.autotuneStep:nth-child(3) {
+  grid-row: 3;
+  grid-column: 2 / 4;
+}
+
+.autotuneStep:nth-child(4) {
+  grid-row: 3;
+  grid-column: 1;
+}
+
+.autotuneStep:nth-child(5) {
+  grid-row: 2;
+  grid-column: 1;
+}
+
+.autotuneStepHeader {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border-default);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.stepNumber {
+  display: grid;
+  place-items: center;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  color: var(--color-brand-on-primary);
+  background: var(--color-brand-primary);
+  border-radius: 50%;
+  font-family: var(--font-code);
+  font-size: 12px;
+}
+
+.autotuneStep p {
+  margin: 8px 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.stepIllustration {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-small);
+  background: var(--color-background-subtle);
+}
+
+.stepIllustration > span {
+  margin-right: 4px;
+  color: var(--color-brand-primary);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.stepIllustration i {
+  height: 7px;
+  flex: 1;
+  background: color-mix(
+    in srgb,
+    var(--color-brand-primary) 22%,
+    var(--color-background-elevated)
+  );
+  border-radius: 2px;
+}
+
+.stepIllustration i:nth-of-type(2) {
+  background: color-mix(
+    in srgb,
+    var(--color-brand-primary) 40%,
+    var(--color-background-elevated)
+  );
+}
+
+.stepIllustration i:nth-of-type(3) {
+  background: var(--color-brand-primary);
+}
+
+.autotuneCenter {
+  display: flex;
+  grid-column: 2;
+  grid-row: 2;
+  align-self: center;
+  justify-self: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 128px;
+  height: 128px;
+  border: 1px dashed
+    color-mix(
+      in srgb,
+      var(--color-brand-primary) 45%,
+      var(--color-border-default)
+    );
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--color-background-surface),
+    var(--color-feedback-info-background)
+  );
+  box-shadow: 0 0 0 6px var(--color-background-subtle);
+  font-size: 13px;
+  text-align: center;
+}
+
+.cycleSymbol {
+  color: var(--color-brand-primary);
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.autotuneCenter > span:last-child {
+  color: var(--color-text-muted);
+  font-family: var(--font-code);
+  font-size: 12px;
+}
+
+.autotuneCaption {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 14px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+@media (max-width: 639px) {
+  .topologyHeading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .topologyBody {
+    padding: 8px;
+  }
+}
+@media (max-width: 767px) {
+  .ecosystem {
+    grid-template-columns: 1fr;
+  }
+
+  .mechanism {
+    padding: 12px;
+  }
+
+  .qosFlow {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+    gap: 8px;
+  }
+
+  .flowNode {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    text-align: left;
+    padding: 12px;
+  }
+
+  .flowNode > span:last-child {
+    grid-column: 2;
+  }
+
+  .nodeSymbol {
+    grid-row: 1 / 3;
+  }
+
+  .flowArrow {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+
+  .branchLines {
+    display: none;
+  }
+
+  .flowOutcomes {
+    gap: 8px;
+  }
+
+  .autotuneFlow {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .autotuneCenter {
+    align-self: stretch;
+    order: -1;
+    width: auto;
+    height: auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 12px;
+    border-radius: var(--radius-card);
+    box-shadow: none;
+  }
+
+  .autotuneSteps {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    gap: 8px;
+  }
+
+  .autotuneStep:nth-child(n) {
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+  }
+
+  .autotuneCaption {
+    flex-wrap: wrap;
+  }
+}
+
+@media print {
+  .architecture,
+  .mechanism,
+  .autotuneStep {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}

@@ -1,0 +1,12 @@
+node_modules
+pnpm-lock.yaml
+.generated
+.docusaurus
+build
+reports
+playwright-report
+test-results
+docs
+README.md
+src/css/tokens.css
+tests/fixtures/catalog/mimo.yaml

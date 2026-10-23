@@ -1,0 +1,131 @@
+{
+  "reviewedOn": "2026-10-22",
+  "projectUrl": "https://stitch.withgoogle.com/projects/3601238558355976464",
+  "canvasLabel": "首页-更新",
+  "canvasInstanceId": "ae7c34338c3d444e8962883018c26f8f",
+  "screen": "projects/3601238558355976464/screens/ae7c34338c3d444e8962883018c26f8f",
+  "html": "projects/3601238558355976464/files/7501900694932492488",
+  "htmlSha256": "a45dbd37d658090b4ccc86c3083116a291a6d529b5ef2633534089bdc9d3b7fe",
+  "screenshot": "projects/3601238558355976464/files/1767179758518368040",
+  "sourceScreenshotPixels": {
+    "width": 2560,
+    "height": 10650
+  },
+  "sourceViewportCssPixels": 1280,
+  "hero": {
+    "tags": [
+      "先进推理服务架构",
+      "新模型首日高性能部署",
+      "广泛异构算力统一纳管",
+      "性能持续自演进"
+    ],
+    "title": [
+      "模域 ModelSphere",
+      "生产级算力部署与推理优化开源平台"
+    ],
+    "lead": "让大模型推理从“能跑”到“生产好用”，让每张 GPU 化身高效 Token 产线。",
+    "description": "基于 Kubernetes 构建，将模型部署、缓存感知路由、按 SLO 弹性伸缩、全维可观测性、挂起故障秒级自愈与 AutoTune 闭环组织成一套工业级推理调度系统，帮助开发者在复杂异构算力上稳定承载大规模生产流量。",
+    "titleGradient": [
+      "#0284C7",
+      "#0891B2",
+      "#0D9488"
+    ],
+    "tagDots": [
+      "#10B981",
+      "#0284C7",
+      "#06B6D4",
+      "#0284C7"
+    ],
+    "tagMotion": [
+      "pulse 2s",
+      "none",
+      "none",
+      "ping 1s"
+    ],
+    "reducedMotion": "All dots remain static.",
+    "measurementsExcludingHeader": {
+      "contentInset": 32,
+      "tagTop": 24,
+      "tagHeight": 26,
+      "visibleTitleTop": 130,
+      "copyWidth": 896,
+      "architectureTop": 532,
+      "titleSize": 48,
+      "titleLineHeight": 56,
+      "titleWeight": 800
+    }
+  },
+  "preservedBoundaries": [
+    "Header remains on its separately confirmed design source; fix its 1280px wrapping without replacing its design.",
+    "Preserve real links, supported behavior and clear illustration labels. Architecture uses the original selected-screen image and glyphs; remaining mechanisms use the selected source diagrams and exact copy, with accessible design-example descriptions.",
+    "Do not publish unverified star counts, benchmark numbers or SLA guarantees from design examples.",
+    "Keep existing D13/D14, paired entrance, reduced-motion, keyboard and history behavior."
+  ],
+  "validation": "tests/e2e/home-design.spec.ts checks source hero copy, gradient, desktop geometry and tag motion; tests/e2e/home-architecture.spec.ts pins the original high-resolution image SHA-256, exact card copy and glyphs, desktop typography and layout, mobile containment and reduced-motion pulse behavior.",
+  "architecture": {
+    "sourceImageUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuAJ5CQZ6xSXis6Ev8oA7X-95uwf_aaQELQUPnmCWuwzE1lJbZugxpMwgDYwYsEI6w7IwlCvjDxqbGxtCbtV6ErGpjZPv1GGoN9zGJ6MaUd6q0sQz7h7_CDg34IhKy8OZa4OXu7OWPE2lZ5KmENMfjE6XNqTqwuNd6-7YtkXiStJsPKGxih5m2DRq4ehTaCORSLb9UaZl8fRopIc5k-Rq5kW_dKeiJ8rj1XtEpgwGZDsmbZmRn_SIg8WuPuzG66Vc2424g=s0",
+    "localImage": "static/diagrams/modelsphere-architecture.png",
+    "pixels": {
+      "width": 2675,
+      "height": 744
+    },
+    "sha256": "3e1454e8cb4911dc2878c660236aa2626e89007dc7b81f6d90a1eb0a9b848cd0",
+    "icons": [
+      "hub",
+      "memory",
+      "developer_board",
+      "account_tree"
+    ],
+    "iconSource": "Material Symbols Outlined, 400 weight, unfilled; four-glyph subset self-hosted with Apache-2.0 license.",
+    "status": "Emerald 500 dot, 6px, pulse 2s; static for reduced motion.",
+    "layout": {
+      "outerPadding": "24px 16px",
+      "cardPadding": 16,
+      "cardGap": 16,
+      "cardTitle": "18px/26px 600",
+      "cardDescription": "12px/18px",
+      "topologyPadding": 16,
+      "imageFramePadding": "16px; 8px below 640px"
+    }
+  },
+  "capabilities": {
+    "scope": "Four cards in Architectural Pillars, restored from the same selected screen.",
+    "icons": [
+      "settings",
+      "bolt",
+      "rocket_launch",
+      "science",
+      "published_with_changes",
+      "adjust"
+    ],
+    "font": "static/fonts/material-symbols-capabilities.ttf; Material Symbols Outlined, unfilled, weight 400, local Apache-2.0 license.",
+    "content": [
+      "Auto-Scaling and dynamic throttling example configuration",
+      "Ascend, Iluvatar, Moore Threads and Hygon DCU chips",
+      "Six original model names and original certification label",
+      "Original 26%/100% relative throughput bars and 285% example label"
+    ],
+    "exampleSemantics": "Configuration, certification and throughput values are design examples, identified with aria-description; they are not runtime telemetry or independently verified performance claims.",
+    "links": "Existing real title links remain; the source community link now targets the restored #benchmarks section.",
+    "motion": "Keep all four articles as direct children of data-home-pair, all original data-home-reveal attributes and HomeMotion implementation unchanged. Preserve source hover-shadow transition; do not add automatic chart animation.",
+    "validation": "tests/e2e/home-capabilities.spec.ts checks exact source content, glyphs, light-theme colors, typography, bar ratios and narrow layouts. Existing home.spec.ts verifies real animations, start positions, reading-line triggers and no replay."
+  },
+  "remainingModules": {
+    "modules": [
+      "fault-tolerance",
+      "qos-scaling",
+      "autotune-evolution",
+      "benchmarks",
+      "get-started",
+      "home-footer"
+    ],
+    "implementation": "src/components/HomeSections/index.tsx and styles.css; source-derived markup and statically compiled, scoped styles; no Tailwind or remote font runtime.",
+    "copySnapshot": "docs/design/sources/stitch-home-sections-copy.json",
+    "theme": "All imported colors live in design/tokens.json as source RGB tokens, with matching dark theme values.",
+    "motion": "HomeMotion implementation, six original introductions and four original paired groups are preserved. Restore the source nine pulse/ping signals; disable only the decorative loops for reduced motion. Use the existing 768px QoS and 1280px fault/AutoTune pair breakpoints.",
+    "links": "Quickstart targets /docs/quickstart; community CTA targets the footer contact group; known footer resources remain working links; unspecified destinations remain non-actionable.",
+    "examples": "Source benchmark, configuration, telemetry and SLA labels are source examples with accessible descriptions, without live data calls.",
+    "headerAndDocsFooter": "Keep the separately confirmed header and document footer; imported home styles are scoped and do not affect them.",
+    "validation": "tests/e2e/home-sections.spec.ts compares every module label, icon, heading style and desktop height against the independent source snapshot. Existing native animation tests remain active, distinguishing CSS source indicators from finite entry effects."
+  }
+}

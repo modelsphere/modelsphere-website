@@ -1,0 +1,246 @@
+{
+  "reviewedOn": "2026-10-20",
+  "timezone": "Asia/Shanghai",
+  "purpose": "公开参考站点动效与加载机制审阅；命名为本项目分析标签，非厂商官方效果名称",
+  "pages": {
+    "GPUStack": "https://gpustack.ai/enterprise/",
+    "Apple": "https://www.apple.com/hk/watch/"
+  },
+  "verification": {
+    "desktopCssViewport": [
+      1280,
+      720
+    ],
+    "appleMobileCssViewport": [
+      390,
+      844
+    ],
+    "methods": [
+      "浏览器滚动前后截图与 DOM 状态",
+      "点击 Apple 图库下一项、详情卡和图文折叠区",
+      "读取页面公开 HTML、样式及脚本"
+    ],
+    "limits": [
+      "未测量冷缓存网络瀑布、传输字节节省或 Core Web Vitals",
+      "手机验证为浏览器尺寸模拟，不是真机",
+      "共享包存在某能力不代表当前页面启用；未确认完整延迟 hydration",
+      "不推断其他 Apple 产品详情页的滚动效果"
+    ]
+  },
+  "observations": [
+    {
+      "id": "G1",
+      "name": "Fade-up Reveal",
+      "status": "页面元素与脚本交叉核验",
+      "target": ".scroll-in-view",
+      "effect": {
+        "yFromPx": 16,
+        "opacityFrom": 0,
+        "durationMs": 700,
+        "start": "top 88%",
+        "once": true
+      },
+      "asset": "gpu-layout-8177ce4d161885a0.js"
+    },
+    {
+      "id": "G2",
+      "name": "Paired Slide-in Reveal",
+      "status": "实际双列卡片与脚本交叉核验",
+      "target": ".left-card-scroll-in-view / .right-card-scroll-in-view",
+      "effect": {
+        "xFromPx": [
+          -60,
+          60
+        ],
+        "opacityFrom": 0,
+        "durationMs": 900,
+        "start": "top 85%",
+        "once": true
+      },
+      "asset": "gpu-layout-8177ce4d161885a0.js"
+    },
+    {
+      "id": "G3",
+      "name": "SplitText Line / Word Reveal",
+      "status": "实际首屏选择器与脚本交叉核验",
+      "target": ".split-lines-text / .split-words-text",
+      "effect": {
+        "lineRotationXFromDeg": 90,
+        "lineDurationMs": 1200,
+        "lineStaggerMs": 180,
+        "wordYFromPx": 30,
+        "wordDurationMs": 900,
+        "wordStaggerMs": 70
+      },
+      "asset": "gpu-layout-8177ce4d161885a0.js"
+    },
+    {
+      "id": "G4",
+      "name": "SVG Status Pulse",
+      "status": "实际 SVG animate 节点核验",
+      "target": "Resource Topology View 内 circle > animate",
+      "effect": {
+        "attribute": "opacity",
+        "values": [
+          1,
+          0.25,
+          1
+        ],
+        "durationMs": 1800,
+        "repeat": "indefinite"
+      },
+      "source": "https://gpustack.ai/enterprise/"
+    },
+    {
+      "id": "A1",
+      "name": "Scroll-snap Gallery",
+      "status": "桌面点击与手机布局核验",
+      "target": "StickyFooterGallery_scrollContainer__Hfn5S / Gallery_scrollContainer__1LaRX",
+      "effect": {
+        "scrollSnapType": "x mandatory",
+        "desktopProductGalleryScrollLeft": [
+          0,
+          36
+        ],
+        "mobileProductGalleryWidth": 390,
+        "mobileProductGalleryScrollWidth": 869
+      },
+      "asset": "apple-4ae1daace98e8008.css"
+    },
+    {
+      "id": "A2",
+      "name": "Modal Scrim Fade",
+      "status": "打开、Escape 关闭与 computed style 核验",
+      "target": "BaseModal_modalOverlay__dZHSK / BaseModal_modalOpen___hGpW",
+      "effect": {
+        "property": "opacity",
+        "openMs": 400,
+        "closeMs": 400,
+        "scaleAnimation": false
+      },
+      "asset": "apple-501e2f39342b9727.css"
+    },
+    {
+      "id": "A3",
+      "name": "Image Accordion Crossfade",
+      "status": "切换 AirPods 与手机图文堆叠核验",
+      "target": "ImageAccordion_accordionTray__BHx_I / ImageAccordion_accordionImage__bAFHA",
+      "effect": {
+        "trayGridRows": [
+          "0fr",
+          "1fr"
+        ],
+        "trayDurationMs": 400,
+        "desktopImageFadeMs": 200,
+        "desktopImageEnterDelayMs": 200,
+        "mobileImageFadeMs": 400
+      },
+      "asset": "apple-4f24d0f95a802ef6.css"
+    },
+    {
+      "id": "L1",
+      "name": "Responsive Picture Source Selection",
+      "status": "实际 picture/source 标签核验",
+      "target": "ResponsivePicture_responsive-picture__picture__jjeBP",
+      "effect": {
+        "mediaMaxWidthPx": [
+          734,
+          1068
+        ],
+        "densityCandidates": [
+          1,
+          2
+        ],
+        "intrinsicDimensions": true
+      },
+      "asset": "apple-9812.5713b3b7cf405b5c.js"
+    },
+    {
+      "id": "L2",
+      "name": "Proximity-gated Image Sources",
+      "status": "实际屏外 srcset 占位与公开 LazyLoad 分支交叉核验",
+      "target": "ResponsivePicture / LazyLoad",
+      "effect": {
+        "defaultStartExpression": "t - 100vh",
+        "once": true,
+        "preventLoadingPlaceholder": "#"
+      },
+      "asset": "apple-9812.5713b3b7cf405b5c.js"
+    },
+    {
+      "id": "L3",
+      "name": "Reduced-motion Gate and Async Motion Modules",
+      "status": "页面使用的动画初始化脚本核验",
+      "effect": {
+        "skipInitializationOnReducedMotion": true,
+        "dynamicImports": [
+          "GSAP",
+          "SplitText",
+          "ScrollTrigger"
+        ],
+        "waitsForFonts": true
+      },
+      "asset": "gpu-layout-8177ce4d161885a0.js"
+    }
+  ],
+  "nonClaims": [
+    {
+      "feature": "GPUStack flowDash 流动连线",
+      "reason": "共享 CSS 有定义，但当前企业页 .flow-line-cr/.flow-line-lc 节点数为 0；不可作为已启用效果。"
+    },
+    {
+      "feature": "Apple 首屏视频、长距离 pin/scrub、逐帧产品旋转",
+      "reason": "指定 Watch 总览页未观察到；video 节点数为 0。"
+    },
+    {
+      "feature": "Apple SectionHeader build-in 与 allowHydration 全站延迟激活",
+      "reason": "共享代码存在相应分支，但本次 DOM 有 enhanced--inactive，且默认 hydration 包装可直接输出；不将其认定为该页已启用策略。"
+    },
+    {
+      "feature": "性能优化收益",
+      "reason": "声明/观察可支持机制判断，不能推出流量减少比例、帧率或加载耗时。"
+    }
+  ],
+  "assets": {
+    "gpu-4f5d299204329719.css": {
+      "url": "https://gpustack.ai/_next/static/css/4f5d299204329719.css",
+      "sha256": "eab87a906d025cab4e5bbfd1bf93bd34da84ff95fcadff6a6a45ac8ac538bae6",
+      "bytes": 71352
+    },
+    "gpu-layout-8177ce4d161885a0.js": {
+      "url": "https://gpustack.ai/_next/static/chunks/app/layout-8177ce4d161885a0.js",
+      "sha256": "afe5a4fb86cc1778b26c126cb8e1ec2bfca89792c50c414f050228545d6dd092",
+      "bytes": 9410
+    },
+    "apple-501e2f39342b9727.css": {
+      "url": "https://www.apple.com/_apps/artisan/_next/static/css/501e2f39342b9727.css",
+      "sha256": "6b3921c07788f3d66b238afbfdfae9dfc8888427d3c6877d9860f2ce2292aaf6",
+      "bytes": 81700
+    },
+    "apple-4ae1daace98e8008.css": {
+      "url": "https://www.apple.com/_apps/artisan/_next/static/css/4ae1daace98e8008.css",
+      "sha256": "e9179fde847e35b82ae7ab21705b6b6671a91727ec4a92aa8975614da0cc9d70",
+      "bytes": 28366
+    },
+    "apple-4f24d0f95a802ef6.css": {
+      "url": "https://www.apple.com/_apps/artisan/_next/static/css/4f24d0f95a802ef6.css",
+      "sha256": "99b3c534e613af580ba711c12d1cbb3f1d9ce2980c45bb343ca125567beffc10",
+      "bytes": 12420
+    },
+    "apple-9812.5713b3b7cf405b5c.js": {
+      "url": "https://www.apple.com/_apps/artisan/_next/static/chunks/9812.5713b3b7cf405b5c.js",
+      "sha256": "c2ec557e45508b853601c3e5aafb36df95dae252e78dbe794ffca365f2851037",
+      "bytes": 83297
+    },
+    "apple-3581.29ee1d64a8e7db63.js": {
+      "url": "https://www.apple.com/_apps/artisan/_next/static/chunks/3581.29ee1d64a8e7db63.js",
+      "sha256": "d76e249e539225593df7fb1d30a35b7579d97a5e1acb80f8cd66973809175088",
+      "bytes": 8888
+    },
+    "apple-8373.2cff79a91c18870a.js": {
+      "url": "https://www.apple.com/_apps/artisan/_next/static/chunks/8373.2cff79a91c18870a.js",
+      "sha256": "c60830ce74b3998417ad8c944fffcd90686fc9bcbc7f4d8ec27145221df158ae",
+      "bytes": 13388
+    }
+  }
+}

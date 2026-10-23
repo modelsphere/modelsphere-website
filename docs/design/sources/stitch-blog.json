@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-10-22",
+  "project": "https://stitch.withgoogle.com/projects/3601238558355976464",
+  "adoptedScreen": "3023474615820510674",
+  "label": "博客洞见-更新",
+  "htmlResource": "projects/3601238558355976464/files/4037800493203212599",
+  "htmlSha256": "f7dc68507adae46f20216f1b1b4a599ed53b7767cad1ff0177ad7201f367f7ca",
+  "layout": [
+    "推荐文章开场：左封面、右标题摘要与阅读入口",
+    "分类、显式提交搜索、热门技术标签",
+    "横向文章卡片与有真实配置时显示的社区侧栏"
+  ],
+  "retainedProjectRules": [
+    "沿用现有 Header 和 Footer",
+    "沿用 Space Grotesk / Geist / JetBrains Mono 与双主题 tokens",
+    "无审核预览时 contain 完整呈现封面，悬停不放大",
+    "原稿中的阅读量、Star、成绩、二维码和运行状态不作为事实内容",
+    "缺少真实社区配置时隐藏侧栏，不留空位"
+  ],
+  "detailApproval": "本次会话用户确认按既有详情契约实现：桌面左目录、中正文、右资源；窄屏合并单列。",
+  "mockApproval": "本次会话用户允许编写 Mock 文件；示例与正式内容隔离。"
+}

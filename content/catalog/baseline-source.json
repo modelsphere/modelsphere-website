@@ -1,0 +1,8 @@
+{
+  "source": "https://modelsphere.github.io/model-catalog/index-v2.json",
+  "retrievedAt": "2026-10-22T10:31:18Z",
+  "dataCommit": "5b668ff2bfd5459ff01d3be6e26cdeac1b037f60",
+  "sha256": "23970d22e6e668b49af7dc9915138165e8e51ee13258ab7342c0b68dea32d757",
+  "purpose": "Public source snapshot for initial HTML and explicit offline fallback; not an editable catalog.",
+  "upstreamSha256": "86a7b59140c3dba4d55ec8c68d0b65c1f7fccf5a7a8f179f27929c95e0492429"
+}

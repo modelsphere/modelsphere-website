@@ -1,0 +1,61 @@
+{
+  "featuredId": "example-blog-platform",
+  "categories": [
+    {
+      "id": "release",
+      "label": "项目动态"
+    },
+    {
+      "id": "performance",
+      "label": "性能调优与测评"
+    },
+    {
+      "id": "architecture",
+      "label": "系统架构解析"
+    },
+    {
+      "id": "engineering",
+      "label": "推理工程实践"
+    }
+  ],
+  "tags": [
+    {
+      "id": "kubernetes",
+      "label": "Kubernetes"
+    },
+    {
+      "id": "sglang",
+      "label": "SGLang"
+    },
+    {
+      "id": "kv-cache",
+      "label": "KV Cache"
+    },
+    {
+      "id": "benchmarks",
+      "label": "Benchmarks"
+    },
+    {
+      "id": "vllm",
+      "label": "vLLM"
+    },
+    {
+      "id": "continuity",
+      "label": "断流续写"
+    },
+    {
+      "id": "autotune",
+      "label": "LLM AutoTune"
+    },
+    {
+      "id": "observability",
+      "label": "可观测性"
+    },
+    {
+      "id": "markdown",
+      "label": "Markdown"
+    }
+  ],
+  "channels": [],
+  "sources": []
+}

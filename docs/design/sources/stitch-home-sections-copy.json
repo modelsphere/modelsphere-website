@@ -1,0 +1,158 @@
+{
+  "screen": "projects/3601238558355976464/screens/ae7c34338c3d444e8962883018c26f8f",
+  "viewport": 1280,
+  "modules": {
+    "fault-tolerance": {
+      "text": "CORE MECHANISM 01 · FAULT TOLERANCE 大模型推理断流续写： 100% 隔离服务崩溃断流 Hang-Watcher 旁路秒级探活： 独立旁路探针实时监听引擎的 Token Emit 时间戳，若单 Token 生成等待时长超过动态阈值（如 150ms 超出 P99.9），立即将节点判定为 Hang 状态并下发熔断。 Token 上下文状态重放： 网关层实时缓存当前流式对话已吐出的 Token 1~N，并在检测到节点异常时，自动向健康节点发起包含历史 Token 的接续 Prefill 请求。 客户端 SSE 无感知透明接力： 客户端浏览器或 API Client 的长连接永不中断，直接在 Token N+1 处无缝追加输出，前端对话 UI 毫无卡死与重试刷新感。 Resumption SLA: < 200ms Zero-Drop Guarantee TOKEN RESUMPTION SEQUENCE ENGINE E2E TIME: 168ms FAILOVER 01 正常流式推理阶段 STREAMING 客户端保持 SSE 长连接；网关将请求分流至 模型服务 A ；服务依次生成并吐出 Token 1 → 2 → 3 → 4 → 5。 Client SSE: [Tok 1] [Tok 2] [Tok 3] [Tok 4] [Tok 5] ... 02 突发故障 & 旁路探针捕获 HANG DETECTED (140ms) 模型服务 A 遭遇 GPU 显存死锁或 CUDA Illegal Memory Access，生成中断。Hang-Watcher 探针在 140ms 内检测到 Token Emit 超时，通知网关切断与 A 的通道。 03 携带上下文无缝切换健康节点 RE-ROUTING 聚合调度网关截取已吐出的 Token 1~5，结合 L3 KV Cache 共享句柄，瞬间重定向发送至健康备用节点 模型服务 B 。 04 断点接续与透明推流 SEAMLESS RESUME 模型服务 B 极速计算并接续生成 Token 6 → 7 → 8... 网关直接追加注入原 SSE 流，客户端用户界面毫无感知，零丢字体验。 Client SSE Resumed: [1-5 Done] [Tok 6] [Tok 7] [Tok 8]",
+      "height": 721,
+      "headings": [
+        {
+          "text": "大模型推理断流续写：",
+          "w": 478.65625,
+          "h": 40,
+          "size": "36px",
+          "line": "40px",
+          "weight": "800",
+          "font": "\"Space Grotesk\", sans-serif",
+          "color": "rgb(15, 23, 42)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "icons": [
+        "radar",
+        "replay",
+        "hub"
+      ]
+    },
+    "qos-scaling": {
+      "text": "CORE MECHANISM 02 · QOS & DYNAMIC SCALING 服务质量保障与 SLO 动态弹性伸缩 告别单一粗暴的 TPM/RPM 静态限流，建立基于首字延迟 (TTFT) 与每秒产出 (OTPS) 的生产级实时反馈调控。 QoS 动态限流 (TTFT / OTPS) AUTO-THROTTLE 静态限流无法感知 Prefill 算力饱和引发的排队雪崩。ModelSphere 动态监测首字延迟。当 TTFT 突破阈值时，网关在毫秒级返回携带 Retry-After: 120ms 的智能 429 退避，避免集群被拖死。 kimi-k3-nginx-ingress-0 TTFT: 68.6s (Degraded) OTPS: 42.4 tok/s TTFT (ms) OTPS (tok/s) Threshold: 10,000ms Threshold 00:00:00 429 Dynamic Throttle Event (Triggered at 00:02:15) 00:05:00 Mitigation Action 429 Auto-Backoff Retry-After 120ms Dynamic Recovery Latency < 350ms Stable SLO 弹性扩缩容 (K8s HPA/EDA) GPU UTIL 85%+ 随并发需求毫秒级调整推理 Pod 副本；非高峰期高优模型借用闲置芯片，使集群整体 GPU 利用率从行业平均 45% 大幅跃升至 85% 以上，且缩容时保证就绪请求排空再释放。 glm-5.2-prod-pool Scale Trace Current: 16 Replicas (Active) 16 Pods Peak Burst: 18,200 QPS 12 Pods Midday Load 8 Pods Night Idle Base Scale-Up < 1.2s Warm Graceful Drain Zero Drop Hardware Sharing B300 + 昇腾",
+      "height": 676.75,
+      "headings": [
+        {
+          "text": "服务质量保障与 SLO 动态弹性伸缩",
+          "w": 1216,
+          "h": 40,
+          "size": "36px",
+          "line": "40px",
+          "weight": "800",
+          "font": "\"Space Grotesk\", sans-serif",
+          "color": "rgb(15, 23, 42)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "QoS 动态限流 (TTFT / OTPS)",
+          "w": 245,
+          "h": 28,
+          "size": "20px",
+          "line": "28px",
+          "weight": "700",
+          "font": "\"Space Grotesk\", sans-serif",
+          "color": "rgb(15, 23, 42)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "SLO 弹性扩缩容 (K8s HPA/EDA)",
+          "w": 272.03125,
+          "h": 28,
+          "size": "20px",
+          "line": "28px",
+          "weight": "700",
+          "font": "\"Space Grotesk\", sans-serif",
+          "color": "rgb(15, 23, 42)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "icons": [
+        "tune",
+        "speed",
+        "auto_mode"
+      ]
+    },
+    "autotune-evolution": {
+      "text": "CORE MECHANISM 03 · CONTINUOUS SELF-EVOLUTION Tuning-Agent 性能持续优化 告别繁冗的人工基准盲测。ModelSphere 将线上真实请求、低谷空闲算力、网格化超参搜索与零停机灰度上线串联成全自动化演进飞轮。 演进范式跃迁 从“人工盲测”跨越到“自主演进” 用空闲算力持续榨干硬件潜能，让 LLM 推理服务越用越快。 采样更准 静态数据集测试 → 7 天滑动窗口真实流量特征蓄水 成本更低 占用生产资源压测 → 夜间低峰期闲置算力并发网格搜索 交付更稳 停机重启更新参数 → 冠军方案自动验证，生产环境零停机热加载 1 线上推理服务 稳定运行 稳定运行，持续提供高质量低时延高可用服务 NODE-01 NODE-02 NODE-03 5 自动化上线 生产灰度 最优配置自动部署，零丢流热加载 Config Push 100% Rolling Deploy 持续性能优化闭环 AUTOTUNE ENGINE 2 收集流量数据 特征蓄水 构建滑动窗口数据集与前缀拓扑 Window 7 Days Prompt Profiler 4 产出并验证配置 真实负载 基于真实负载比选出冠军推理方案 ★ +48.6% SLO P99<200ms 3 利用空闲算力调优 低峰搜索 夜间低峰期并发搜索更优推理超参 02:00~06:00 Night Tuning Chunk/TP 18 Sets",
+      "height": 680,
+      "headings": [
+        {
+          "text": "Tuning-Agent 性能持续优化",
+          "w": 1216,
+          "h": 40,
+          "size": "36px",
+          "line": "40px",
+          "weight": "800",
+          "font": "\"Space Grotesk\", sans-serif",
+          "color": "rgb(15, 23, 42)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "从“人工盲测”跨越到“自主演进”",
+          "w": 460.5,
+          "h": 33,
+          "size": "24px",
+          "line": "33px",
+          "weight": "700",
+          "font": "\"Space Grotesk\", sans-serif",
+          "color": "rgb(15, 23, 42)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "icons": [
+        "change_circle",
+        "rocket_launch",
+        "sync",
+        "database",
+        "emoji_events",
+        "bedtime"
+      ]
+    },
+    "benchmarks": {
+      "text": "Empirical Telemetry 透明可复现的真实实测 公开完整的基准输入输出分布、硬件拓扑与权衡代价，每一次调优收益皆可复核。 Verified on MLPerf & LLMBench harness 模型与架构 硬件环境 负载场景 (Prompt+Output) 吞吐对比 (Default vs Tuned) 性能飞跃 调优技术与代价说明 MiMo-V2.5 8 × NVIDIA H100 50k + 1.5k (长上下文) 13,900 → 30,600 tok/s +119.9% 并发 4→26; TTFT 4.81s→7.66s (符合 SLO ≤ 8s); GPQA 精度微降 3.03% (显式折中) DeepSeek-V4.1-Flash 8 × NVIDIA H100 50k + 1.5k / 8k + 1k 长文大幅跃升 / 常用平稳 +89.5% / +5.0% 客观体现“负载改变收益改变”，AutoTune 针对超长上下文自适应调整 Chunk 分块 Qwen3.6-35B-A3B 2 × NVIDIA H800 Agentic (c=8 并发多轮) 6,200 → 8,016 tok/s +29.3% SGLang + FlashAttention-3 + FP8 + Chunked Prefill 32768 + extra_buffer 深度融合 GLM-5.3 (NVFP4) 4 × NVIDIA B300 全量生产仿真混合集 基线对比 → 最高峰值 +195.3% AutoTune 搜索至最优 TP4 单节点拓扑，集成 modelopt_fp4 极致内核",
+      "height": 527,
+      "headings": [
+        {
+          "text": "透明可复现的真实实测",
+          "w": 504,
+          "h": 40,
+          "size": "32px",
+          "line": "40px",
+          "weight": "700",
+          "font": "\"Space Grotesk\", sans-serif",
+          "color": "rgb(15, 23, 42)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "icons": [],
+      "columns": [
+        148.53125,
+        121.5,
+        176.15625,
+        175.578125,
+        136.6875,
+        455.546875
+      ]
+    },
+    "get-started": {
+      "text": "Production Ready Infrastructure 准备好让你的大模型推理集群提速了吗？ 全套源码完全开源，加入顶尖 AI Infra 工程师共建的下一代推理基础设施。 立即部署 加入开发者交流群 ✓ Apache-2.0 Open Source • ✓ Helm Chart 1-Click Ready • ✓ Zero Cloud Lock-in",
+      "height": 444,
+      "headings": [
+        {
+          "text": "准备好让你的大模型推理集群提速了吗？",
+          "w": 842.40625,
+          "h": 48,
+          "size": "48px",
+          "line": "48px",
+          "weight": "800",
+          "font": "Geist, sans-serif",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "icons": []
+    },
+    "home-footer": {
+      "text": "模域 ModelSphere 让大模型推理从实验室能跑，到生产好用。 All Systems Operational K8s v1.28+ Ready 开源代码 GitHub 仓库 Model Catalog 模型库 社区与生态 博客洞察 微信开发者群 ModelHubXC 信创模盒 开发者资源 技术文档 博客洞察 法律与开源 Apache 2.0 License Security Advisory Roadmap 演进图 Code of Conduct © 2025 ModelSphere (模域) Open Source Project. All rights reserved. Telemetry Node: AP-EAST-01 SHA: 4f8b9e1",
+      "height": 272,
+      "headings": [],
+      "icons": []
+    }
+  }
+}

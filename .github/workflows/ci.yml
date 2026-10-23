@@ -1,0 +1,84 @@
+name: Website checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm tokens:generate
+      - run: git diff --exit-code -- src/css/tokens.css
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm blog:check
+      - run: BLOG_SOURCE_MODE=mock pnpm blog:check
+      - name: Unit tests
+        run: pnpm test
+  static-site:
+    runs-on: ubuntu-latest
+    needs: quality
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [preview, release]
+    env:
+      SITE_ORIGIN: http://localhost:4173
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Build mock preview
+        run: pnpm build:docs-preview
+      - name: Build release after mock to detect stale content
+        if: matrix.mode == 'release'
+        run: pnpm build
+      - name: Verify preview artifact
+        if: matrix.mode == 'preview'
+        run: pnpm artifacts:check
+        env:
+          SITE_BUILD_TARGET: preview
+          DOCS_SOURCE_MODE: mock
+      - name: Verify release artifact
+        if: matrix.mode == 'release'
+        run: pnpm artifacts:check
+        env:
+          SITE_BUILD_TARGET: release
+          DOCS_SOURCE_MODE: none
+      - run: docker build -f infra/docker/Dockerfile -t modelsphere-docs-test .
+      - run: docker run -d --name docs-test -p 127.0.0.1:4173:8080 modelsphere-docs-test
+      - name: Wait for Nginx
+        run: curl --retry 20 --retry-all-errors --retry-delay 1 --fail http://localhost:4173/docs
+      - name: Browser acceptance on Nginx
+        run: pnpm test:e2e
+        env:
+          E2E_BASE_URL: http://localhost:4173
+          TEST_DOCS_MODE: ${{ matrix.mode == 'preview' && 'mock' || 'none' }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: acceptance-${{ matrix.mode }}
+          path: |
+            reports/
+            playwright-report/
+            test-results/
+      - run: docker rm -f docs-test
+        if: always()

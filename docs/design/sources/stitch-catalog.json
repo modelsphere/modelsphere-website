@@ -1,0 +1,14 @@
+{
+  "reviewedOn": "2026-10-22",
+  "projectUrl": "https://stitch.withgoogle.com/projects/3601238558355976464",
+  "screen": "projects/3601238558355976464/screens/5532569258885020735",
+  "userCanvasLabel": "模型目录-更新",
+  "apiTitle": "模型目录与测评 - 模域 ModelSphere 生产级大模型推理平台 (浅色版)",
+  "html": "projects/3601238558355976464/files/6797808435170193412",
+  "screenshot": "projects/3601238558355976464/files/2572475871781049352",
+  "sourceTools": ["get_screen", "download_file"],
+  "scope": "Latest catalog body; retained shared Header/Footer and existing theme fonts are approved exceptions.",
+  "structure": ["breadcrumb and source state", "headline", "five statistics", "search and filters", "four-column recipe cards", "selected report state"],
+  "dataPolicy": "Design examples do not provide factual evidence. Replace unsupported certifications, sync times, global performance claims and nonexistent recipes with sourced records or explicit absence.",
+  "reportDetailBoundary": "The selected source leaves the benchmark detail container empty with comments; the structured report detail is an implementation supplement."
+}

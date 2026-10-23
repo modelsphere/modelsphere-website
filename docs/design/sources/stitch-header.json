@@ -1,0 +1,32 @@
+{
+  "projectId": "14815301483114557678",
+  "projectUrl": "https://stitch.withgoogle.com/projects/14815301483114557678",
+  "scope": "Shared header only; other page designs retain their existing source.",
+  "screens": [
+    {
+      "id": "70281eea0dfa49508b00e0d9c933767f",
+      "role": "home header HTML"
+    },
+    {
+      "id": "f183d486a77f4adaa1fe180a6fbcd612",
+      "role": "docs header HTML and screenshot"
+    },
+    {
+      "id": "8894950184876916442",
+      "role": "original transparent brand logo",
+      "file": "projects/14815301483114557678/files/8894950184876914969",
+      "localAsset": "static/brand/modelsphere-logo.png"
+    }
+  ],
+  "decisions": {
+    "theme": "Single sun/moon button; initial system preference, then persisted light/dark.",
+    "github": "https://github.com/modelsphere (user confirmed)",
+    "unavailableNavigation": "Static labels with upcoming semantics; no broken links.",
+    "search": "Disabled pending search implementation.",
+    "unverifiedData": "No fabricated Core version, star count or account control.",
+    "logo": "Original alpha mask preserves wordmark shape; colored symbol remains original pixels in both themes.",
+    "fonts": "Inter served locally; header scope only.",
+    "responsive": "Six links and content badge at >=1280px; compact native details below; extended search at >=1600px.",
+    "notice": "No global mock notice strip; requested removal applies in every build mode."
+  }
+}

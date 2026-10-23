@@ -1,0 +1,6 @@
+*
+!build/
+!build/**
+!infra/
+!infra/docker/
+!infra/docker/nginx.conf

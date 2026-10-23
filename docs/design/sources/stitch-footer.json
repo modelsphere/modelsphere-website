@@ -1,0 +1,151 @@
+{
+  "projectId": "3601238558355976464",
+  "projectUrl": "https://stitch.withgoogle.com/projects/3601238558355976464",
+  "scope": "Portal Footer uses only the latest top home screen; old dark references supply colors only. Preserve the already confirmed documentation Footer implementation. Header remains the separate confirmed exception from project 14815301483114557678.",
+  "layout": {
+    "docs": "Preserve the existing confirmed compact two-band documentation Footer implementation; no new old-screen selection.",
+    "portal": "Six-column grid from the latest selected home: brand spans two columns plus four shared navigation groups.",
+    "maxWidth": "1280px",
+    "desktopHorizontalPadding": "32px",
+    "docsVerticalPadding": "40px",
+    "portalColumnGap": "40px",
+    "lightBackground": "#FFFFFF",
+    "darkBackground": "#0B0E15"
+  },
+  "historicalScreens": [
+    {
+      "id": "14050489bf0345948f712cd70b166730",
+      "page": "docs",
+      "theme": "light",
+      "html": "projects/3601238558355976464/files/18296608997524128803",
+      "screenshot": "projects/3601238558355976464/files/8516751492820782855"
+    },
+    {
+      "id": "846bbe8002864363bbf67801478578b0",
+      "page": "docs",
+      "theme": "dark",
+      "html": "projects/3601238558355976464/files/1152257848921777740",
+      "screenshot": "projects/3601238558355976464/files/16323503386570427861"
+    },
+    {
+      "id": "e6dbe9b7c32a4401a2ee2bb3ffed9f15",
+      "page": "portal",
+      "theme": "light",
+      "html": "projects/3601238558355976464/files/1765190473939545714",
+      "screenshot": "projects/3601238558355976464/files/7343931013038575430"
+    },
+    {
+      "id": "82062c5a8d194c7b856857e69c57667c",
+      "page": "portal",
+      "theme": "dark",
+      "html": "projects/3601238558355976464/files/13195401867196620947",
+      "screenshot": "projects/3601238558355976464/files/7610995182807555106"
+    }
+  ],
+  "historicalDecisions": {
+    "sourceOverrides": {
+      "header": "14815301483114557678",
+      "footer": "3601238558355976464"
+    },
+    "portalGroupTitles": [
+      "产品架构",
+      "社区与生态",
+      "开发者资源",
+      "法律与开源"
+    ],
+    "notice": "Global mock notice remains removed.",
+    "unavailableLinks": "Static upcoming labels; no empty hrefs.",
+    "designSampleData": "No fabricated version, SHA, telemetry, live health, SLA or license guarantees. Preserve visual slots using documentation/project labels.",
+    "copyrightYear": 2026,
+    "verification": "Compare documentation and home separately against their corresponding light/dark screens."
+  },
+  "currentSelection": {
+    "reviewedOn": "2026-10-21",
+    "portalSource": {
+      "page": "home",
+      "route": "/",
+      "screenId": "ae7c34338c3d444e8962883018c26f8f",
+      "name": "projects/3601238558355976464/screens/ae7c34338c3d444e8962883018c26f8f",
+      "title": "模域 ModelSphere 生产级大模型推理平台官方主页 (含完整三大核心机制)",
+      "theme": "light",
+      "deviceType": "DESKTOP",
+      "width": 2560,
+      "height": 10262,
+      "html": "projects/3601238558355976464/files/7501900694932492488",
+      "screenshot": "projects/3601238558355976464/files/1767179758518368040",
+      "htmlSha256": "2badf8d2e133d3fcc68714f15b5314c28443d556eed5e0f6d161b311d9040ec7",
+      "htmlReviewed": true
+    },
+    "supersededLatestPageVariants": [
+      {
+        "page": "catalog",
+        "screenId": "5532569258885020735",
+        "reason": "Its Product Architecture group is superseded by the latest home group structure."
+      },
+      {
+        "page": "blog",
+        "screenId": "3023474615820510674",
+        "reason": "Its Product Architecture group is superseded by the latest home group structure."
+      }
+    ],
+    "darkPaletteReferences": [
+      {
+        "page": "home",
+        "screenId": "82062c5a8d194c7b856857e69c57667c",
+        "name": "projects/3601238558355976464/screens/82062c5a8d194c7b856857e69c57667c",
+        "html": "projects/3601238558355976464/files/13195401867196620947",
+        "screenshot": "projects/3601238558355976464/files/7610995182807555106",
+        "htmlSha256": "6edd90835f169ef4d93ffaa5ce1a30b1593cb653017227b53d04b66ae7e1635b",
+        "allowedUse": "Color and theme configuration only; exclude layout, modules, text and route selection."
+      }
+    ],
+    "docsFooter": "Existing confirmed compact two-band implementation retained as an exception; historical docs files below are provenance only, not newly selected visuals.",
+    "historicalBoundary": "historicalScreens and historicalDecisions preserve the prior source record unchanged; their old portal groups do not control the current portal Footer."
+  },
+  "decisions": {
+    "sourceOverrides": {
+      "header": "14815301483114557678",
+      "portalFooter": "3601238558355976464",
+      "docsFooter": "Previously confirmed implementation exception"
+    },
+    "portalGroups": [
+      {
+        "title": "开源代码",
+        "entries": [
+          "GitHub 仓库",
+          "Model Catalog 模型库"
+        ]
+      },
+      {
+        "title": "社区与生态",
+        "entries": [
+          "博客洞见",
+          "微信开发者群",
+          "ModelHubXC 信创模盒"
+        ]
+      },
+      {
+        "title": "开发者资源",
+        "entries": [
+          "技术文档"
+        ]
+      },
+      {
+        "title": "法律与开源",
+        "entriesPolicy": "Only verified legal and open-source resources with real destinations."
+      }
+    ],
+    "portalGroupTitles": [
+      "开源代码",
+      "社区与生态",
+      "开发者资源",
+      "法律与开源"
+    ],
+    "unificationChoice": "Use the latest home groups across all portal pages; remove the duplicate blog entry from Developer Resources. Do not retain older Catalog/blog footer groups.",
+    "notice": "Global mock notice remains removed.",
+    "unavailableLinks": "Known unavailable destinations are static upcoming labels; never empty hrefs. Missing resources or groups are omitted, not fabricated.",
+    "designSampleData": "No fabricated version, SHA, telemetry, live health, SLA or license guarantees. Use only verified public resources.",
+    "copyrightYear": 2026,
+    "verification": "Validate the shared portal Footer against the latest selected home; derive dark colors only. Regress the existing documentation Footer without selecting an old docs design anew."
+  }
+}

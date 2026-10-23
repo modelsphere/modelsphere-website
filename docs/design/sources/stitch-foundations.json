@@ -1,0 +1,1499 @@
+{
+  "schemaVersion": 1,
+  "retrievedOn": "2026-10-21",
+  "timezone": "Asia/Shanghai",
+  "projectUrl": "https://stitch.withgoogle.com/projects/3601238558355976464",
+  "projectMetadata": {
+    "name": "projects/3601238558355976464",
+    "title": "ModelSphere 推理基础设施官网",
+    "createTime": "2026-10-19T06:51:26.877592Z",
+    "updateTime": "2026-10-21T07:28:47.520888Z",
+    "visibility": "PUBLIC",
+    "userRole": null
+  },
+  "sourceTools": [
+    "get_project",
+    "list_screens",
+    "list_design_systems",
+    "download_file"
+  ],
+  "currentSelection": {
+    "reviewedOn": "2026-10-21",
+    "selectionAuthority": "User-designated top three latest screens; screen order is selected by the supplied canvas reference, not by list_screens response order.",
+    "metadataVerifiedWith": "list_screens",
+    "pages": [
+      {
+        "page": "home",
+        "route": "/",
+        "screenId": "ae7c34338c3d444e8962883018c26f8f",
+        "name": "projects/3601238558355976464/screens/ae7c34338c3d444e8962883018c26f8f",
+        "title": "模域 ModelSphere 生产级大模型推理平台官方主页 (含完整三大核心机制)",
+        "theme": "light",
+        "deviceType": "DESKTOP",
+        "width": 2560,
+        "height": 10262,
+        "html": "projects/3601238558355976464/files/7501900694932492488",
+        "screenshot": "projects/3601238558355976464/files/1767179758518368040",
+        "htmlSha256": "2badf8d2e133d3fcc68714f15b5314c28443d556eed5e0f6d161b311d9040ec7",
+        "htmlReviewed": true
+      },
+      {
+        "page": "catalog",
+        "route": "/models",
+        "screenId": "5532569258885020735",
+        "name": "projects/3601238558355976464/screens/5532569258885020735",
+        "title": "模型目录与测评 - 模域 ModelSphere 生产级大模型推理平台 (浅色版)",
+        "theme": "light",
+        "deviceType": "DESKTOP",
+        "width": 2560,
+        "height": 6064,
+        "html": "projects/3601238558355976464/files/10295788475287954872",
+        "screenshot": "projects/3601238558355976464/files/3391312963992126606",
+        "htmlSha256": "f813d7ca4cd07e021baa509bfc567f0b01e879eaa9fc6d549142671b66a0ce98",
+        "htmlReviewed": true
+      },
+      {
+        "page": "blog",
+        "route": "/blog",
+        "screenId": "3023474615820510674",
+        "name": "projects/3601238558355976464/screens/3023474615820510674",
+        "title": "技术博客与动态 - 模域 ModelSphere 生产级大模型推理平台 (浅色版)",
+        "theme": "light",
+        "deviceType": "DESKTOP",
+        "width": 2560,
+        "height": 10966,
+        "html": "projects/3601238558355976464/files/4037800493203212599",
+        "screenshot": "projects/3601238558355976464/files/8501972715470900863",
+        "htmlSha256": "f7dc68507adae46f20216f1b1b4a599ed53b7767cad1ff0177ad7201f367f7ca",
+        "htmlReviewed": true
+      }
+    ],
+    "darkPaletteReferences": [
+      {
+        "page": "home",
+        "screenId": "82062c5a8d194c7b856857e69c57667c",
+        "name": "projects/3601238558355976464/screens/82062c5a8d194c7b856857e69c57667c",
+        "html": "projects/3601238558355976464/files/13195401867196620947",
+        "screenshot": "projects/3601238558355976464/files/7610995182807555106",
+        "htmlSha256": "6edd90835f169ef4d93ffaa5ce1a30b1593cb653017227b53d04b66ae7e1635b",
+        "allowedUse": "Color and theme configuration only; exclude layout, modules, text and route selection."
+      },
+      {
+        "page": "catalog",
+        "screenId": "df89d20f725e4aa683ad76ee447e6163",
+        "name": "projects/3601238558355976464/screens/df89d20f725e4aa683ad76ee447e6163",
+        "html": "projects/3601238558355976464/files/16225702944109036508",
+        "screenshot": "projects/3601238558355976464/files/15514405710957764396",
+        "htmlSha256": "9a397be73664a1e602900f3fffc2d58543723639ae6ea8af1427eb7ea2dcc5fa",
+        "allowedUse": "Color and theme configuration only; exclude layout, modules, text and route selection."
+      },
+      {
+        "page": "blog",
+        "screenId": "37d5c004e27d42ddb8651a3526ff37d5",
+        "name": "projects/3601238558355976464/screens/37d5c004e27d42ddb8651a3526ff37d5",
+        "html": "projects/3601238558355976464/files/17332282009642895690",
+        "screenshot": "projects/3601238558355976464/files/14923713269709595122",
+        "htmlSha256": "d9ab6216507acbd8a351489d6ad18e5e648aa96a95b7d8df38c15ff7eaa97b5f",
+        "allowedUse": "Color and theme configuration only; exclude layout, modules, text and route selection."
+      }
+    ],
+    "historicalBoundary": "The retained designSystems, screens, projectMetadata, historicalReviewScope and historicalImplementationDecisions describe the earlier 14-screen review. They remain historical evidence and do not select current page visuals; no original file IDs or fingerprints were rewritten.",
+    "uncoveredPages": {
+      "routes": [
+        "/architecture",
+        "/community",
+        "/blog/<slug>"
+      ],
+      "policy": "Keep functional and content contracts; independent page visuals await new designs. Do not use old screens to fill visual gaps."
+    },
+    "confirmedExceptions": {
+      "header": {
+        "projectId": "14815301483114557678",
+        "authority": "Previously confirmed independent Header implementation; Inter and 1440px container are Header-only exceptions.",
+        "record": "stitch-header.json"
+      },
+      "docsFooter": {
+        "authority": "Preserve the already confirmed two-band documentation Footer implementation; do not treat old docs screens as a newly selected source.",
+        "record": "stitch-footer.json"
+      }
+    },
+    "implementationDecisions": {
+      "authority": "../foundations.md and current page/component/content contracts; this record is evidence, not runtime tokens.",
+      "sharedStructure": true,
+      "sharedFonts": [
+        "Space Grotesk",
+        "Geist",
+        "JetBrains Mono"
+      ],
+      "sourceFontDifference": "Latest light Catalog still declares Plus Jakarta Sans / Inter; latest home and blog declare Space Grotesk / Geist. Page fonts intentionally unify; Header alone keeps local Inter.",
+      "themeUi": {
+        "control": "One persistent sun/moon button",
+        "visibleChoices": [
+          "light",
+          "dark"
+        ],
+        "initialPreference": "system",
+        "systemResetUi": false
+      },
+      "homeFeatures": "Four comparison cards and three core mechanisms; no required four-tab features section.",
+      "cta": {
+        "variant": "gradient",
+        "documentationOnlyUntilPortalImplementation": true,
+        "lightGradient": "linear-gradient(135deg, #1D4ED8 0%, #2563EB 35%, #3B82F6 70%, #4338CA 100%)",
+        "radiusPx": 16,
+        "lightContentScrim": "rgba(15,23,42,.18)",
+        "darkPolicy": "Reuse the latest light structure, angle and stop positions; map only colors from the approved dark palette. See foundations.md section 3.1.",
+        "contrastBoundary": "Opaque white on the original #3B82F6 stop is about 3.68:1; the static content scrim and opaque text are an explicit accessibility adjustment. Rendered gradients, controls and focus still require verification."
+      },
+      "portalFooter": "Latest home group structure applies to all portal pages; developer resources only contains technical documentation to remove the duplicate blog link.",
+      "coverPolicy": "Use reviewed preview crops: featured 16:9 and list 3:2. Without an approved preview use contain. Body architecture diagrams stay complete; hover never scales covers.",
+      "runtimeBoundary": "Do not update design/tokens.json, CSS or application code as part of this documentation reconciliation."
+    }
+  },
+  "designSystems": [
+    {
+      "designSystem": {
+        "displayName": "Deep Tech Infrastructure",
+        "styleGuidelines": "## Brand & Style\n\nThis design system embodies high-throughput infrastructure engineering, mission-critical stability, and precision telemetry. Tailored for infrastructure engineers, ML platform architects, and enterprise DevOps teams deploying distributed AI workloads, it balances industrial-grade density with razor-sharp modern aesthetics.\n\nThe visual style merges structured Enterprise Brutalism—defined by data-dense grids, precise dividers, and monospaced diagnostic readouts—with subtle Dark-Glassmorphism and electro-luminescent telemetry accents. The interface feels like a mission control cockpit for cluster computing: deep void obsidian backgrounds, surgical hierarchy, muted container boundaries, and calculated neon signals indicating system health, throughput spikes, and GPU orchestration states.\n\n## Layout & Spacing\n\nThe layout is built around a flexible 12-column system optimized for dashboard density, telemetry sidecars, and split-screen code debugging.\n\n### Grid & Density Rules\n- **Desktop (>= 1280px)**: 12-column layout with 24px margins and 16px gutters. Maximizes monitor horizontal footprint for side-by-side Grafana-style charts, inference traces, and node maps.\n- **Tablet (768px - 1279px)**: 8-column layout with 20px margins and 16px gutters. Auxiliary panels collapse into sliding drawers or expandable tab sheets.\n- **Mobile (< 768px)**: 4-column layout with 16px margins and 12px gutters. Telemetry shifts from parallel charts to stacked, priority-driven health cards.\n- **Rhythm**: All paddings, row heights, and layout gaps adhere strictly to a 4px base increment (`0.25rem`), prioritizing dense vertical economy without crowding critical diagnostic metrics.\n\n## Elevation & Depth\n\nThis system avoids heavy, diffused dropshadows, replacing them with layered obsidian planes, perimeter border gradients, and reactive back-glows.\n\n- **Level 0 (Canvas)**: Raw background (`#0A0D14`), flat surface with no borders.\n- **Level 1 (Sub-Panels & Base Cards)**: Surface `#0F1422` with a 1px solid border in `#1E293B`. No shadow.\n- **Level 2 (Active Containers & Modals)**: Surface `rgba(15, 20, 34, 0.85)` with `backdrop-filter: blur(12px)`. Outlined with a linear gradient border: `rgba(0, 229, 255, 0.3)` fading to `rgba(99, 102, 241, 0.05)`.\n- **Level 3 (Focused Overlays & Context Drawers)**: High-translucency `#161F33` layered over canvas blur. Soft, localized ambient glow: `0 0 24px -4px rgba(0, 229, 255, 0.15)`.\n- **Status Luminescence**: Critical or active elements cast localized inner and outer glows using their respective accent tokens (e.g., `#10B981` at 15% opacity with an 8px spread for healthy GPU nodes).\n\n## Components\n\n### Buttons\n- **Primary**: Background `#00E5FF`, label `#0A0D14` (Inter bold or JetBrains Mono medium), radius 4px. Hover brings a `0 0 16px rgba(0, 229, 255, 0.5)` drop-glow with zero translation.\n- **Secondary / Ghost**: Background `rgba(22, 31, 51, 0.6)` with a 1px border `#1E293B`, label `#E2E8F0`. Hover shifts border to `#00E5FF` and background to `#161F33`.\n- **Destructive**: Background `rgba(239, 68, 68, 0.1)`, 1px border `#EF4444`, label `#EF4444`.\n\n### Chips & Status Badges\n- Pill-shaped (`rounded-full`) with a glassmorphic fill: `rgba(15, 20, 34, 0.75)` and a 1px border colored by state.\n- **Healthy Node**: `#10B981` border with a 6px pulsing dot `#10B981` and JetBrains Mono small text.\n- **Active Scaling / Workload In-Flight**: `#00E5FF` border with a spinning activity indicator.\n\n### Input Fields & Terminal Consoles\n- Background `#0F1422`, border 1px `#1E293B`, inset text `#F8FAFC`. Focus ring transitions to a crisp 1px `#00E5FF` accompanied by `box-shadow: 0 0 0 1px #00E5FF`.\n- Integrated monospace command lines prefix user input with a muted cyan prompt symbol `$` and carry a solid blinking block cursor.\n\n### Precision Data Grids & Lists\n- Table headers use `label-caps` in JetBrains Mono (`#64748B`), separated by a clean 1px baseline `#1E293B`.\n- Alternate row striping using `#0A0D14` and `#0F1422`. Hover on rows triggers an instant background switch to `#161F33` with an active 2px left border accent in `#00E5FF`.\n\n### Cards & Cluster Nodes\n- Constructed with surface `#0F1422` and fine borders (`#1E293B`).\n- Headers feature segmented status lights, model architecture chips (e.g., `FP8`, `AWQ`, `TensorRT-LLM`), and live GPU VRAM / KV-cache capacity bars.\n- Live metric graphs inside cards render with `#00E5FF` line paths backed by subtle vertical gradient fills that fade into the card background at zero opacity.",
+        "theme": {
+          "bodyFont": "INTER",
+          "bodyFontFamily": "Inter",
+          "colorMode": "DARK",
+          "colorVariant": "FIDELITY",
+          "customColor": "#00e5ff",
+          "designMd": "---\nname: Deep Tech Infrastructure\ncolors:\n  surface: '#10131a'\n  surface-dim: '#10131a'\n  surface-bright: '#363941'\n  surface-container-lowest: '#0b0e15'\n  surface-container-low: '#191b23'\n  surface-container: '#1d1f27'\n  surface-container-high: '#272a32'\n  surface-container-highest: '#32353d'\n  on-surface: '#e1e2ec'\n  on-surface-variant: '#bac9cc'\n  inverse-surface: '#e1e2ec'\n  inverse-on-surface: '#2d3038'\n  outline: '#849396'\n  outline-variant: '#3b494c'\n  surface-tint: '#00daf3'\n  primary: '#c3f5ff'\n  on-primary: '#00363d'\n  primary-container: '#00e5ff'\n  on-primary-container: '#00626e'\n  inverse-primary: '#006875'\n  secondary: '#4edea3'\n  on-secondary: '#003824'\n  secondary-container: '#00a572'\n  on-secondary-container: '#00311f'\n  tertiary: '#edeaff'\n  on-tertiary: '#1000a9'\n  tertiary-container: '#ccccff'\n  on-tertiary-container: '#4344d1'\n  error: '#ffb4ab'\n  on-error: '#690005'\n  error-container: '#93000a'\n  on-error-container: '#ffdad6'\n  primary-fixed: '#9cf0ff'\n  primary-fixed-dim: '#00daf3'\n  on-primary-fixed: '#001f24'\n  on-primary-fixed-variant: '#004f58'\n  secondary-fixed: '#6ffbbe'\n  secondary-fixed-dim: '#4edea3'\n  on-secondary-fixed: '#002113'\n  on-secondary-fixed-variant: '#005236'\n  tertiary-fixed: '#e1e0ff'\n  tertiary-fixed-dim: '#c0c1ff'\n  on-tertiary-fixed: '#07006c'\n  on-tertiary-fixed-variant: '#2f2ebe'\n  background: '#10131a'\n  on-background: '#e1e2ec'\n  surface-variant: '#32353d'\ntypography:\n  display-lg:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 48px\n    fontWeight: '700'\n    lineHeight: 56px\n    letterSpacing: -0.03em\n  display-lg-mobile:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 32px\n    fontWeight: '700'\n    lineHeight: 40px\n    letterSpacing: -0.02em\n  headline-lg:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 32px\n    fontWeight: '600'\n    lineHeight: 40px\n    letterSpacing: -0.02em\n  headline-lg-mobile:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 24px\n    fontWeight: '600'\n    lineHeight: 32px\n    letterSpacing: -0.01em\n  headline-md:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 24px\n    fontWeight: '600'\n    lineHeight: 32px\n    letterSpacing: -0.01em\n  headline-sm:\n    fontFamily: Plus Jakarta Sans\n    fontSize: 18px\n    fontWeight: '600'\n    lineHeight: 26px\n    letterSpacing: 0em\n  body-lg:\n    fontFamily: Inter\n    fontSize: 16px\n    fontWeight: '400'\n    lineHeight: 24px\n    letterSpacing: -0.01em\n  body-md:\n    fontFamily: Inter\n    fontSize: 14px\n    fontWeight: '400'\n    lineHeight: 20px\n    letterSpacing: 0em\n  body-sm:\n    fontFamily: Inter\n    fontSize: 12px\n    fontWeight: '400'\n    lineHeight: 16px\n    letterSpacing: 0.01em\n  code-lg:\n    fontFamily: JetBrains Mono\n    fontSize: 14px\n    fontWeight: '500'\n    lineHeight: 20px\n    letterSpacing: -0.02em\n  code-md:\n    fontFamily: JetBrains Mono\n    fontSize: 12px\n    fontWeight: '500'\n    lineHeight: 16px\n    letterSpacing: 0em\n  code-sm:\n    fontFamily: JetBrains Mono\n    fontSize: 11px\n    fontWeight: '400'\n    lineHeight: 14px\n    letterSpacing: 0.02em\n  label-caps:\n    fontFamily: JetBrains Mono\n    fontSize: 10px\n    fontWeight: '700'\n    lineHeight: 14px\n    letterSpacing: 0.08em\nrounded:\n  sm: 0.125rem\n  DEFAULT: 0.25rem\n  md: 0.375rem\n  lg: 0.5rem\n  xl: 0.75rem\n  full: 9999px\nspacing:\n  gutter: 1rem\n  gutter-mobile: 0.75rem\n  margin: 1.5rem\n  margin-mobile: 1rem\n  space-xs: 0.25rem\n  space-sm: 0.5rem\n  space-md: 1rem\n  space-lg: 1.5rem\n  space-xl: 2rem\n---\n\n## Brand & Style\n\nThis design system embodies high-throughput infrastructure engineering, mission-critical stability, and precision telemetry. Tailored for infrastructure engineers, ML platform architects, and enterprise DevOps teams deploying distributed AI workloads, it balances industrial-grade density with razor-sharp modern aesthetics.\n\nThe visual style merges structured Enterprise Brutalism—defined by data-dense grids, precise dividers, and monospaced diagnostic readouts—with subtle Dark-Glassmorphism and electro-luminescent telemetry accents. The interface feels like a mission control cockpit for cluster computing: deep void obsidian backgrounds, surgical hierarchy, muted container boundaries, and calculated neon signals indicating system health, throughput spikes, and GPU orchestration states.\n\n## Colors\n\nThe palette establishes an ultra-low light floor to reduce visual fatigue during prolonged incident management and node monitoring, layered with precision optical feedback.\n\n### Palette Architecture\n- **Obsidian Canvas Foundations**: Base surfaces sit at `#0A0D14` (canvas), `#0F1422` (primary panel surface), and `#161F33` (interactive surface/container elevated). Border lines and structural subdivisions utilize `#1E293B` and `#334155` at low opacity to maintain separation without visual weight.\n- **Electric Cyan (`#00E5FF`)**: Primary action, active runtime telemetry, active routing traces, and primary node selectors. Communicates instantaneous throughput and active control.\n- **Engine Emerald (`#10B981`)**: Operational healthy states, high availability metrics, cluster stability indicators, and optimal vLLM/TGI engine readiness.\n- **Quantum Violet (`#6366F1`)**: Secondary infrastructure, queued inference requests, model checkpoint weights, and Kubernetes namespace abstractions.\n- **System Diagnostics**:\n  - Alert / Throttle Amber: `#F59E0B`\n  - Critical Node Eviction / Pod OOM Red: `#EF4444`\n\nContrast ratios for text and key telemetry markers strictly conform to WCAG 2.1 AAA on all obsidian base layers.\n\n## Typography\n\nThe typographic hierarchy distinguishes narrative structure from diagnostic data:\n- **Headings (Plus Jakarta Sans)**: Delivers geometric authority with clean architectural terminals. Used for section anchors, page titles, and cluster-level stats.\n- **Interface & Prose (Inter)**: High legibility at small sizes, neutral rendering across standard rendering engines, optimized for rapid scanning in dense layouts.\n- **Machine Data & Diagnostics (JetBrains Mono)**: Reserved for model weights, token latency (TTFT, ITL), pod statuses, YAML configurations, and command interfaces. Always rendered with tabular lining figures (`font-variant-numeric: tabular-nums`) to prevent jitter in live-streaming metric dashboards.\n\n## Layout & Spacing\n\nThe layout is built around a flexible 12-column system optimized for dashboard density, telemetry sidecars, and split-screen code debugging.\n\n### Grid & Density Rules\n- **Desktop (>= 1280px)**: 12-column layout with 24px margins and 16px gutters. Maximizes monitor horizontal footprint for side-by-side Grafana-style charts, inference traces, and node maps.\n- **Tablet (768px - 1279px)**: 8-column layout with 20px margins and 16px gutters. Auxiliary panels collapse into sliding drawers or expandable tab sheets.\n- **Mobile (< 768px)**: 4-column layout with 16px margins and 12px gutters. Telemetry shifts from parallel charts to stacked, priority-driven health cards.\n- **Rhythm**: All paddings, row heights, and layout gaps adhere strictly to a 4px base increment (`0.25rem`), prioritizing dense vertical economy without crowding critical diagnostic metrics.\n\n## Elevation & Depth\n\nThis system avoids heavy, diffused dropshadows, replacing them with layered obsidian planes, perimeter border gradients, and reactive back-glows.\n\n- **Level 0 (Canvas)**: Raw background (`#0A0D14`), flat surface with no borders.\n- **Level 1 (Sub-Panels & Base Cards)**: Surface `#0F1422` with a 1px solid border in `#1E293B`. No shadow.\n- **Level 2 (Active Containers & Modals)**: Surface `rgba(15, 20, 34, 0.85)` with `backdrop-filter: blur(12px)`. Outlined with a linear gradient border: `rgba(0, 229, 255, 0.3)` fading to `rgba(99, 102, 241, 0.05)`.\n- **Level 3 (Focused Overlays & Context Drawers)**: High-translucency `#161F33` layered over canvas blur. Soft, localized ambient glow: `0 0 24px -4px rgba(0, 229, 255, 0.15)`.\n- **Status Luminescence**: Critical or active elements cast localized inner and outer glows using their respective accent tokens (e.g., `#10B981` at 15% opacity with an 8px spread for healthy GPU nodes).\n\n## Shapes\n\nThe interface embraces a precise, hard-edged technical silhouette using `roundedness: 1` (Soft):\n- Default components (inputs, list items, buttons, standard data cards) use `4px` (`0.25rem`) corner radii.\n- Modals, large surface panels, and floating consoles scale up to `rounded-lg` (`8px` / `0.5rem`).\n- Exceptions: System health status indicators, tag badges, and token counters employ fully rounded pills (`9999px`) to create clear geometric contrast against rigid data tables and square terminal panels.\n\n## Components\n\n### Buttons\n- **Primary**: Background `#00E5FF`, label `#0A0D14` (Inter bold or JetBrains Mono medium), radius 4px. Hover brings a `0 0 16px rgba(0, 229, 255, 0.5)` drop-glow with zero translation.\n- **Secondary / Ghost**: Background `rgba(22, 31, 51, 0.6)` with a 1px border `#1E293B`, label `#E2E8F0`. Hover shifts border to `#00E5FF` and background to `#161F33`.\n- **Destructive**: Background `rgba(239, 68, 68, 0.1)`, 1px border `#EF4444`, label `#EF4444`.\n\n### Chips & Status Badges\n- Pill-shaped (`rounded-full`) with a glassmorphic fill: `rgba(15, 20, 34, 0.75)` and a 1px border colored by state.\n- **Healthy Node**: `#10B981` border with a 6px pulsing dot `#10B981` and JetBrains Mono small text.\n- **Active Scaling / Workload In-Flight**: `#00E5FF` border with a spinning activity indicator.\n\n### Input Fields & Terminal Consoles\n- Background `#0F1422`, border 1px `#1E293B`, inset text `#F8FAFC`. Focus ring transitions to a crisp 1px `#00E5FF` accompanied by `box-shadow: 0 0 0 1px #00E5FF`.\n- Integrated monospace command lines prefix user input with a muted cyan prompt symbol `$` and carry a solid blinking block cursor.\n\n### Precision Data Grids & Lists\n- Table headers use `label-caps` in JetBrains Mono (`#64748B`), separated by a clean 1px baseline `#1E293B`.\n- Alternate row striping using `#0A0D14` and `#0F1422`. Hover on rows triggers an instant background switch to `#161F33` with an active 2px left border accent in `#00E5FF`.\n\n### Cards & Cluster Nodes\n- Constructed with surface `#0F1422` and fine borders (`#1E293B`).\n- Headers feature segmented status lights, model architecture chips (e.g., `FP8`, `AWQ`, `TensorRT-LLM`), and live GPU VRAM / KV-cache capacity bars.\n- Live metric graphs inside cards render with `#00E5FF` line paths backed by subtle vertical gradient fills that fade into the card background at zero opacity.",
+          "font": "PLUS_JAKARTA_SANS",
+          "headlineFont": "PLUS_JAKARTA_SANS",
+          "headlineFontFamily": "Plus Jakarta Sans",
+          "labelFont": "JETBRAINS_MONO",
+          "labelFontFamily": "JetBrains Mono",
+          "namedColors": {
+            "background": "#10131a",
+            "error": "#ffb4ab",
+            "error_container": "#93000a",
+            "inverse_on_surface": "#2d3038",
+            "inverse_primary": "#006875",
+            "inverse_surface": "#e1e2ec",
+            "on_background": "#e1e2ec",
+            "on_error": "#690005",
+            "on_error_container": "#ffdad6",
+            "on_primary": "#00363d",
+            "on_primary_container": "#00626e",
+            "on_primary_fixed": "#001f24",
+            "on_primary_fixed_variant": "#004f58",
+            "on_secondary": "#003824",
+            "on_secondary_container": "#00311f",
+            "on_secondary_fixed": "#002113",
+            "on_secondary_fixed_variant": "#005236",
+            "on_surface": "#e1e2ec",
+            "on_surface_variant": "#bac9cc",
+            "on_tertiary": "#1000a9",
+            "on_tertiary_container": "#4344d1",
+            "on_tertiary_fixed": "#07006c",
+            "on_tertiary_fixed_variant": "#2f2ebe",
+            "outline": "#849396",
+            "outline_variant": "#3b494c",
+            "primary": "#c3f5ff",
+            "primary_container": "#00e5ff",
+            "primary_fixed": "#9cf0ff",
+            "primary_fixed_dim": "#00daf3",
+            "secondary": "#4edea3",
+            "secondary_container": "#00a572",
+            "secondary_fixed": "#6ffbbe",
+            "secondary_fixed_dim": "#4edea3",
+            "surface": "#10131a",
+            "surface_bright": "#363941",
+            "surface_container": "#1d1f27",
+            "surface_container_high": "#272a32",
+            "surface_container_highest": "#32353d",
+            "surface_container_low": "#191b23",
+            "surface_container_lowest": "#0b0e15",
+            "surface_dim": "#10131a",
+            "surface_tint": "#00daf3",
+            "surface_variant": "#32353d",
+            "tertiary": "#edeaff",
+            "tertiary_container": "#ccccff",
+            "tertiary_fixed": "#e1e0ff",
+            "tertiary_fixed_dim": "#c0c1ff"
+          },
+          "overrideNeutralColor": "#0a0d14",
+          "overridePrimaryColor": "#00e5ff",
+          "overrideSecondaryColor": "#10b981",
+          "overrideTertiaryColor": "#6366f1",
+          "roundness": "ROUND_FOUR",
+          "spacing": {
+            "gutter": "1rem",
+            "gutter-mobile": "0.75rem",
+            "margin": "1.5rem",
+            "margin-mobile": "1rem",
+            "space-lg": "1.5rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2rem",
+            "space-xs": "0.25rem"
+          },
+          "spacingScale": 2,
+          "typography": {
+            "body-lg": {
+              "fontFamily": "Inter",
+              "fontSize": "16px",
+              "fontWeight": "400",
+              "letterSpacing": "-0.01em",
+              "lineHeight": "24px"
+            },
+            "body-md": {
+              "fontFamily": "Inter",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "letterSpacing": "0em",
+              "lineHeight": "20px"
+            },
+            "body-sm": {
+              "fontFamily": "Inter",
+              "fontSize": "12px",
+              "fontWeight": "400",
+              "letterSpacing": "0.01em",
+              "lineHeight": "16px"
+            },
+            "code-lg": {
+              "fontFamily": "JetBrains Mono",
+              "fontSize": "14px",
+              "fontWeight": "500",
+              "letterSpacing": "-0.02em",
+              "lineHeight": "20px"
+            },
+            "code-md": {
+              "fontFamily": "JetBrains Mono",
+              "fontSize": "12px",
+              "fontWeight": "500",
+              "letterSpacing": "0em",
+              "lineHeight": "16px"
+            },
+            "code-sm": {
+              "fontFamily": "JetBrains Mono",
+              "fontSize": "11px",
+              "fontWeight": "400",
+              "letterSpacing": "0.02em",
+              "lineHeight": "14px"
+            },
+            "display-lg": {
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": "48px",
+              "fontWeight": "700",
+              "letterSpacing": "-0.03em",
+              "lineHeight": "56px"
+            },
+            "display-lg-mobile": {
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": "32px",
+              "fontWeight": "700",
+              "letterSpacing": "-0.02em",
+              "lineHeight": "40px"
+            },
+            "headline-lg": {
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "letterSpacing": "-0.02em",
+              "lineHeight": "40px"
+            },
+            "headline-lg-mobile": {
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": "24px",
+              "fontWeight": "600",
+              "letterSpacing": "-0.01em",
+              "lineHeight": "32px"
+            },
+            "headline-md": {
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": "24px",
+              "fontWeight": "600",
+              "letterSpacing": "-0.01em",
+              "lineHeight": "32px"
+            },
+            "headline-sm": {
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "letterSpacing": "0em",
+              "lineHeight": "26px"
+            },
+            "label-caps": {
+              "fontFamily": "JetBrains Mono",
+              "fontSize": "10px",
+              "fontWeight": "700",
+              "letterSpacing": "0.08em",
+              "lineHeight": "14px"
+            }
+          }
+        }
+      },
+      "name": "assets/279fef5495fe430daba15a856a367ab7",
+      "version": "1"
+    },
+    {
+      "designSystem": {
+        "displayName": "ModelSphere Kinetic Minimal",
+        "styleGuidelines": "## Brand & Style\n\nThis design system targets machine learning engineers, infrastructure architects, and deep-tech founders building high-performance AI systems. The aesthetic reflects structural precision, deterministic compute, and luminous clarity.\n\nThe visual direction combines **Precision Minimalism** with **Technical High-Contrast Utility**:\n- **Purity over Noise:** Vast spans of crystalline white (`#ffffff`) and cool atmospheric light-gray layers (`#f8fafc`, `#f1f5f9`), avoiding heavy artificial textures.\n- **Electric Accentuation:** Laser-focused cyan and sky-blue energy points represent active tensors, running endpoints, and low-latency inference channels.\n- **Geek Elegance:** Strict alignment grids, monospaced computational metadata, tight hairline dividers (`#e2e8f0`), and unambiguous information hierarchy.\n- **Emotional Intent:** Instill confidence, frictionless navigation through high-density telemetry, and an unyielding sense of modern algorithmic velocity.\n\n## Layout & Spacing\n\nThe layout is structured around an adaptive 12-column fluid grid tailored for heavy data throughput:\n\n- **Desktop (≥1280px):** 12-column layout with fixed 260px collapsible operational side-navigation, 24px (`1.5rem`) gutters, and dynamic horizontal margins clamped to max 1600px width.\n- **Tablet (768px – 1279px):** 8-column layout with 20px gutters, 24px outer margins, collapsing complex node graphs into stacked metric bands.\n- **Mobile (<768px):** 4-column single-column prioritized flow with 16px (`1rem`) gutters and margins; data-heavy tables horizontal scroll with fixed left identity columns.\n\n### Spatial Rhythm\n- Apply `space-xs` (4px) and `space-sm` (8px) for internal atomic element grouping (e.g., metric label to value, tag internal offsets).\n- Apply `space-md` (16px) for module card padding, form field vertical stacks, and icon-to-label distances.\n- Apply `space-lg` (24px) for inter-card distances, table segment separation, and modal inner boundary gaps.\n- Apply `space-xl` (40px) exclusively to major dashboard domain dividers and canvas hero boundaries.\n\n## Elevation & Depth\n\nThis design system avoids blurry, heavy dropshadows, relying on **Structural Tiers, Hairline Boundaries, and Ambient Cyanic Diffusions**:\n\n- **Tier 0 (Canvas Base):** Surface `#f8fafc`. Flat, non-elevated background.\n- **Tier 1 (Surface Containers & Cards):** Surface `#ffffff` framed by a 1px solid `#e2e8f0` border. No shadow in resting state. Hover state transitions to border `#cbd5e1` accompanied by a micro-ambient illumination: `0 4px 20px -2px rgba(15, 23, 42, 0.04)`.\n- **Tier 2 (Popovers, Flyouts, Menus):** Surface `#ffffff`, border 1px solid `#e2e8f0`, shadow: `0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)`.\n- **Tier 3 (Modals & Command Palette):** Backdropped by `rgba(15, 23, 42, 0.25)` with a `backdrop-filter: blur(4px)`. The surface is crisp `#ffffff`, edged with a precision 1px border `#cbd5e1`, with shadow: `0 20px 40px -12px rgba(15, 23, 42, 0.12)`.\n- **Active / Accent Glows:** Highlighted execution states use a directional luminous glow: `box-shadow: 0 0 0 1px #0284c7, 0 0 12px 0 rgba(6, 182, 212, 0.25)`.\n\n## Components\n\n### Buttons\n- **Primary:** Solid `#0284c7` background, text `#ffffff` (`Geist`, 14px, weight 500), border `1px solid #0284c7`. Hover transitions to `#0ea5e9`. Active transitions to `#0369a1`.\n- **Secondary / Ghost Outline:** Background `#ffffff`, text `#0f172a`, border `1px solid #e2e8f0`. Hover switches background to `#f8fafc` and border to `#cbd5e1`.\n- **Ghost Action:** Background transparent, text `#334155`. Hover background `#f1f5f9`, text `#0f172a`.\n- **Engineering / Terminal Action:** JetBrains Mono 12px font, height 32px, px-3, border `1px solid #e2e8f0`, with trailing keyboard shortcut chips (e.g., `⌘K`).\n\n### Input Fields & Controls\n- **Inputs:** Height 36px, background `#ffffff`, border `1px solid #e2e8f0`, text `#0f172a` (`Geist`, 14px). Placeholder color `#64748b`. Focused state applies `border-color: #0284c7` and a sharp ring `0 0 0 1px #0284c7`.\n- **Checkboxes & Radios:** 16px square/circle, border `1.5px solid #cbd5e1`, background `#ffffff`. Selected state fills `#0284c7` with a crisp white tick mark.\n- **Toggles / Switches:** 36x20px container with `#e2e8f0` background. Thumb is 16px white disk. Active state fills background with `#0284c7`.\n\n### Chips & Telemetry Status Badges\n- **Style:** JetBrains Mono 11px font, weight 500, uppercase letter-spacing 0.04em, padding `2px 8px`, radius 4px.\n- **Live Running Indicator:** Background `rgba(6, 182, 212, 0.1)`, text `#0284c7`, border `1px solid rgba(6, 182, 212, 0.3)` with an internal 6px pulsing dot.\n- **Static Neutral Token:** Background `#f1f5f9`, text `#334155`, border `1px solid #e2e8f0`.\n\n### Data Cards & Clusters\n- **Structure:** Background `#ffffff`, 1px border `#e2e8f0`, padding 20px, radius 8px.\n- **Header Pattern:** Metric label in `Geist` 12px uppercase `#64748b`, primary value in `Space Grotesk` 24px `#0f172a`, accompanied by performance delta tags (`+12.4ms` or `-2.1%`).\n- **Dividers:** Internal section partitions use 1px hairlines of `#f1f5f9`.\n\n### Specialized Deep-Tech Components\n- **Inference Log Viewer:** Background `#f8fafc`, font `JetBrains Mono` 12px, line numbers in `#64748b`, syntax colored via deep blue/slate shades and cyan string literals.\n- **Model Topology Nodes:** Canvas elements rendered on pure `#ffffff` cards with active edge connections colored in `#06b6d4` with animating gradient dashes.",
+        "theme": {
+          "bodyFont": "GEIST",
+          "bodyFontFamily": "Geist",
+          "colorMode": "LIGHT",
+          "colorVariant": "FIDELITY",
+          "customColor": "#0284c7",
+          "designMd": "---\nname: ModelSphere Kinetic Minimal\ncolors:\n  surface: '#faf8ff'\n  surface-dim: '#d2d9f4'\n  surface-bright: '#faf8ff'\n  surface-container-lowest: '#ffffff'\n  surface-container-low: '#f2f3ff'\n  surface-container: '#eaedff'\n  surface-container-high: '#e2e7ff'\n  surface-container-highest: '#dae2fd'\n  on-surface: '#131b2e'\n  on-surface-variant: '#3f4850'\n  inverse-surface: '#283044'\n  inverse-on-surface: '#eef0ff'\n  outline: '#707881'\n  outline-variant: '#bfc7d2'\n  surface-tint: '#006398'\n  primary: '#006194'\n  on-primary: '#ffffff'\n  primary-container: '#007bb9'\n  on-primary-container: '#fdfcff'\n  inverse-primary: '#93ccff'\n  secondary: '#00687a'\n  on-secondary: '#ffffff'\n  secondary-container: '#57dffe'\n  on-secondary-container: '#006172'\n  tertiary: '#00628d'\n  on-tertiary: '#ffffff'\n  tertiary-container: '#007cb1'\n  on-tertiary-container: '#fcfcff'\n  error: '#ba1a1a'\n  on-error: '#ffffff'\n  error-container: '#ffdad6'\n  on-error-container: '#93000a'\n  primary-fixed: '#cce5ff'\n  primary-fixed-dim: '#93ccff'\n  on-primary-fixed: '#001d31'\n  on-primary-fixed-variant: '#004b73'\n  secondary-fixed: '#acedff'\n  secondary-fixed-dim: '#4cd7f6'\n  on-secondary-fixed: '#001f26'\n  on-secondary-fixed-variant: '#004e5c'\n  tertiary-fixed: '#c9e6ff'\n  tertiary-fixed-dim: '#89ceff'\n  on-tertiary-fixed: '#001e2f'\n  on-tertiary-fixed-variant: '#004c6e'\n  background: '#faf8ff'\n  on-background: '#131b2e'\n  surface-variant: '#dae2fd'\ntypography:\n  display:\n    fontFamily: Space Grotesk\n    fontSize: 48px\n    fontWeight: '700'\n    lineHeight: 56px\n    letterSpacing: -0.03em\n  display-mobile:\n    fontFamily: Space Grotesk\n    fontSize: 36px\n    fontWeight: '700'\n    lineHeight: 44px\n    letterSpacing: -0.02em\n  headline-lg:\n    fontFamily: Space Grotesk\n    fontSize: 32px\n    fontWeight: '600'\n    lineHeight: 40px\n    letterSpacing: -0.02em\n  headline-lg-mobile:\n    fontFamily: Space Grotesk\n    fontSize: 26px\n    fontWeight: '600'\n    lineHeight: 34px\n    letterSpacing: -0.01em\n  headline-md:\n    fontFamily: Space Grotesk\n    fontSize: 24px\n    fontWeight: '600'\n    lineHeight: 32px\n    letterSpacing: -0.01em\n  headline-sm:\n    fontFamily: Space Grotesk\n    fontSize: 18px\n    fontWeight: '600'\n    lineHeight: 26px\n    letterSpacing: -0.01em\n  body-lg:\n    fontFamily: Geist\n    fontSize: 16px\n    fontWeight: '400'\n    lineHeight: 24px\n    letterSpacing: -0.005em\n  body-md:\n    fontFamily: Geist\n    fontSize: 14px\n    fontWeight: '400'\n    lineHeight: 20px\n    letterSpacing: 0em\n  body-sm:\n    fontFamily: Geist\n    fontSize: 12px\n    fontWeight: '400'\n    lineHeight: 18px\n    letterSpacing: 0.005em\n  label-lg:\n    fontFamily: JetBrains Mono\n    fontSize: 13px\n    fontWeight: '500'\n    lineHeight: 18px\n    letterSpacing: 0em\n  label-md:\n    fontFamily: JetBrains Mono\n    fontSize: 11px\n    fontWeight: '500'\n    lineHeight: 16px\n    letterSpacing: 0.02em\n  label-sm:\n    fontFamily: JetBrains Mono\n    fontSize: 10px\n    fontWeight: '600'\n    lineHeight: 14px\n    letterSpacing: 0.04em\nrounded:\n  sm: 0.125rem\n  DEFAULT: 0.25rem\n  md: 0.375rem\n  lg: 0.5rem\n  xl: 0.75rem\n  full: 9999px\nspacing:\n  gutter: 1.5rem\n  gutter-mobile: 1rem\n  margin: 2rem\n  margin-mobile: 1rem\n  space-xs: 0.25rem\n  space-sm: 0.5rem\n  space-md: 1rem\n  space-lg: 1.5rem\n  space-xl: 2.5rem\n---\n\n## Brand & Style\n\nThis design system targets machine learning engineers, infrastructure architects, and deep-tech founders building high-performance AI systems. The aesthetic reflects structural precision, deterministic compute, and luminous clarity.\n\nThe visual direction combines **Precision Minimalism** with **Technical High-Contrast Utility**:\n- **Purity over Noise:** Vast spans of crystalline white (`#ffffff`) and cool atmospheric light-gray layers (`#f8fafc`, `#f1f5f9`), avoiding heavy artificial textures.\n- **Electric Accentuation:** Laser-focused cyan and sky-blue energy points represent active tensors, running endpoints, and low-latency inference channels.\n- **Geek Elegance:** Strict alignment grids, monospaced computational metadata, tight hairline dividers (`#e2e8f0`), and unambiguous information hierarchy.\n- **Emotional Intent:** Instill confidence, frictionless navigation through high-density telemetry, and an unyielding sense of modern algorithmic velocity.\n\n## Colors\n\nThe palette balances clean slate architecture with vibrant cyanic focal points:\n\n### Base & Canvas Surfaces\n- **Canvas Default:** `#ffffff` — Crisp, pure base for maximum contrast and high-definition clarity.\n- **Canvas Subdued:** `#f8fafc` (Slate 50) — Used for foundational application backdrops, sidebar panels, and outer layout troughs.\n- **Surface Elevated:** `#f1f5f9` (Slate 100) — Dedicated to interactive card foundations, table headers, and code block containers.\n- **Border Default:** `#e2e8f0` (Slate 200) — Hairline boundaries, matrix lines, and divider structures.\n- **Border Focus / Subtle Active:** `#cbd5e1` (Slate 300) — Interactive hover states on neutral containers.\n\n### Typography & Content\n- **Text Strong / Primary:** `#0f172a` (Slate 900) — Uncompromised high-contrast legibility for titles, critical metrics, and code operators.\n- **Text Subdued / Secondary:** `#334155` (Slate 700) — Explanatory documentation, standard body descriptions, and secondary metadata.\n- **Text Muted:** `#64748b` (Slate 500) — Placeholders, inactive labels, and table axis markers.\n\n### Accents & Telemetry\n- **Primary Accent:** `#0284c7` (Sky 600) — Main call-to-actions, active navigation pills, primary status highlights.\n- **Secondary Accent:** `#06b6d4` (Cyan 500) — Telemetry pulses, throughput charts, model weights, and latency gauges.\n- **Tertiary Accent:** `#0ea5e9` (Sky 500) — Interactive hover states, secondary highlights, and token stream indicators.\n- **Subtle Accent Wash:** `rgba(6, 182, 212, 0.08)` — Active row selections, chip tints, and focused input backgrounds.\n- **Status Semantic Signals:** Success `#059669` (Emerald 600), Warning `#d97706` (Amber 600), Critical `#e11d48` (Rose 600).\n\n## Typography\n\nThe typographic hierarchy orchestrates technical capability and clean human readability:\n\n- **Headlines (Space Grotesk):** Provides structured geometric confidence with subtle engineering idiosyncrasies. Used across major section titles, dashboard canvas metric headings, and system breadcrumbs.\n- **Body & Editorial (Geist):** Serves as an unadorned, high-clarity sans-serif calibrated for dense functional dashboards, operational reports, and multi-column parameter tables.\n- **Technical & Metric Metadata (JetBrains Mono):** Reserved for model identifiers, parameter counts (`70B`, `405B`), token generation speeds (`tok/sec`), memory allocation bars, timestamps, and JSON/YAML configuration previews.\n\n## Layout & Spacing\n\nThe layout is structured around an adaptive 12-column fluid grid tailored for heavy data throughput:\n\n- **Desktop (≥1280px):** 12-column layout with fixed 260px collapsible operational side-navigation, 24px (`1.5rem`) gutters, and dynamic horizontal margins clamped to max 1600px width.\n- **Tablet (768px – 1279px):** 8-column layout with 20px gutters, 24px outer margins, collapsing complex node graphs into stacked metric bands.\n- **Mobile (<768px):** 4-column single-column prioritized flow with 16px (`1rem`) gutters and margins; data-heavy tables horizontal scroll with fixed left identity columns.\n\n### Spatial Rhythm\n- Apply `space-xs` (4px) and `space-sm` (8px) for internal atomic element grouping (e.g., metric label to value, tag internal offsets).\n- Apply `space-md` (16px) for module card padding, form field vertical stacks, and icon-to-label distances.\n- Apply `space-lg` (24px) for inter-card distances, table segment separation, and modal inner boundary gaps.\n- Apply `space-xl` (40px) exclusively to major dashboard domain dividers and canvas hero boundaries.\n\n## Elevation & Depth\n\nThis design system avoids blurry, heavy dropshadows, relying on **Structural Tiers, Hairline Boundaries, and Ambient Cyanic Diffusions**:\n\n- **Tier 0 (Canvas Base):** Surface `#f8fafc`. Flat, non-elevated background.\n- **Tier 1 (Surface Containers & Cards):** Surface `#ffffff` framed by a 1px solid `#e2e8f0` border. No shadow in resting state. Hover state transitions to border `#cbd5e1` accompanied by a micro-ambient illumination: `0 4px 20px -2px rgba(15, 23, 42, 0.04)`.\n- **Tier 2 (Popovers, Flyouts, Menus):** Surface `#ffffff`, border 1px solid `#e2e8f0`, shadow: `0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)`.\n- **Tier 3 (Modals & Command Palette):** Backdropped by `rgba(15, 23, 42, 0.25)` with a `backdrop-filter: blur(4px)`. The surface is crisp `#ffffff`, edged with a precision 1px border `#cbd5e1`, with shadow: `0 20px 40px -12px rgba(15, 23, 42, 0.12)`.\n- **Active / Accent Glows:** Highlighted execution states use a directional luminous glow: `box-shadow: 0 0 0 1px #0284c7, 0 0 12px 0 rgba(6, 182, 212, 0.25)`.\n\n## Shapes\n\nThe geometric framework favors sharp architectural discipline over bubbly organic curves:\n\n- **Base Radius (`rounded`, 4px):** Used for micro-components including badges, data table tags, status pills, inputs, and operational buttons.\n- **Container Radius (`rounded-lg`, 8px):** Applied to telemetry cards, modular widgets, dropdown menus, and metric containers.\n- **Structural Radius (`rounded-xl`, 12px):** Reserved solely for global modal dialogs, primary code IDE wrappers, and interactive node playgrounds.\n- **Corner Contrast:** Inner sub-elements nested within containers must always use an inner radius calculated as `R_inner = max(0, R_outer - padding)` to maintain clean concentric geometry.\n\n## Components\n\n### Buttons\n- **Primary:** Solid `#0284c7` background, text `#ffffff` (`Geist`, 14px, weight 500), border `1px solid #0284c7`. Hover transitions to `#0ea5e9`. Active transitions to `#0369a1`.\n- **Secondary / Ghost Outline:** Background `#ffffff`, text `#0f172a`, border `1px solid #e2e8f0`. Hover switches background to `#f8fafc` and border to `#cbd5e1`.\n- **Ghost Action:** Background transparent, text `#334155`. Hover background `#f1f5f9`, text `#0f172a`.\n- **Engineering / Terminal Action:** JetBrains Mono 12px font, height 32px, px-3, border `1px solid #e2e8f0`, with trailing keyboard shortcut chips (e.g., `⌘K`).\n\n### Input Fields & Controls\n- **Inputs:** Height 36px, background `#ffffff`, border `1px solid #e2e8f0`, text `#0f172a` (`Geist`, 14px). Placeholder color `#64748b`. Focused state applies `border-color: #0284c7` and a sharp ring `0 0 0 1px #0284c7`.\n- **Checkboxes & Radios:** 16px square/circle, border `1.5px solid #cbd5e1`, background `#ffffff`. Selected state fills `#0284c7` with a crisp white tick mark.\n- **Toggles / Switches:** 36x20px container with `#e2e8f0` background. Thumb is 16px white disk. Active state fills background with `#0284c7`.\n\n### Chips & Telemetry Status Badges\n- **Style:** JetBrains Mono 11px font, weight 500, uppercase letter-spacing 0.04em, padding `2px 8px`, radius 4px.\n- **Live Running Indicator:** Background `rgba(6, 182, 212, 0.1)`, text `#0284c7`, border `1px solid rgba(6, 182, 212, 0.3)` with an internal 6px pulsing dot.\n- **Static Neutral Token:** Background `#f1f5f9`, text `#334155`, border `1px solid #e2e8f0`.\n\n### Data Cards & Clusters\n- **Structure:** Background `#ffffff`, 1px border `#e2e8f0`, padding 20px, radius 8px.\n- **Header Pattern:** Metric label in `Geist` 12px uppercase `#64748b`, primary value in `Space Grotesk` 24px `#0f172a`, accompanied by performance delta tags (`+12.4ms` or `-2.1%`).\n- **Dividers:** Internal section partitions use 1px hairlines of `#f1f5f9`.\n\n### Specialized Deep-Tech Components\n- **Inference Log Viewer:** Background `#f8fafc`, font `JetBrains Mono` 12px, line numbers in `#64748b`, syntax colored via deep blue/slate shades and cyan string literals.\n- **Model Topology Nodes:** Canvas elements rendered on pure `#ffffff` cards with active edge connections colored in `#06b6d4` with animating gradient dashes.",
+          "font": "SPACE_GROTESK",
+          "headlineFont": "SPACE_GROTESK",
+          "headlineFontFamily": "Space Grotesk",
+          "labelFont": "JETBRAINS_MONO",
+          "labelFontFamily": "JetBrains Mono",
+          "namedColors": {
+            "background": "#faf8ff",
+            "error": "#ba1a1a",
+            "error_container": "#ffdad6",
+            "inverse_on_surface": "#eef0ff",
+            "inverse_primary": "#93ccff",
+            "inverse_surface": "#283044",
+            "on_background": "#131b2e",
+            "on_error": "#ffffff",
+            "on_error_container": "#93000a",
+            "on_primary": "#ffffff",
+            "on_primary_container": "#fdfcff",
+            "on_primary_fixed": "#001d31",
+            "on_primary_fixed_variant": "#004b73",
+            "on_secondary": "#ffffff",
+            "on_secondary_container": "#006172",
+            "on_secondary_fixed": "#001f26",
+            "on_secondary_fixed_variant": "#004e5c",
+            "on_surface": "#131b2e",
+            "on_surface_variant": "#3f4850",
+            "on_tertiary": "#ffffff",
+            "on_tertiary_container": "#fcfcff",
+            "on_tertiary_fixed": "#001e2f",
+            "on_tertiary_fixed_variant": "#004c6e",
+            "outline": "#707881",
+            "outline_variant": "#bfc7d2",
+            "primary": "#006194",
+            "primary_container": "#007bb9",
+            "primary_fixed": "#cce5ff",
+            "primary_fixed_dim": "#93ccff",
+            "secondary": "#00687a",
+            "secondary_container": "#57dffe",
+            "secondary_fixed": "#acedff",
+            "secondary_fixed_dim": "#4cd7f6",
+            "surface": "#faf8ff",
+            "surface_bright": "#faf8ff",
+            "surface_container": "#eaedff",
+            "surface_container_high": "#e2e7ff",
+            "surface_container_highest": "#dae2fd",
+            "surface_container_low": "#f2f3ff",
+            "surface_container_lowest": "#ffffff",
+            "surface_dim": "#d2d9f4",
+            "surface_tint": "#006398",
+            "surface_variant": "#dae2fd",
+            "tertiary": "#00628d",
+            "tertiary_container": "#007cb1",
+            "tertiary_fixed": "#c9e6ff",
+            "tertiary_fixed_dim": "#89ceff"
+          },
+          "overrideNeutralColor": "#0f172a",
+          "overridePrimaryColor": "#0284c7",
+          "overrideSecondaryColor": "#06b6d4",
+          "overrideTertiaryColor": "#0ea5e9",
+          "roundness": "ROUND_FOUR",
+          "spacing": {
+            "gutter": "1.5rem",
+            "gutter-mobile": "1rem",
+            "margin": "2rem",
+            "margin-mobile": "1rem",
+            "space-lg": "1.5rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2.5rem",
+            "space-xs": "0.25rem"
+          },
+          "spacingScale": 2,
+          "typography": {
+            "body-lg": {
+              "fontFamily": "Geist",
+              "fontSize": "16px",
+              "fontWeight": "400",
+              "letterSpacing": "-0.005em",
+              "lineHeight": "24px"
+            },
+            "body-md": {
+              "fontFamily": "Geist",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "letterSpacing": "0em",
+              "lineHeight": "20px"
+            },
+            "body-sm": {
+              "fontFamily": "Geist",
+              "fontSize": "12px",
+              "fontWeight": "400",
+              "letterSpacing": "0.005em",
+              "lineHeight": "18px"
+            },
+            "display": {
+              "fontFamily": "Space Grotesk",
+              "fontSize": "48px",
+              "fontWeight": "700",
+              "letterSpacing": "-0.03em",
+              "lineHeight": "56px"
+            },
+            "display-mobile": {
+              "fontFamily": "Space Grotesk",
+              "fontSize": "36px",
+              "fontWeight": "700",
+              "letterSpacing": "-0.02em",
+              "lineHeight": "44px"
+            },
+            "headline-lg": {
+              "fontFamily": "Space Grotesk",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "letterSpacing": "-0.02em",
+              "lineHeight": "40px"
+            },
+            "headline-lg-mobile": {
+              "fontFamily": "Space Grotesk",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "letterSpacing": "-0.01em",
+              "lineHeight": "34px"
+            },
+            "headline-md": {
+              "fontFamily": "Space Grotesk",
+              "fontSize": "24px",
+              "fontWeight": "600",
+              "letterSpacing": "-0.01em",
+              "lineHeight": "32px"
+            },
+            "headline-sm": {
+              "fontFamily": "Space Grotesk",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "letterSpacing": "-0.01em",
+              "lineHeight": "26px"
+            },
+            "label-lg": {
+              "fontFamily": "JetBrains Mono",
+              "fontSize": "13px",
+              "fontWeight": "500",
+              "letterSpacing": "0em",
+              "lineHeight": "18px"
+            },
+            "label-md": {
+              "fontFamily": "JetBrains Mono",
+              "fontSize": "11px",
+              "fontWeight": "500",
+              "letterSpacing": "0.02em",
+              "lineHeight": "16px"
+            },
+            "label-sm": {
+              "fontFamily": "JetBrains Mono",
+              "fontSize": "10px",
+              "fontWeight": "600",
+              "letterSpacing": "0.04em",
+              "lineHeight": "14px"
+            }
+          }
+        }
+      },
+      "name": "assets/424dd55a7dcc4d88aac6c59c7a19c922",
+      "version": "1"
+    }
+  ],
+  "screens": [
+    {
+      "deviceType": "DESKTOP",
+      "height": "10678",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/17099206191290292763"
+      },
+      "name": "projects/3601238558355976464/screens/ee4d0d0626074e06b788501def72c82f",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/17699318198336903807"
+      },
+      "title": "特性与架构 - 模域 ModelSphere 生产级大模型推理平台",
+      "width": "2896",
+      "theme": "dark",
+      "htmlSha256": "1542bfedd8d65dfad7b3c8a36acb2dba4bf653c1e947d5ea6d8223b3b8238fcd",
+      "htmlReviewed": true,
+      "screenshotReviewed": false
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "5732",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/5853845568464053881"
+      },
+      "name": "projects/3601238558355976464/screens/846bbe8002864363bbf67801478578b0",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/11914981776219524447"
+      },
+      "title": "快速开始与技术文档 - 模域 ModelSphere 生产级大模型推理平台",
+      "width": "2560",
+      "theme": "dark",
+      "htmlSha256": "eb3b16099871c28ab90b9812656a71b8281aec486f2d1c3b21fb2c3793408800",
+      "htmlReviewed": true,
+      "screenshotReviewed": false
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "6430",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/3513121209737798277"
+      },
+      "name": "projects/3601238558355976464/screens/df89d20f725e4aa683ad76ee447e6163",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/10655906811487098911"
+      },
+      "title": "模型目录与测评 - 模域 ModelSphere 生产级大模型推理平台",
+      "width": "2896",
+      "theme": "dark",
+      "htmlSha256": "5426fae4eb62368f39e81a844d01f6ae149896937e27f998a09c1c02f3e87164",
+      "htmlReviewed": true,
+      "screenshotReviewed": false
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "6132",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/5670909689759941242"
+      },
+      "name": "projects/3601238558355976464/screens/14050489bf0345948f712cd70b166730",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/2600902566726852328"
+      },
+      "title": "快速开始与技术文档 - 模域 ModelSphere 生产级大模型推理平台 (浅色版)",
+      "width": "2560",
+      "theme": "light",
+      "htmlSha256": "dcd0ba5caa11cbcfa263e56f466291521bbdbbbbf3f144395c3234a60cfcc69e",
+      "htmlReviewed": true,
+      "screenshotReviewed": false
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "10272",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/1417657409099258094"
+      },
+      "name": "projects/3601238558355976464/screens/5263701929920374721",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/9326294373481702781"
+      },
+      "title": "模域 ModelSphere 生产级大模型推理平台官方主页 (浅色版)",
+      "width": "2560",
+      "theme": "light",
+      "htmlSha256": "0e3a99afa2f887a9bedacd025483dbd311ec2dedfb676336196b256489add73b",
+      "htmlReviewed": true,
+      "screenshotReviewed": false
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "7814",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/16727163790765334844"
+      },
+      "name": "projects/3601238558355976464/screens/3cb57bc78d0d458ca73ad43283ec4f41",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/13204201161089698717"
+      },
+      "title": "社区与生态 - 模域 ModelSphere 生产级大模型推理平台",
+      "width": "2560",
+      "theme": "dark",
+      "htmlSha256": "21be218a1830147205239f468e535bed3846a795e3f8977b2d103296e2ad8036",
+      "htmlReviewed": true,
+      "screenshotReviewed": false
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "9514",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/13263281797968214709"
+      },
+      "name": "projects/3601238558355976464/screens/13ecc0712d564e3ba3e3c54851a876f3",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/5420092003821583944"
+      },
+      "title": "社区与生态 - 模域 ModelSphere 生产级大模型推理平台 (浅色版)",
+      "width": "2560",
+      "theme": "light",
+      "htmlSha256": "db8267b8f27237fdad50cf48def40d1037756a94b349b25b445173c3a26bb915",
+      "htmlReviewed": true,
+      "screenshotReviewed": false
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "11820",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/15831037554193392517"
+      },
+      "name": "projects/3601238558355976464/screens/37d5c004e27d42ddb8651a3526ff37d5",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/14923713269709595122"
+      },
+      "title": "技术博客与动态 - 模域 ModelSphere 生产级大模型推理平台",
+      "width": "2896",
+      "theme": "dark",
+      "htmlSha256": "a1cf291b6862501ad14efbef844d76a2ecf3547dc2c7ade47567499b0592ca02",
+      "htmlReviewed": true,
+      "screenshotReviewed": false
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "10966",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/2553480786153602943"
+      },
+      "name": "projects/3601238558355976464/screens/447c1b2d4c044d37879bba6ce6f6eb7a",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/5438002795364940577"
+      },
+      "title": "技术博客与动态 - 模域 ModelSphere 生产级大模型推理平台 (浅色版)",
+      "width": "2560",
+      "theme": "light",
+      "htmlSha256": "0dc6ef417abd33c6a48700d4f6c52d777ba283a4f4ff419486c362190cf03c58",
+      "htmlReviewed": true,
+      "screenshotReviewed": false
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "9156",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/12591464638510076604"
+      },
+      "name": "projects/3601238558355976464/screens/82062c5a8d194c7b856857e69c57667c",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/2775858627326330039"
+      },
+      "title": "模域 ModelSphere 生产级大模型推理平台官方主页",
+      "width": "2560",
+      "theme": "dark",
+      "htmlSha256": "5ff528f8349c2492d46cf344c50f92eefb0a19a00faec910ed42a7e1259db500",
+      "htmlReviewed": true,
+      "screenshotReviewed": true,
+      "downloadedScreenshotDimensions": {
+        "width": 2560,
+        "height": 9652
+      }
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "6064",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/18021764215845545283"
+      },
+      "name": "projects/3601238558355976464/screens/e1933f162a094a17884790ca93c051ce",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/13920093471520477519"
+      },
+      "title": "模型目录与测评 - 模域 ModelSphere 生产级大模型推理平台 (浅色版)",
+      "width": "2560",
+      "theme": "light",
+      "htmlSha256": "493b2389d3108c12d746ee82e3ac1988087209adef37ddc39fd48f7cf6672382",
+      "htmlReviewed": true,
+      "screenshotReviewed": true,
+      "downloadedScreenshotDimensions": {
+        "width": 2560,
+        "height": 3574
+      }
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "9000",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/16045188393393734285"
+      },
+      "name": "projects/3601238558355976464/screens/5656810de34242ca994f75e06012ebff",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/15403626435918408657"
+      },
+      "title": "文章深度精读 - 模域 ModelSphere 正式开源 (浅色版)",
+      "width": "2560",
+      "theme": "light",
+      "htmlSha256": "839693f0531b317cc2b82885fd1b44a9309b781fe7a56c81294b07510a939f4a",
+      "htmlReviewed": true,
+      "screenshotReviewed": true,
+      "downloadedScreenshotDimensions": {
+        "width": 2560,
+        "height": 8988
+      }
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "10144",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/14134351686456223045"
+      },
+      "name": "projects/3601238558355976464/screens/89adf2364c4f427ca52ff9cbcb549af4",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/8842899703104869079"
+      },
+      "title": "特性与架构 - 模域 ModelSphere 生产级大模型推理平台 (浅色版)",
+      "width": "2560",
+      "theme": "light",
+      "htmlSha256": "fecc15efb2f06b7fd18a738a3408f4212cd838420923b3ed5d60db6adc39ccca",
+      "htmlReviewed": true,
+      "screenshotReviewed": false
+    },
+    {
+      "deviceType": "DESKTOP",
+      "height": "10272",
+      "htmlCode": {
+        "mimeType": "text/html",
+        "name": "projects/3601238558355976464/files/16603426697023181110"
+      },
+      "name": "projects/3601238558355976464/screens/e6dbe9b7c32a4401a2ee2bb3ffed9f15",
+      "screenshot": {
+        "name": "projects/3601238558355976464/files/13203690005346935553"
+      },
+      "title": "模域 ModelSphere 生产级大模型推理平台官方主页 (浅色版)",
+      "width": "2560",
+      "theme": "light",
+      "htmlSha256": "e3237fc0223dcd76d115fcc4e71740b94e49ee176c4282b3bf40131ad7125d38",
+      "htmlReviewed": true,
+      "screenshotReviewed": true,
+      "downloadedScreenshotDimensions": {
+        "width": 2560,
+        "height": 10046
+      }
+    }
+  ],
+  "evidenceBoundary": "Design and screenshots are visual references, not proof of business claims or functioning interactions. Screenshot metadata may differ from list metadata. No application built or screenshot parity verified.",
+  "semanticContrastAudit": {
+    "checkedOn": "2026-10-21",
+    "method": "WCAG sRGB relative luminance contrast, opaque pairs only",
+    "scope": "Declared text/actions/feedback/code pairs and control/focus colors against solid surfaces; not a rendered UI or accessibility certification",
+    "checks": [
+      {
+        "label": "light text.primary/canvas",
+        "foreground": "#0F172A",
+        "background": "#FFFFFF",
+        "ratio": 17.853,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light text.secondary/canvas",
+        "foreground": "#334155",
+        "background": "#FFFFFF",
+        "ratio": 10.355,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light text.muted/canvas",
+        "foreground": "#475569",
+        "background": "#FFFFFF",
+        "ratio": 7.578,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light brand.primary/canvas",
+        "foreground": "#0369A1",
+        "background": "#FFFFFF",
+        "ratio": 5.934,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light brand.primaryHover/canvas",
+        "foreground": "#075985",
+        "background": "#FFFFFF",
+        "ratio": 7.563,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light border.control/canvas",
+        "foreground": "#64748B",
+        "background": "#FFFFFF",
+        "ratio": 4.759,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "light focus.ring/canvas",
+        "foreground": "#0369A1",
+        "background": "#FFFFFF",
+        "ratio": 5.934,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "light text.primary/surface",
+        "foreground": "#0F172A",
+        "background": "#FFFFFF",
+        "ratio": 17.853,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light text.secondary/surface",
+        "foreground": "#334155",
+        "background": "#FFFFFF",
+        "ratio": 10.355,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light text.muted/surface",
+        "foreground": "#475569",
+        "background": "#FFFFFF",
+        "ratio": 7.578,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light brand.primary/surface",
+        "foreground": "#0369A1",
+        "background": "#FFFFFF",
+        "ratio": 5.934,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light brand.primaryHover/surface",
+        "foreground": "#075985",
+        "background": "#FFFFFF",
+        "ratio": 7.563,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light border.control/surface",
+        "foreground": "#64748B",
+        "background": "#FFFFFF",
+        "ratio": 4.759,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "light focus.ring/surface",
+        "foreground": "#0369A1",
+        "background": "#FFFFFF",
+        "ratio": 5.934,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "light text.primary/subtle",
+        "foreground": "#0F172A",
+        "background": "#F8FAFC",
+        "ratio": 17.063,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light text.secondary/subtle",
+        "foreground": "#334155",
+        "background": "#F8FAFC",
+        "ratio": 9.897,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light text.muted/subtle",
+        "foreground": "#475569",
+        "background": "#F8FAFC",
+        "ratio": 7.243,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light brand.primary/subtle",
+        "foreground": "#0369A1",
+        "background": "#F8FAFC",
+        "ratio": 5.671,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light brand.primaryHover/subtle",
+        "foreground": "#075985",
+        "background": "#F8FAFC",
+        "ratio": 7.228,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light border.control/subtle",
+        "foreground": "#64748B",
+        "background": "#F8FAFC",
+        "ratio": 4.548,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "light focus.ring/subtle",
+        "foreground": "#0369A1",
+        "background": "#F8FAFC",
+        "ratio": 5.671,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "light text.primary/elevated",
+        "foreground": "#0F172A",
+        "background": "#F1F5F9",
+        "ratio": 16.296,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light text.secondary/elevated",
+        "foreground": "#334155",
+        "background": "#F1F5F9",
+        "ratio": 9.452,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light text.muted/elevated",
+        "foreground": "#475569",
+        "background": "#F1F5F9",
+        "ratio": 6.917,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light brand.primary/elevated",
+        "foreground": "#0369A1",
+        "background": "#F1F5F9",
+        "ratio": 5.416,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light brand.primaryHover/elevated",
+        "foreground": "#075985",
+        "background": "#F1F5F9",
+        "ratio": 6.904,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light border.control/elevated",
+        "foreground": "#64748B",
+        "background": "#F1F5F9",
+        "ratio": 4.344,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "light focus.ring/elevated",
+        "foreground": "#0369A1",
+        "background": "#F1F5F9",
+        "ratio": 5.416,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "light code.command",
+        "foreground": "#075985",
+        "background": "#F1F5F9",
+        "ratio": 6.904,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light code.string",
+        "foreground": "#065F46",
+        "background": "#F1F5F9",
+        "ratio": 7.014,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light code.comment",
+        "foreground": "#475569",
+        "background": "#F1F5F9",
+        "ratio": 6.917,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light primary label/primary",
+        "foreground": "#FFFFFF",
+        "background": "#0369A1",
+        "ratio": 5.934,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light primary label/primaryHover",
+        "foreground": "#FFFFFF",
+        "background": "#075985",
+        "ratio": 7.563,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light terminal #E2E8F0",
+        "foreground": "#E2E8F0",
+        "background": "#0F172A",
+        "ratio": 14.482,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light terminal #38BDF8",
+        "foreground": "#38BDF8",
+        "background": "#0F172A",
+        "ratio": 8.333,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light terminal #6FFBBE",
+        "foreground": "#6FFBBE",
+        "background": "#0F172A",
+        "ratio": 13.788,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light terminal #A4B3B6",
+        "foreground": "#A4B3B6",
+        "background": "#0F172A",
+        "ratio": 8.248,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark text.primary/canvas",
+        "foreground": "#E1E2EC",
+        "background": "#10131A",
+        "ratio": 14.416,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark text.secondary/canvas",
+        "foreground": "#BAC9CC",
+        "background": "#10131A",
+        "ratio": 10.897,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark text.muted/canvas",
+        "foreground": "#A4B3B6",
+        "background": "#10131A",
+        "ratio": 8.585,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark brand.primary/canvas",
+        "foreground": "#00E5FF",
+        "background": "#10131A",
+        "ratio": 12.08,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark brand.primaryHover/canvas",
+        "foreground": "#9CF0FF",
+        "background": "#10131A",
+        "ratio": 14.443,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark border.control/canvas",
+        "foreground": "#849396",
+        "background": "#10131A",
+        "ratio": 5.836,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "dark focus.ring/canvas",
+        "foreground": "#00E5FF",
+        "background": "#10131A",
+        "ratio": 12.08,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "dark text.primary/surface",
+        "foreground": "#E1E2EC",
+        "background": "#1D1F27",
+        "ratio": 12.752,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark text.secondary/surface",
+        "foreground": "#BAC9CC",
+        "background": "#1D1F27",
+        "ratio": 9.639,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark text.muted/surface",
+        "foreground": "#A4B3B6",
+        "background": "#1D1F27",
+        "ratio": 7.594,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark brand.primary/surface",
+        "foreground": "#00E5FF",
+        "background": "#1D1F27",
+        "ratio": 10.686,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark brand.primaryHover/surface",
+        "foreground": "#9CF0FF",
+        "background": "#1D1F27",
+        "ratio": 12.776,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark border.control/surface",
+        "foreground": "#849396",
+        "background": "#1D1F27",
+        "ratio": 5.162,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "dark focus.ring/surface",
+        "foreground": "#00E5FF",
+        "background": "#1D1F27",
+        "ratio": 10.686,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "dark text.primary/subtle",
+        "foreground": "#E1E2EC",
+        "background": "#191B23",
+        "ratio": 13.328,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark text.secondary/subtle",
+        "foreground": "#BAC9CC",
+        "background": "#191B23",
+        "ratio": 10.074,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark text.muted/subtle",
+        "foreground": "#A4B3B6",
+        "background": "#191B23",
+        "ratio": 7.937,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark brand.primary/subtle",
+        "foreground": "#00E5FF",
+        "background": "#191B23",
+        "ratio": 11.168,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark brand.primaryHover/subtle",
+        "foreground": "#9CF0FF",
+        "background": "#191B23",
+        "ratio": 13.352,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark border.control/subtle",
+        "foreground": "#849396",
+        "background": "#191B23",
+        "ratio": 5.395,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "dark focus.ring/subtle",
+        "foreground": "#00E5FF",
+        "background": "#191B23",
+        "ratio": 11.168,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "dark text.primary/elevated",
+        "foreground": "#E1E2EC",
+        "background": "#272A32",
+        "ratio": 11.132,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark text.secondary/elevated",
+        "foreground": "#BAC9CC",
+        "background": "#272A32",
+        "ratio": 8.414,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark text.muted/elevated",
+        "foreground": "#A4B3B6",
+        "background": "#272A32",
+        "ratio": 6.629,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark brand.primary/elevated",
+        "foreground": "#00E5FF",
+        "background": "#272A32",
+        "ratio": 9.328,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark brand.primaryHover/elevated",
+        "foreground": "#9CF0FF",
+        "background": "#272A32",
+        "ratio": 11.152,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark border.control/elevated",
+        "foreground": "#849396",
+        "background": "#272A32",
+        "ratio": 4.506,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "dark focus.ring/elevated",
+        "foreground": "#00E5FF",
+        "background": "#272A32",
+        "ratio": 9.328,
+        "minimum": 3,
+        "pass": true
+      },
+      {
+        "label": "dark code.command",
+        "foreground": "#9CF0FF",
+        "background": "#0B0E15",
+        "ratio": 15.003,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark code.string",
+        "foreground": "#6FFBBE",
+        "background": "#0B0E15",
+        "ratio": 14.908,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark code.comment",
+        "foreground": "#A4B3B6",
+        "background": "#0B0E15",
+        "ratio": 8.918,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark primary label/primary",
+        "foreground": "#0A0D14",
+        "background": "#00E5FF",
+        "ratio": 12.634,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark primary label/primaryHover",
+        "foreground": "#0A0D14",
+        "background": "#9CF0FF",
+        "ratio": 15.105,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark terminal #E2E8F0",
+        "foreground": "#E2E8F0",
+        "background": "#0B0E15",
+        "ratio": 15.659,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark terminal #38BDF8",
+        "foreground": "#38BDF8",
+        "background": "#0B0E15",
+        "ratio": 9.011,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark terminal #6FFBBE",
+        "foreground": "#6FFBBE",
+        "background": "#0B0E15",
+        "ratio": 14.908,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark terminal #A4B3B6",
+        "foreground": "#A4B3B6",
+        "background": "#0B0E15",
+        "ratio": 8.918,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light neutral",
+        "foreground": "#334155",
+        "background": "#F1F5F9",
+        "ratio": 9.452,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark neutral",
+        "foreground": "#BAC9CC",
+        "background": "#272A32",
+        "ratio": 8.414,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light info",
+        "foreground": "#075985",
+        "background": "#E0F2FE",
+        "ratio": 6.591,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark info",
+        "foreground": "#9CF0FF",
+        "background": "#00363D",
+        "ratio": 10.233,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light success",
+        "foreground": "#065F46",
+        "background": "#ECFDF5",
+        "ratio": 7.294,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark success",
+        "foreground": "#6FFBBE",
+        "background": "#003824",
+        "ratio": 10.193,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light warning",
+        "foreground": "#92400E",
+        "background": "#FFFBEB",
+        "ratio": 6.837,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark warning",
+        "foreground": "#FCD34D",
+        "background": "#422006",
+        "ratio": 10.108,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "light error",
+        "foreground": "#991B1B",
+        "background": "#FEF2F2",
+        "ratio": 7.597,
+        "minimum": 4.5,
+        "pass": true
+      },
+      {
+        "label": "dark error",
+        "foreground": "#FFB4AB",
+        "background": "#690005",
+        "ratio": 7.717,
+        "minimum": 4.5,
+        "pass": true
+      }
+    ]
+  },
+  "historicalReviewScope": {
+    "htmlScreens": 14,
+    "designSystems": 2,
+    "screenshotsViewed": 4,
+    "mobileScreensProvided": false,
+    "implementationOrVisualAcceptancePerformed": false
+  },
+  "historicalImplementationDecisions": {
+    "authority": "../foundations.md and current contracts; raw source values below are evidence, not parallel runtime tokens",
+    "sharedStructure": true,
+    "sharedFonts": [
+      "Space Grotesk",
+      "Geist",
+      "JetBrains Mono"
+    ],
+    "themePreference": [
+      "system",
+      "light",
+      "dark"
+    ],
+    "breakpointsCssPx": [
+      768,
+      1280
+    ],
+    "sourceConflicts": [
+      "Light prose colors differ from generated namedColors; semantic map uses white/cool-gray prose palette.",
+      "Dark prose colors differ from actual named screen colors; map uses #10131A surface family.",
+      "Dark and light source fonts/layouts differ; unify dimensions and font metrics.",
+      "Light primary button adjusted to #0369A1 with white text for contrast.",
+      "Docs mock marketing blocks are replaced with standard Docusaurus reading layout.",
+      "Dark blog embeds article illustration; actual list and article use distinct routes.",
+      "Alternate light homepage is reference only."
+    ],
+    "excludedPrototypeDetails": [
+      "fake telemetry, performance and social counters",
+      "avatar implying login",
+      "global hidden scrollbars and fixed canvas sizes",
+      "remote Tailwind and Google Fonts runtime dependencies",
+      "pulsing status lights, automatic slides and image hover scaling"
+    ]
+  }
+}

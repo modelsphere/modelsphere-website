@@ -1,0 +1,148 @@
+{
+  "reports": [
+    {
+      "lang": "en",
+      "title": "Optimizing MiMo-V2.5 Inference on H100: Experimental Evaluation",
+      "comparison": {
+        "baseline": {
+          "label": "baseline (vendor recipe)",
+          "launch": {
+            "cards": 8,
+            "config": {
+              "engine": "sglang",
+              "image": "lmsysorg/sglang:dev-dsv41"
+            }
+          },
+          "environment": {
+            "gpu_name": "NVIDIA H100 80GB HBM3",
+            "cuda_version": "13.0",
+            "engine_version": "0.0.0.dev1+gda64c5cbb",
+            "started_at": "2026-09-20T13:39:55.805809Z"
+          },
+          "results": {
+            "scenarios": []
+          }
+        },
+        "attempts": [
+          {
+            "label": "optimized (tuned)",
+            "launch": {
+              "cards": 8,
+              "config": {
+                "engine": "sglang",
+                "image": "lmsysorg/sglang:dev-dsv41"
+              }
+            },
+            "environment": {
+              "gpu_name": "NVIDIA H100 80GB HBM3",
+              "cuda_version": "13.0",
+              "engine_version": "0.0.0.dev1+gda64c5cbb",
+              "started_at": "2026-09-20T13:40:34.198756Z"
+            },
+            "results": {
+              "scenarios": []
+            }
+          }
+        ],
+        "benchmark": {
+          "modules": [
+            {
+              "key": "perf_guidellm_sweep",
+              "params": {
+                "max_seconds": 1800,
+                "search_mode": "auto",
+                "input_tokens": 50000,
+                "report_level": "slo_best",
+                "concurrencies": "1,2,4,8,16",
+                "output_tokens": 1500,
+                "probe_seconds": 1800,
+                "warmup_seconds": 0,
+                "request_timeout": 600,
+                "slo_max_ttft_ms": 8000.0,
+                "warmup_fraction": 0.1,
+                "max_total_seconds": 21600,
+                "search_granularity": 0,
+                "slo_ttft_percentile": "p50",
+                "probe_warmup_fraction": 0.2,
+                "search_max_concurrency": 64,
+                "requests_per_concurrency": 20,
+                "slo_min_request_output_tps": 15.0,
+                "probe_requests_per_concurrency": 10
+              }
+            },
+            {
+              "key": "opencompass",
+              "params": {
+                "stream": true,
+                "avg_k_hle": 1,
+                "avg_k_lcb": 1,
+                "avg_k_aime": 1,
+                "avg_k_gpqa": 1,
+                "avg_k_mmlu": 1,
+                "max_tokens": 16384,
+                "pass_k_hle": 1,
+                "pass_k_lcb": 1,
+                "dataset_dir": "/app/dataset/opencompass/data",
+                "judge_model": "",
+                "max_seconds": 43200,
+                "max_workers": 8,
+                "pass_k_aime": 1,
+                "pass_k_gpqa": 1,
+                "pass_k_mmlu": 1,
+                "avg_k_ifeval": 1,
+                "sample_top_p": 0.95,
+                "hle_use_judge": true,
+                "judge_api_key": "",
+                "judge_api_url": "",
+                "pass_k_ifeval": 1,
+                "avg_k_simpleqa": 1,
+                "sample_cap_hle": 0,
+                "sample_cap_lcb": 0,
+                "avg_k_longbench": 1,
+                "pass_k_simpleqa": 1,
+                "request_timeout": 600,
+                "sample_cap_aime": 0,
+                "sample_cap_gpqa": 0,
+                "sample_cap_mmlu": 0,
+                "judge_max_tokens": 256,
+                "pass_k_longbench": 1,
+                "force_temperature": false,
+                "sample_cap_ifeval": 0,
+                "sample_temperature": 1,
+                "sample_cap_simpleqa": 0,
+                "hle_judge_max_tokens": 2048,
+                "sample_cap_longbench": 0,
+                "longbench_max_input_tokens": 120000,
+                "longbench_max_output_tokens": 8192
+              }
+            },
+            {
+              "key": "perf_guidellm_sweep#2",
+              "params": {
+                "max_seconds": 1800,
+                "search_mode": "auto",
+                "input_tokens": 8000,
+                "report_level": "slo_best",
+                "concurrencies": "1,2,4,8,16",
+                "output_tokens": 1000,
+                "probe_seconds": 1800,
+                "warmup_seconds": 0,
+                "request_timeout": 600,
+                "slo_max_ttft_ms": 8000.0,
+                "warmup_fraction": 0.1,
+                "max_total_seconds": 21600,
+                "search_granularity": 0,
+                "slo_ttft_percentile": "p50",
+                "probe_warmup_fraction": 0.2,
+                "search_max_concurrency": 256,
+                "requests_per_concurrency": 20,
+                "slo_min_request_output_tps": 15.0,
+                "probe_requests_per_concurrency": 10
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

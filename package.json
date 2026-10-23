@@ -1,0 +1,80 @@
+{
+  "name": "modelsphere-website",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.22.0",
+  "engines": {
+    "node": "24.22.0"
+  },
+  "scripts": {
+    "dev:docs": "node --import tsx scripts/build-site.ts dev",
+    "dev:blog": "BLOG_SOURCE_MODE=content node --import tsx scripts/build-site.ts dev",
+    "dev:blog-mock": "BLOG_SOURCE_MODE=mock node --import tsx scripts/build-site.ts dev",
+    "build:blog-preview": "BLOG_SOURCE_MODE=content node --import tsx scripts/build-site.ts preview",
+    "build:docs-preview": "node --import tsx scripts/build-site.ts preview",
+    "build": "node --import tsx scripts/build-site.ts release",
+    "tokens:generate": "node --import tsx scripts/generate-tokens.ts",
+    "content:check": "node --import tsx scripts/check-docs.ts",
+    "blog:check": "node --import tsx scripts/check-blog.ts",
+    "artifacts:check": "node --import tsx scripts/check-artifacts.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "serve": "node --import tsx scripts/serve-static.ts"
+  },
+  "dependencies": {
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/plugin-content-blog": "3.10.2",
+    "@docusaurus/plugin-content-docs": "3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
+    "@docusaurus/theme-common": "3.10.2",
+    "@fontsource/geist": "5.3.0",
+    "@fontsource/inter": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@fontsource/space-grotesk": "5.3.0",
+    "@mdx-js/react": "3.1.1",
+    "clsx": "2.1.1",
+    "prism-react-renderer": "2.4.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "3.10.2",
+    "@docusaurus/tsconfig": "3.10.2",
+    "@docusaurus/types": "3.10.2",
+    "@eslint/js": "9.39.1",
+    "@playwright/test": "1.64.1",
+    "@types/mdast": "4.0.4",
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "eslint": "9.39.1",
+    "github-slugger": "2.0.0",
+    "globals": "16.5.0",
+    "mdast-util-to-string": "4.0.0",
+    "prettier": "3.6.2",
+    "remark-directive": "4.0.0",
+    "remark-gfm": "4.0.1",
+    "remark-mdx": "3.1.1",
+    "remark-parse": "11.0.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.0",
+    "unified": "11.0.5",
+    "unist-util-visit": "5.0.0",
+    "vitest": "5.0.5",
+    "yaml": "2.8.1",
+    "zod": "4.1.12"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ],
+    "ignoredBuiltDependencies": [
+      "core-js"
+    ]
+  }
+}
