@@ -371,13 +371,32 @@ async function observeRealReveals(
   );
 }
 
-async function expectArchitectureRemoved(page: Page) {
-  await expect(page.locator(architecture)).toHaveCount(0);
-  expect(
-    await page.evaluate(
-      () => (window as MotionWindow).__homeArchitectureRuns ?? [],
-    ),
-  ).toEqual([]);
+async function expectArchitectureSettled(page: Page) {
+  const diagram = page.locator(architecture);
+  await expect(diagram).toHaveCount(1);
+  await expect(diagram).not.toHaveAttribute('data-home-pending', '');
+  await expect
+    .poll(() =>
+      diagram.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          opacity: Number(style.opacity),
+          transform: style.transform,
+          clipPath: style.clipPath,
+          active: element
+            .getAnimations()
+            .some((animation) =>
+              ['running', 'paused'].includes(animation.playState),
+            ),
+        };
+      }),
+    )
+    .toEqual({
+      opacity: 1,
+      transform: 'none',
+      clipPath: 'none',
+      active: false,
+    });
 }
 
 async function expectHeroSettled(page: Page) {
@@ -579,7 +598,7 @@ test('no-script home keeps its content, native links and anchor offsets', async 
     await page.goto('/');
     await expectReadableHome(page);
     await expectHeroSettled(page);
-    await expectArchitectureRemoved(page);
+    await expectArchitectureSettled(page);
     await expect(page.locator('.theme-toggle')).toBeHidden();
     await expect(
       page.locator(`${home} a[href^="https://github.com/modelsphere"]`).first(),
@@ -763,7 +782,7 @@ for (const interruption of [
           () => (window as MotionWindow).__homeArchitectureAnimations!.length,
         ),
       )
-      .toBe(0);
+      .toBe(1);
     if (interruption === 'reduced motion') {
       await page.emulateMedia({ reducedMotion: 'reduce' });
     } else if (interruption === 'background') {
@@ -787,7 +806,7 @@ for (const interruption of [
       )
       .toBe(true);
     await expectHeroSettled(page);
-    await expectArchitectureRemoved(page);
+    await expectArchitectureSettled(page);
     if (interruption === 'reduced motion')
       await page.emulateMedia({ reducedMotion: 'no-preference' });
     await setHomeVisibility(page, 'visible');
@@ -804,9 +823,9 @@ for (const interruption of [
       await page.evaluate(
         () => (window as MotionWindow).__homeArchitectureRuns!.length,
       ),
-    ).toBe(0);
+    ).toBe(1);
     await expectHeroSettled(page);
-    await expectArchitectureRemoved(page);
+    await expectArchitectureSettled(page);
   });
 }
 
@@ -975,10 +994,10 @@ for (const width of [390, 1440]) {
 }
 
 for (const width of [390, 1440]) {
-  test(`removed architecture leaves no pending motion at ${width}px`, async ({
+  test(`the entire architecture fades up once without shifting layout at ${width}px`, async ({
     page,
   }) => {
-    await page.setViewportSize({ width, height: 900 });
+    await page.setViewportSize({ width, height: width === 390 ? 600 : 900 });
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await observeRealReveals(page);
     await page.goto('/');
@@ -986,25 +1005,65 @@ for (const width of [390, 1440]) {
       'data-has-hydrated',
       'true',
     );
+    const diagram = page.locator(architecture);
+    if (width === 390) {
+      await expect(diagram).toHaveAttribute('data-home-pending', '');
+      expect(
+        await page.evaluate(
+          () => (window as MotionWindow).__homeArchitectureRuns,
+        ),
+      ).toEqual([]);
+      await diagram.scrollIntoViewIfNeeded();
+    }
     await expect
       .poll(() =>
         page.evaluate(
           () =>
-            (window as MotionWindow).__homeHeroRuns!.filter(
+            (window as MotionWindow).__homeArchitectureRuns!.filter(
               (run) => run.completed,
             ).length,
         ),
       )
-      .toBe(3);
-    await expectHeroSettled(page);
-    await expectArchitectureRemoved(page);
+      .toBe(1);
+    const [run] = await page.evaluate(
+      () => (window as MotionWindow).__homeArchitectureRuns!,
+    );
+    expect(run.duration).toBe(700);
+    expect(run.delay).toBe(0);
+    expect(run.fill).toBe('backwards');
+    expect(run.frames.map(({ y, opacity }) => ({ y, opacity }))).toEqual([
+      { y: 32, opacity: 0 },
+      { y: 0, opacity: 1 },
+    ]);
+    expect(
+      run.samples.some(
+        (sample) =>
+          sample.y > 0 &&
+          sample.y < 32 &&
+          sample.opacity > 0 &&
+          sample.opacity < 1,
+      ),
+    ).toBe(true);
+    for (const sample of run.samples) {
+      expect(sample.box).toEqual(run.before.box);
+      expect(sample.comparisonTop).toBe(run.before.comparisonTop);
+      expect(sample.staticBoxes).toEqual(run.before.staticBoxes);
+      expect(sample.childBoxes).toEqual(run.before.childBoxes);
+      expect(sample.clipPath).toBe('none');
+    }
+    await expectArchitectureSettled(page);
     await page.locator('#comparison').scrollIntoViewIfNeeded();
-    await expect(page.locator('#comparison')).toBeVisible();
-    await expect(page.locator('#hero [data-home-pending]')).toHaveCount(0);
+    await diagram.scrollIntoViewIfNeeded();
+    expect(
+      await page.evaluate(
+        () => (window as MotionWindow).__homeArchitectureRuns!.length,
+      ),
+    ).toBe(1);
+    await expectArchitectureSettled(page);
   });
 }
 
-test('backgrounding and breakpoint changes do not schedule the removed architecture', async ({
+test('backgrounding preserves unread architecture and breakpoint changes do not replay it', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 600 });
@@ -1015,24 +1074,34 @@ test('backgrounding and breakpoint changes do not schedule the removed architect
     'data-has-hydrated',
     'true',
   );
+  expect(
+    await page.evaluate(() => (window as MotionWindow).__homeArchitectureRuns),
+  ).toEqual([]);
   await setHomeVisibility(page, 'visible');
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          (window as MotionWindow).__homeHeroRuns!.filter(
-            (run) => run.completed,
-          ).length,
-      ),
-    )
-    .toBe(3);
-  await expectHeroSettled(page);
+  const diagram = page.locator(architecture);
+  await expect(diagram).toHaveAttribute('data-home-pending', '');
   await setHomeVisibility(page, 'hidden');
   await setHomeVisibility(page, 'visible');
+  await expect(diagram).toHaveAttribute('data-home-pending', '');
+  await diagram.scrollIntoViewIfNeeded();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        (window as MotionWindow).__homeArchitectureRuns!.some(
+          (run) => run.completed,
+        ),
+      ),
+    )
+    .toBe(true);
   await page.setViewportSize({ width: 1440, height: 900 });
-  await expectArchitectureRemoved(page);
+  await expectArchitectureSettled(page);
   await page.setViewportSize({ width: 390, height: 844 });
-  await expectArchitectureRemoved(page);
+  await expectArchitectureSettled(page);
+  expect(
+    await page.evaluate(
+      () => (window as MotionWindow).__homeArchitectureRuns!.length,
+    ),
+  ).toBe(1);
 });
 
 for (const width of [390, 768, 1024, 1440]) {
@@ -1571,7 +1640,7 @@ test('first visit with reduced motion leaves every diagram and section readable'
     await page.evaluate(() => (window as MotionWindow).__homeArchitectureRuns),
   ).toEqual([]);
   await expectHeroSettled(page);
-  await expectArchitectureRemoved(page);
+  await expectArchitectureSettled(page);
   for (const id of sectionIds) {
     await page.locator(`${home} #${id}`).scrollIntoViewIfNeeded();
     await expectReadableHome(page);

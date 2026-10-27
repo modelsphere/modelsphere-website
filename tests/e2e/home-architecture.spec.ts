@@ -1,14 +1,51 @@
 import { expect, test } from '@playwright/test';
 
 for (const width of [390, 1440]) {
-  test(`home removes the architecture module and navigation at ${width}px`, async ({
+  test(`home restores the architecture display at ${width}px`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
+    const diagram = page.locator('[data-home-diagram="architecture"]');
+    await diagram.scrollIntoViewIfNeeded();
+    await expect(diagram).toBeVisible();
+    for (const title of [
+      '上层应用生态',
+      '模域 ModelSphere 核心底座',
+      '下层多元异构算力',
+    ])
+      await expect(diagram.getByText(title, { exact: true })).toBeVisible();
     await expect(
-      page.locator('[data-home-diagram="architecture"]'),
-    ).toHaveCount(0);
+      diagram.locator('strong').filter({
+        hasText: '系统分层架构与算力调度拓扑',
+      }),
+    ).toBeVisible();
+    const image = diagram.getByRole('img');
+    await expect(image).toHaveAttribute(
+      'src',
+      '/diagrams/modelsphere-architecture.png',
+    );
+    await expect
+      .poll(() =>
+        image.evaluate(
+          (img: HTMLImageElement) =>
+            img.complete &&
+            img.naturalWidth === 2675 &&
+            img.naturalHeight === 744,
+        ),
+      )
+      .toBe(true);
+    expect(
+      await diagram.evaluate((element) => {
+        const rect = element.getBoundingClientRect();
+        return (
+          rect.left >= 0 &&
+          rect.right <= innerWidth &&
+          document.documentElement.scrollWidth <= innerWidth
+        );
+      }),
+    ).toBe(true);
     await expect(
       page.locator('.site-nav-link').filter({ hasText: '全景架构' }),
     ).toHaveCount(0);

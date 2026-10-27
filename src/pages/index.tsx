@@ -10,6 +10,7 @@ import {
   Benchmarks,
   GetStarted,
 } from '@site/src/components/HomeSections';
+import { ArchitectureDiagram } from '@site/src/components/HomeDiagrams';
 import { useHomeMotion } from '@site/src/components/HomeMotion';
 import styles from './index.module.css';
 
@@ -363,6 +364,7 @@ export default function Home() {
                 模型调优库 (Model Catalog)
               </Link>
             </div>
+            <ArchitectureDiagram />
           </div>
         </section>
         <section
