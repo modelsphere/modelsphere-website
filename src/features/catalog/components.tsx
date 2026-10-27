@@ -318,7 +318,7 @@ export function RecipeCard({
                 : detailHref(r, version, undefined, returnTo)
             }
           >
-            {badge === 'optimized' ? '对比报告' : '部署配置'}
+            {badge === 'optimized' ? '查看对照报告' : '查看部署配置'}
           </Link>
           <CopyButton getText={copy} />
         </div>

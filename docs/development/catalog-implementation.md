@@ -11,7 +11,7 @@
 - `/models/recipe?modelId=…&recipeId=…`：以配方为主体，使用“部署配置 / 性能对照 / 版本历史”三个 Tab；默认部署配置，保留 SHA-256 校验、完整 YAML 复制、原始 extraArgs、历史版本与固定提交。
 - `tab=performance` 展示关联测量版本、测试条件和原报告入口；`tab=history` 展示历史提交及对应配置链接。Tab 支持分享、刷新和浏览器前进后退；左右方向键及 Home/End 移动焦点，Enter/Space 激活。
 - `/models/evidence`：公开的数据来源、规则解释及缺失说明。
-- 配方卡片有调优记录时显示“对比报告”，直达“性能对照”；基线和无调优记录显示“部署配置”，打开部署 Tab。表格使用“查看配方详情”，点击源记录增幅直达“性能对照”。模型与配方页面通过受限的 `returnTo` 保留原目录查询；旧 `/models/report`、目录 benchmark 参数和配方 `#benchmark` 链接以 history.replace 转到配方的性能 Tab。
+- 配方卡片有调优记录时显示“查看对照报告”，直达“性能对照”；基线和无调优记录显示“查看部署配置”，打开部署 Tab。表格使用“查看配方详情”，点击源记录增幅直达“性能对照”。模型与配方页面通过受限的 `returnTo` 保留原目录查询；旧 `/models/report`、目录 benchmark 参数和配方 `#benchmark` 链接以 history.replace 转到配方的性能 Tab。
 - 切换 Tab 保留 `version`、`dataVersion` 与 `returnTo`，不重载目录、配置或已打开的报告。报告首次打开才加载，并按所选目录中的优化配方解析最新测量版本及首份关联报告；配置历史 `version` 不作为报告版本选择，页面明确显示实际测量版本。没有报告时仍保留 Tab 并显示空态。
 - 官网导航、首页 Catalog 入口和 Footer 进入站内目录；公共 Header/Footer 和双主题延续现有实现。
 - 不修改 model-catalog 的源文件、生成程序或发布流水线，不创建自托管数据服务，不增加数据库和写入接口。
