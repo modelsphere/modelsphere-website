@@ -55,6 +55,8 @@ test.beforeEach(async ({ page }) => {
 
 test('home loads its assets and all internal links under the project path', async ({
   page,
+  request,
+  baseURL,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
@@ -94,6 +96,12 @@ test('home loads its assets and all internal links under the project path', asyn
     ),
   ).toBe(true);
   expect(errors).toEqual([]);
+  const quickstart = page
+    .locator('#get-started')
+    .getByRole('link', { name: '立即部署', exact: true });
+  const target = `${prefix}${mock ? 'docs/quickstart' : 'docs'}`;
+  await expect(quickstart).toHaveAttribute('href', target);
+  expect((await request.get(new URL(target, baseURL).href)).status()).toBe(200);
 });
 
 test('catalog filters, recipe tabs, legacy redirects and return links preserve the prefix', async ({
