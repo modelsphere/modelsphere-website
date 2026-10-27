@@ -44,9 +44,10 @@ for (const width of [390, 1440]) {
       ).toBeVisible();
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
       if (width < 1280) {
-        await expect(
-          page.locator('.community-mobile-menu'),
-        ).not.toHaveAttribute('open', '');
+        await expect(page.locator('.mobile-menu')).not.toHaveAttribute(
+          'open',
+          '',
+        );
         await page.getByLabel('导航菜单', { exact: true }).click();
       }
       await expect(
@@ -67,8 +68,11 @@ for (const width of [390, 1440]) {
         }),
       ).toBeVisible();
       await expect(
-        page.getByRole('link', { name: '快速开始', exact: true }),
-      ).toHaveAttribute('href', '/docs');
+        page.locator('.desktop-quickstart .header-primary-link'),
+      ).toHaveAttribute(
+        'href',
+        process.env.TEST_DOCS_MODE === 'mock' ? '/docs/quickstart' : '/docs',
+      );
       await page
         .getByRole('navigation', { name: 'Breadcrumb' })
         .getByRole('link', { name: '首页', exact: true })
