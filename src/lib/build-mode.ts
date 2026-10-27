@@ -6,6 +6,7 @@ const inputSchema = z.object({
   SITE_ORIGIN: z.string().optional(),
   SITE_BASE_URL: z.string().optional(),
   BLOG_SOURCE_MODE: z.enum(['content', 'mock']).optional(),
+  SITE_PUBLISH_EXAMPLES: z.enum(['true', 'false']).default('false'),
 });
 export interface BuildMode {
   target: 'local' | 'preview' | 'release';
@@ -13,6 +14,7 @@ export interface BuildMode {
   origin: string;
   baseUrl?: string;
   blogSource?: 'content' | 'mock';
+  publishExamples?: boolean;
 }
 export function resolveBuildMode(
   env: Record<string, string | undefined>,
@@ -20,6 +22,7 @@ export function resolveBuildMode(
   const input = inputSchema.parse(env);
   if (
     input.SITE_BUILD_TARGET === 'release' &&
+    input.SITE_PUBLISH_EXAMPLES !== 'true' &&
     input.BLOG_SOURCE_MODE === 'mock'
   )
     throw new Error('正式构建禁止使用 Mock 博客。');
@@ -27,6 +30,7 @@ export function resolveBuildMode(
     throw new Error('真实文档仓库尚未接入，请使用 none 或受控 mock 预览。');
   if (
     input.SITE_BUILD_TARGET === 'release' &&
+    input.SITE_PUBLISH_EXAMPLES !== 'true' &&
     input.DOCS_SOURCE_MODE === 'mock'
   )
     throw new Error('正式构建禁止使用 Mock 文档。');
@@ -50,6 +54,9 @@ export function resolveBuildMode(
     target: input.SITE_BUILD_TARGET,
     source: input.DOCS_SOURCE_MODE,
     origin: url.origin,
+    ...(input.SITE_PUBLISH_EXAMPLES === 'true'
+      ? { publishExamples: true }
+      : {}),
     ...(input.SITE_BASE_URL !== undefined
       ? { baseUrl: validateBaseUrl(input.SITE_BASE_URL) }
       : {}),

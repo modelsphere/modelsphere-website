@@ -72,6 +72,23 @@ describe('Build-mode boundary', () => {
   });
 });
 describe('Content staging', () => {
+  it('publishes both example documents in an explicitly enabled release', async () => {
+    const root = await fixture();
+    const release = resolveBuildMode({
+      SITE_ORIGIN: 'https://example.test',
+      SITE_PUBLISH_EXAMPLES: 'true',
+      DOCS_SOURCE_MODE: 'mock',
+    });
+    await prepareDocs(root, release);
+    expect(await readdir(path.join(root, '.generated/docs'))).toEqual([
+      'overview.md',
+      'quickstart.md',
+    ]);
+    await assertPrepared(root, release);
+    await expect(
+      assertPrepared(root, { ...release, publishExamples: false }),
+    ).rejects.toThrow('不匹配');
+  });
   it('removes all prior Mock inputs on switch to release', async () => {
     const root = await fixture();
     const mock = resolveBuildMode({

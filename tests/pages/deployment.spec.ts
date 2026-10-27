@@ -171,7 +171,9 @@ test('direct documents, blog routes, 404 responses and version metadata work und
   expect(missing.status()).toBe(404);
   const version = await (await request.get(`${baseURL}version.json`)).json();
   expect(version.baseUrl).toBe(prefix);
-  expect(version.target).toBe(mock ? 'preview' : 'release');
+  expect(version.target).toBe(
+    process.env.TEST_BUILD_TARGET ?? (mock ? 'preview' : 'release'),
+  );
   expect(version.commit).toMatch(/^[a-f0-9]{40}$/);
 });
 

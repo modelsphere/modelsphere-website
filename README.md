@@ -2,6 +2,8 @@
 
 项目名称：`modelsphere-website`。
 
+当前博客与文档展示策略：`SITE_ORIGIN=https://modelsphere.github.io SITE_BASE_URL=/modelsphere-website/ pnpm build` 默认在正式产物中包含 7 篇站内示例博客、1 条站外示例及 2 篇示例文档，同时生成搜索索引。示例保留原有标识与正文说明，不代表实测结论。`SITE_PUBLISH_EXAMPLES=false` 可恢复无示例的正式构建；真实内容预览仍使用 `pnpm dev:blog`。本策略覆盖下文历史验证记录中的 release/none 描述，构建成功不表示已部署。
+
 面向 AI 基础设施、平台、算法与稳定性团队的公开官网，覆盖产品介绍、技术架构、模型目录与测评、快速开始与文档、技术博客、社区与生态。
 
 设计来源：[ModelSphere 推理基础设施官网](https://stitch.withgoogle.com/projects/3601238558355976464)。页面结构仅采用顶部“首页-更新”“模型目录”“博客洞见-更新”三张新版，底部旧稿仅参考 dark mode 色彩；[来源快照](docs/design/sources/stitch-foundations.json)记录当前采用范围与原始证据。Header 的独立来源覆盖和已实现文档双层 Footer 保留为既定特例。当前已实现首页、博客功能与文档栏目试点；博客使用隔离 Mock 预览，真实内容尚未接入，其他门户页面仍待实施。

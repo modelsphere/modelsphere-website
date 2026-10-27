@@ -37,6 +37,7 @@ jobs:
         mode: [preview, release]
     env:
       SITE_ORIGIN: http://localhost:4173
+      BLOG_SOURCE_MODE: mock
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -50,7 +51,7 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - name: Build mock preview
         run: pnpm build:docs-preview
-      - name: Build release after mock to detect stale content
+      - name: Build release with public examples
         if: matrix.mode == 'release'
         run: pnpm build
       - name: Verify preview artifact
@@ -64,7 +65,9 @@ jobs:
         run: pnpm artifacts:check
         env:
           SITE_BUILD_TARGET: release
-          DOCS_SOURCE_MODE: none
+          DOCS_SOURCE_MODE: mock
+          BLOG_SOURCE_MODE: mock
+          SITE_PUBLISH_EXAMPLES: 'true'
       - run: docker build -f infra/docker/Dockerfile -t modelsphere-docs-test .
       - run: docker run -d --name docs-test -p 127.0.0.1:4173:8080 modelsphere-docs-test
       - name: Wait for Nginx
@@ -73,7 +76,8 @@ jobs:
         run: pnpm test:e2e
         env:
           E2E_BASE_URL: http://localhost:4173
-          TEST_DOCS_MODE: ${{ matrix.mode == 'preview' && 'mock' || 'none' }}
+          TEST_DOCS_MODE: mock
+          TEST_BUILD_TARGET: ${{ matrix.mode }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -95,6 +99,7 @@ jobs:
     env:
       SITE_ORIGIN: https://modelsphere.github.io
       SITE_BASE_URL: /modelsphere-website/
+      BLOG_SOURCE_MODE: mock
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -115,7 +120,9 @@ jobs:
         run: pnpm artifacts:check
         env:
           SITE_BUILD_TARGET: ${{ matrix.mode }}
-          DOCS_SOURCE_MODE: ${{ matrix.mode == 'preview' && 'mock' || 'none' }}
+          DOCS_SOURCE_MODE: mock
+          BLOG_SOURCE_MODE: mock
+          SITE_PUBLISH_EXAMPLES: ${{ matrix.mode == 'release' && 'true' || 'false' }}
       - run: docker build --build-arg SITE_BASE_URL="$SITE_BASE_URL" -f infra/docker/Dockerfile -t modelsphere-pages-test .
       - run: docker run -d --name pages-test -p 127.0.0.1:4173:8080 modelsphere-pages-test
       - name: Wait for Pages candidate
@@ -124,7 +131,8 @@ jobs:
         run: pnpm test:pages
         env:
           E2E_BASE_URL: http://localhost:4173
-          TEST_DOCS_MODE: ${{ matrix.mode == 'preview' && 'mock' || 'none' }}
+          TEST_DOCS_MODE: mock
+          TEST_BUILD_TARGET: ${{ matrix.mode }}
       - name: Package the verified release
         if: matrix.mode == 'release' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5.0.0

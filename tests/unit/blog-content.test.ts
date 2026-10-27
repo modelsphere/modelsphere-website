@@ -84,6 +84,23 @@ async function withArticle(
   });
 }
 describe('blog publication boundary', () => {
+  it('publishes the selected example blog in an explicitly enabled release', async () => {
+    const mode = resolveBuildMode({
+      SITE_ORIGIN: 'https://example.test',
+      SITE_PUBLISH_EXAMPLES: 'true',
+      BLOG_SOURCE_MODE: 'mock',
+    });
+    const result = await readBlog(process.cwd(), mode);
+    expect(result.articles).toHaveLength(8);
+    expect(
+      result.articles.filter((a) => a.meta.kind === 'internal'),
+    ).toHaveLength(7);
+    expect(result.articles.every((a) => a.meta.example)).toBe(true);
+    expect(result.preview).toBe(true);
+    await expect(
+      readBlog(process.cwd(), { ...mode, publishExamples: false }),
+    ).rejects.toThrow('Mock 博客');
+  });
   it('reads the eight isolated fixtures, including one external article', async () => {
     const result = await readBlog(process.cwd(), preview);
     expect(result.articles).toHaveLength(8);

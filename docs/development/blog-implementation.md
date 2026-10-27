@@ -1,5 +1,7 @@
 # 博客功能与内容维护
 
+当前发布配置：`pnpm build` 默认启用 `SITE_PUBLISH_EXAMPLES=true`，正式网站包含本文件所述的 7 篇站内 Mock 与 1 条站外示例，并保留示例提示和搜索索引。`SITE_PUBLISH_EXAMPLES=false pnpm build` 才排除这些示例。下文的旧隔离规则仅适用于未启用公开示例的构建；草稿、内部规范与社区示例仍不得公开。
+
 博客采用现有 Docusaurus、React、TypeScript、CSS Modules 与双主题变量。列表依据 Stitch 项目 `3601238558355976464` 顶层的“博客洞见-更新” `3023474615820510674`；详情按本次用户确认的既有阅读契约实现，不继承旧稿结构。Header 和 Footer 沿用网站已确认的独立配置。
 
 ## 入口与预览

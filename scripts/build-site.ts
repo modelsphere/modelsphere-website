@@ -10,16 +10,20 @@ import { artifactHash, checkArtifacts } from './check-artifacts';
 const action = process.argv[2];
 if (!['dev', 'preview', 'release'].includes(action))
   throw new Error('使用 dev / preview / release');
-if (
-  action === 'release' &&
-  process.env.DOCS_SOURCE_MODE &&
-  process.env.DOCS_SOURCE_MODE !== 'none'
-)
-  throw new Error('正式构建拒绝文档来源覆盖');
+const examplesSetting =
+  process.env.SITE_PUBLISH_EXAMPLES ??
+  (action === 'release' ? 'true' : 'false');
+const publishExamples = examplesSetting === 'true';
 const env = {
   ...process.env,
   SITE_BUILD_TARGET: action === 'dev' ? 'local' : action,
-  DOCS_SOURCE_MODE: action === 'release' ? 'none' : 'mock',
+  SITE_PUBLISH_EXAMPLES: examplesSetting,
+  DOCS_SOURCE_MODE:
+    process.env.DOCS_SOURCE_MODE ??
+    (action === 'release' && !publishExamples ? 'none' : 'mock'),
+  BLOG_SOURCE_MODE:
+    process.env.BLOG_SOURCE_MODE ??
+    (action === 'release' ? (publishExamples ? 'mock' : 'content') : undefined),
   SITE_ORIGIN:
     process.env.SITE_ORIGIN ??
     (action === 'release' ? undefined : 'http://localhost:3000'),
