@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useRef } from 'react';
 import Layout from '@theme/Layout';
 import Head from '@docusaurus/Head';
@@ -288,6 +289,7 @@ function CapabilityDescription({ index }: { index: number }) {
   );
 }
 export default function Home() {
+  const { siteHref } = useSitePath();
   const root = useRef<HTMLElement>(null);
   useHomeMotion(root);
   return (
@@ -393,7 +395,7 @@ export default function Home() {
                       <h3>
                         <a
                           className={styles.cardTitleLink}
-                          href={card.href}
+                          href={siteHref(card.href)}
                           target={
                             card.href.startsWith('/') ? undefined : '_blank'
                           }

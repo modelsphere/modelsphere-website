@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect, useRef, useState } from 'react';
 import Layout from '@theme/Layout';
 import Head from '@docusaurus/Head';
@@ -12,11 +13,12 @@ import type { BlogIndex } from './types';
 import { Cover, PostMeta } from './components';
 import styles from './styles.module.css';
 export default function BlogPostPage({ content: Content }: Props) {
+  const { siteHref, localHref } = useSitePath();
   const index = usePluginData('docusaurus-plugin-content-blog') as BlogIndex;
   const location = useLocation();
   const { siteConfig } = useDocusaurusContext();
   const post = index.posts.find(
-    (post) => post.href === Content.metadata.permalink,
+    (post) => post.href === localHref(Content.metadata.permalink),
   );
   const [copy, setCopy] = useState<'idle' | 'copying' | 'success' | 'error'>(
     'idle',
@@ -96,7 +98,7 @@ export default function BlogPostPage({ content: Content }: Props) {
   const toc = <TOC toc={Content.toc} minHeadingLevel={2} maxHeadingLevel={4} />;
   const hasToc = Content.toc.length > 0;
   const hasResources = post.resources.length > 0;
-  const canonical = `${siteConfig.url}${post.href}`;
+  const canonical = `${siteConfig.url}${siteHref(post.href)}`;
   async function copyLink() {
     const current = generation.current;
     setCopy('copying');
@@ -133,9 +135,9 @@ export default function BlogPostPage({ content: Content }: Props) {
       <main id="main-content" tabIndex={-1} className={styles.blog}>
         <div className={styles.breadcrumbBar}>
           <nav className={styles.container} aria-label="面包屑">
-            <a href="/">首页</a>
+            <a href={siteHref('/')}>首页</a>
             <span aria-hidden="true">/</span>
-            <a href="/blog">博客洞见</a>
+            <a href={siteHref('/blog')}>博客洞见</a>
             <span aria-hidden="true">/</span>
             <span aria-current="page">文章正文</span>
           </nav>
@@ -160,7 +162,7 @@ export default function BlogPostPage({ content: Content }: Props) {
             </aside>
           )}
           <div className={styles.readingColumn}>
-            <a href="/blog" className={styles.back}>
+            <a href={siteHref('/blog')} className={styles.back}>
               ← 返回博客
             </a>
             <article>
@@ -179,7 +181,10 @@ export default function BlogPostPage({ content: Content }: Props) {
                 <PostMeta post={post} />
                 <div className={styles.articleTags}>
                   {post.tagIds.map((id) => (
-                    <a key={id} href={`/blog?tag=${encodeURIComponent(id)}`}>
+                    <a
+                      key={id}
+                      href={siteHref(`/blog?tag=${encodeURIComponent(id)}`)}
+                    >
                       #{index.tags.find((tag) => tag.id === id)?.label}
                     </a>
                   ))}
@@ -244,13 +249,17 @@ export default function BlogPostPage({ content: Content }: Props) {
                   {related.map((other) => (
                     <article key={other.id}>
                       {other.cover && (
-                        <a href={other.href} tabIndex={-1} aria-hidden="true">
+                        <a
+                          href={siteHref(other.href)}
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        >
                           <Cover media={other.cover} />
                         </a>
                       )}
                       <PostMeta post={other} />
                       <h3>
-                        <a href={other.href}>{other.title}</a>
+                        <a href={siteHref(other.href)}>{other.title}</a>
                       </h3>
                     </article>
                   ))}

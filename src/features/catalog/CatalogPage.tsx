@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
@@ -28,6 +29,7 @@ import CatalogSelect from './CatalogSelect';
 import styles from './styles.module.css';
 
 export default function CatalogPage() {
+  const { siteHref, localHref } = useSitePath();
   const browser = useIsBrowser(),
     location = useLocation(),
     history = useHistory();
@@ -43,13 +45,13 @@ export default function CatalogPage() {
   const f = useMemo(() => facets(c), [c]),
     result = useMemo(() => queryRecipes(c, q), [c, q]);
   const all = useMemo(() => recipesOf(c), [c]);
-  const returnTo = location.pathname + location.search;
+  const returnTo = localHref(location.pathname) + location.search;
   const legacyReport = browser
     ? legacyCatalogReportHref(location.search)
     : null;
   useEffect(() => {
-    if (legacyReport) history.replace(legacyReport);
-  }, [history, legacyReport]);
+    if (legacyReport) history.replace(siteHref(legacyReport));
+  }, [history, legacyReport, siteHref]);
   const [draft, setDraft] = useState(''),
     search = useRef<HTMLInputElement>(null),
     filters = useRef<HTMLFormElement>(null),
@@ -104,7 +106,7 @@ export default function CatalogPage() {
   }, [browser]);
   function update(patch: Partial<Query>, page = false) {
     const next = { ...q, ...patch, ...(page ? {} : { page: 1 }) };
-    const href = queryHref(next) + location.hash;
+    const href = siteHref(queryHref(next) + location.hash);
     if (href !== location.pathname + location.search + location.hash) {
       paginationHref.current = page ? href : null;
       history.push(href);

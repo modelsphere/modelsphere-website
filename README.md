@@ -10,7 +10,7 @@
 
 ## 当前阶段
 
-已确认采用 **Docusaurus + React + TypeScript 统一全站**，博客首期使用 **Markdown/Git 发布**。门户、博客和开发者文档构建为一个静态站点；Model Catalog 使用自定义 React 界面读取独立数据源。当前已建立 Docusaurus 应用、依赖锁文件和 CI 配置，实现首页、博客列表与阅读页、两篇 Mock 文档及太阳／月亮主题切换。站内 Catalog 现已接入公开源；真实博客内容与文档同步和生产部署尚未实施；CI 配置不代表远程检查已通过。
+已确认采用 **Docusaurus + React + TypeScript 统一全站**，博客首期使用 **Markdown/Git 发布**。门户、博客和开发者文档构建为一个静态站点；Model Catalog 使用自定义 React 界面读取独立数据源。当前已建立 Docusaurus 应用、依赖锁文件和 CI 配置，实现首页、博客列表与阅读页、两篇 Mock 文档及太阳／月亮主题切换。站内 Catalog 现已接入公开源；真实博客内容与文档同步尚未实施。首期选择公开仓库与 GitHub Pages 项目地址；是否已上线以 Actions 发布结果和线上版本为准。
 
 首页按最新首页稿实现六个区块：`hero`、`comparison`、`fault-tolerance`、`qos-scaling`、`autotune-evolution`、`get-started`。完整架构与机制图、说明文字和真实链接均在初始 HTML 中静态输出；首页标题按 D13 整体翻起渐显，引导语与简介从左滑入渐显，架构拓扑正文按 D14 从上向下揭示。屏外能力卡与各机制直接子块分别在自身起点进入 85% 触发线时入场；并排时左右聚合，堆叠时逐卡上移渐显。首屏按钮、技术标签、拓扑标题及其上方三张卡静态可用；架构数据与布局保持稳定，减少动效、无脚本及历史恢复显示最终态。机制说明链接到已核对的项目资料及固定提交，示意曲线明确标注为机制示意。现有资料不足以满足测评报告和完整测试条件要求，因此省略 `benchmarks`，不展示设计稿样例成绩。模型入口进入站内 `/models`，目录读取公开 Catalog 数据；正式 `/docs` 仍显示准备状态，预览构建中的 Mock 文档不发布为真实内容。
 
@@ -26,7 +26,7 @@
 | 博客 | 仓库中维护 Markdown、frontmatter 与图片；通过 PR 检查、预览和 Git 合并进入网站发布 |
 | 开发者文档 | 独立 Markdown 仓库按固定 commit 同步到 `/docs`，采用标准开发者文档布局，与网站统一构建发布 |
 | 搜索 | Header 本地全文搜索覆盖已发布站内文档和博客；博客列表保留独立字段筛选 |
-| 部署 | Docusaurus 静态产物 → Nginx Docker 镜像 → 现有 Kubernetes；无需 Node.js 生产服务 |
+| 部署 | Docusaurus 静态产物 → GitHub Actions → GitHub Pages；Nginx 用于浏览器验收 |
 | 内容存储 | Git 管理正文、元数据与图片；首期不引入 CMS、数据库、素材上传服务或自建任务队列 |
 | 数据更新 | Catalog 首期直接读取公开源，地址集中配置；博客、门户和文档同版发布与回滚 |
 | 资源依赖 | 字体、图片、脚本和搜索本地托管；Catalog 首期按用户决定直接依赖公开源 |
@@ -41,8 +41,8 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 
 | 维度 | 要求 |
 | --- | --- |
-| 维护与交付 | 用户与 AI 共同维护，Docker 镜像部署到现有 Kubernetes |
-| 发布 | 可以接受几分钟构建；检查实际合并提交，验证同一候选镜像后发布；失败保留旧站 |
+| 维护与交付 | 用户与 AI 共同维护，公开仓库通过 GitHub Actions 发布到 GitHub Pages |
+| 发布 | 可以接受几分钟构建；检查实际合并提交，验证同一静态候选后发布；发布前失败保留旧站 |
 | 内容规模 | 按千位数验证，具体业务量待确定，不用测试样例冒充真实内容 |
 | 访问地区 | 中国大陆与海外；首期中文，跨地区可用不等于承诺统一延迟 |
 | 视觉 | 顶部三张新版决定结构，旧稿仅补充深色色彩；全站跟随系统/浅色/深色，文档朴素；保留可访问性、响应式和减少动效 |
@@ -87,6 +87,24 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 
 真实文章放入 `content/blog/<id>/index.md`，分类、标签与推荐项在 `content/pages/blog.json` 配置；使用 `pnpm dev:blog` 预览真实内容。格式、发布边界、响应式图片及验证命令见[博客功能与内容维护](docs/development/blog-implementation.md)。
 
+## GitHub Pages 发布
+
+首期地址：[ModelSphere 官网](https://modelsphere.github.io/modelsphere-website/)。仓库设为公开后，源码与提交历史均公开。仓库 Settings → Pages 的 Source 使用 **GitHub Actions**，`github-pages` 环境只允许 `main` 分支发布。
+
+`.github/workflows/ci.yml` 对分支和 PR 执行格式、Lint、类型、内容检查及单测，随后分别验证根路径与 `/modelsphere-website/` 路径的 preview/mock、release/none 构建。候选通过 Nginx 浏览器检查后，只有 `main` 才上传已验证的正式产物并部署；发布阶段不重新构建。正式站不会包含 Mock 博客或文档，文档目前显示准备状态，站点仍保留验证期的 noindex。
+
+发布参数固定为 `SITE_ORIGIN=https://modelsphere.github.io`、`SITE_BASE_URL=/modelsphere-website/`。`SITE_ORIGIN` 只含协议和域名；子目录单独配置，必须以 `/` 开始和结束。不设置 `SITE_BASE_URL` 时继续支持根路径部署。
+
+```sh
+SITE_ORIGIN=https://modelsphere.github.io SITE_BASE_URL=/modelsphere-website/ pnpm build
+SITE_BASE_URL=/modelsphere-website/ pnpm serve
+E2E_BASE_URL=http://localhost:4173 TEST_DOCS_MODE=none pnpm test:pages
+```
+
+每次合并后流水线重新验证合并提交，部署串行执行且检查候选仍是当前 `main`。发布后核对 `version.json` 的完整提交 SHA、代表路由、静态资源与真实 HTTP 404。线上代码版本与 Catalog 实时数据版本分别记录。
+
+可在 Actions 的 **Website checks** 使用 **Run workflow**，选择 `main` 重试发布。回滚通过 PR 撤销问题提交，待检查通过后合并并重新发布；发布前失败不会替换现有站点，发布后验收失败需要修复或回滚，尚无自动回滚。更换自定义域名或迁移 Kubernetes 时再调整发布配置。
+
 ## 本地运行文档试点
 
 运行环境：Node.js **24.22.0**、pnpm **10.22.0**；版本固定在 `.node-version` 和 `package.json`。
@@ -116,7 +134,7 @@ pnpm test
 
 浏览器检查在 Nginx 容器运行后，通过 `E2E_BASE_URL=http://localhost:4173 TEST_DOCS_MODE=mock pnpm test:e2e` 执行；正式候选改为 `TEST_DOCS_MODE=none`。具体步骤见 `.github/workflows/ci.yml`。
 
-仅本地验证，未推送／未验证远程 CI；当前未创建 PR 或提交，不能据此宣称可合并或已部署。
+本节说明验证方法；每次变更的远程检查与发布状态以对应 PR 和 Actions 运行记录为准。
 
 Header 已按 [Stitch 项目 14815301483114557678](https://stitch.withgoogle.com/projects/14815301483114557678) 覆盖，包含原始 Logo、完整导航结构、GitHub 组织入口和图标主题切换；未开放栏目明确标示为待开放。右上角搜索在桌面与手机均可用，详见下方说明。
 

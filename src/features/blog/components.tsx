@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect, useRef, useState } from 'react';
 import { useColorMode } from '@docusaurus/theme-common';
 import useIsBrowser from '@docusaurus/useIsBrowser';
@@ -12,6 +13,7 @@ export function Cover({
   featured?: boolean;
   full?: boolean;
 }) {
+  const { siteHref } = useSitePath();
   const [failed, setFailed] = useState(false);
   const { colorMode } = useColorMode();
   const browser = useIsBrowser();
@@ -44,14 +46,14 @@ export function Cover({
                     : 'not all'
                   : '(prefers-color-scheme: dark)'
               }
-              srcSet={media.srcDark}
+              srcSet={siteHref(media.srcDark)}
             />
           )}
           <img
             ref={imageRef}
-            src={selected.src}
+            src={siteHref(selected.src)}
             srcSet={selected.variants
-              ?.map((variant) => `${variant.src} ${variant.width}w`)
+              ?.map((variant) => `${siteHref(variant.src)} ${variant.width}w`)
               .join(', ')}
             sizes={
               full
@@ -98,6 +100,7 @@ export function ArticleCard({
   index: BlogIndex;
   featured?: boolean;
 }) {
+  const { siteHref } = useSitePath();
   const category = index.categories.find((item) => item.id === post.categoryId);
   return (
     <article
@@ -107,7 +110,7 @@ export function ArticleCard({
       {post.cover && (
         <a
           className={styles.coverLink}
-          href={post.href}
+          href={siteHref(post.href)}
           aria-label={`阅读：${post.title}`}
         >
           <Cover media={post.cover} featured={featured} />
@@ -128,11 +131,11 @@ export function ArticleCard({
         {!featured && <PostMeta post={post} />}
         {featured ? (
           <h2>
-            <a href={post.href}>{post.title}</a>
+            <a href={siteHref(post.href)}>{post.title}</a>
           </h2>
         ) : (
           <h3>
-            <a href={post.href}>{post.title}</a>
+            <a href={siteHref(post.href)}>{post.title}</a>
           </h3>
         )}
         <p className={styles.summary}>{post.summary}</p>
@@ -148,7 +151,7 @@ export function ArticleCard({
             </div>
           )}
           <a
-            href={post.href}
+            href={siteHref(post.href)}
             className={featured ? styles.primary : styles.readLink}
           >
             阅读全文{' '}

@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect } from 'react';
 import Layout from '@theme/Layout';
 import Head from '@docusaurus/Head';
@@ -10,13 +11,14 @@ import styles from './styles.module.css';
 
 // Keep published report links usable after consolidating recipe details.
 export default function ReportPage() {
+  const { siteHref } = useSitePath();
   const browser = useIsBrowser();
   const location = useLocation();
   const history = useHistory();
   const target = recipeTabHref(browser ? location.search : '', 'performance');
   useEffect(() => {
-    if (browser) history.replace(target);
-  }, [browser, history, target]);
+    if (browser) history.replace(siteHref(target));
+  }, [browser, history, target, siteHref]);
   return (
     <Layout title="配方详情" description="在配方详情中查看性能对照。">
       <Head>

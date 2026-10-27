@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect, useRef } from 'react';
 import { useHistory, useLocation } from '@docusaurus/router';
 import { translate } from '@docusaurus/Translate';
@@ -6,6 +7,8 @@ import styles from './styles.module.css';
 
 export default function SkipToContent() {
   const location = useLocation();
+  const { localHref } = useSitePath();
+  const pathname = localHref(location.pathname);
   const { action } = useHistory();
   const previousLocation = useRef(location);
   const container = useRef<HTMLDivElement>(null);
@@ -20,14 +23,14 @@ export default function SkipToContent() {
     previousLocation.current = location;
     // Catalog filters and recipe tabs update the URL in place.
     const sameRecipe =
-      location.pathname === '/models/recipe' &&
+      pathname === '/models/recipe' &&
       ['modelId', 'recipeId', 'dataVersion'].every(
         (key) =>
           new URLSearchParams(location.search).get(key) ===
           new URLSearchParams(previous.search).get(key),
       );
     const catalogQueryChange =
-      (location.pathname === '/models' || sameRecipe) &&
+      (pathname === '/models' || sameRecipe) &&
       previous.pathname === location.pathname &&
       previous.hash === location.hash;
     if (
@@ -38,7 +41,7 @@ export default function SkipToContent() {
     ) {
       container.current?.focus();
     }
-  }, [location, action]);
+  }, [location, action, pathname]);
 
   return (
     <div ref={container} role="region" aria-label={label} tabIndex={-1}>

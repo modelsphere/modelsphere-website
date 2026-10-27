@@ -1,14 +1,17 @@
 import { z } from 'zod';
+import { validateBaseUrl } from './site-path';
 const inputSchema = z.object({
   SITE_BUILD_TARGET: z.enum(['local', 'preview', 'release']).default('release'),
   DOCS_SOURCE_MODE: z.enum(['none', 'mock', 'repository']).default('none'),
   SITE_ORIGIN: z.string().optional(),
+  SITE_BASE_URL: z.string().optional(),
   BLOG_SOURCE_MODE: z.enum(['content', 'mock']).optional(),
 });
 export interface BuildMode {
   target: 'local' | 'preview' | 'release';
   source: 'none' | 'mock';
   origin: string;
+  baseUrl?: string;
   blogSource?: 'content' | 'mock';
 }
 export function resolveBuildMode(
@@ -47,6 +50,9 @@ export function resolveBuildMode(
     target: input.SITE_BUILD_TARGET,
     source: input.DOCS_SOURCE_MODE,
     origin: url.origin,
+    ...(input.SITE_BASE_URL !== undefined
+      ? { baseUrl: validateBaseUrl(input.SITE_BASE_URL) }
+      : {}),
     ...(input.BLOG_SOURCE_MODE ? { blogSource: input.BLOG_SOURCE_MODE } : {}),
   };
 }
