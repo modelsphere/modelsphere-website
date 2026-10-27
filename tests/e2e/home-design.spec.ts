@@ -66,6 +66,10 @@ test('home restores the selected Stitch screen copy, gradient and desktop propor
       gradient: gradient.backgroundImage,
       clipped: gradient.backgroundClip,
       background: getComputedStyle(hero).backgroundImage,
+      architectureTop:
+        document
+          .querySelector('[data-home-architecture]')!
+          .getBoundingClientRect().top - top,
       cardTitleSize: getComputedStyle(document.querySelector('#comparison h3')!)
         .fontSize,
       mechanismTitleSize: getComputedStyle(
@@ -95,8 +99,9 @@ test('home restores the selected Stitch screen copy, gradient and desktop propor
   expect(measured.clipped).toBe('text');
   expect(measured.background).toContain('rgba(240, 249, 255, 0.4)');
   await expect(page.locator('[data-home-diagram="architecture"]')).toHaveCount(
-    0,
+    1,
   );
+  expect(measured.architectureTop).toBeCloseTo(532, 0);
   expect(measured.cardTitleSize).toBe('20px');
   expect(measured.mechanismTitleSize).toBe('36px');
 });

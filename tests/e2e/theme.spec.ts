@@ -137,7 +137,7 @@ test('light and dark desktop/mobile reading screenshots', async ({
       await page.locator('.site-header').screenshot({
         path: testInfo.outputPath(`header-${width}-${colorScheme}.png`),
       });
-      await page.locator('.site-footer').screenshot({
+      await page.locator('.community-footer').screenshot({
         path: testInfo.outputPath(`footer-${width}-${colorScheme}.png`),
         style: '.site-header { visibility: hidden; }',
       });

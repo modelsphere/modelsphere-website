@@ -70,7 +70,7 @@ test('home loads its assets and all internal links under the project path', asyn
   await expect(page.locator('.desktop-nav [aria-current="page"]')).toHaveText(
     '首页',
   );
-  await expect(page.locator('#home-footer')).toBeVisible();
+  await expect(page.locator('.community-footer')).toBeVisible();
   expect(
     await page
       .locator('a[href^="/"]')
