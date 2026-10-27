@@ -6,6 +6,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import BrandLogo from '@site/src/components/BrandLogo';
 import ThemeModeSwitch from '@site/src/components/ThemeModeSwitch';
 import SiteSearch from '@site/src/features/search/SiteSearch';
+import { CommunityHeader } from '@site/src/features/community/components';
 const items = [
   { label: '首页', href: '/' },
   { label: '模型目录', href: '/models' },
@@ -68,7 +69,7 @@ export default function Navbar() {
       mq.removeEventListener('change', change);
       document.removeEventListener('focusin', rememberFocus);
     };
-  }, []);
+  }, [pathname]);
   const navItems = items.map((item) =>
     item.href ? (
       <Link
@@ -118,6 +119,8 @@ export default function Navbar() {
       </svg>
     </Link>
   );
+  if (pathname === '/community' || pathname === '/community/')
+    return <CommunityHeader />;
   return (
     <header ref={header} className="navbar site-header">
       <div className="header-inner">

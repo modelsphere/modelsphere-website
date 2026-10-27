@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { resolveBuildMode, type BuildMode } from '../src/lib/build-mode';
 import { withoutBaseUrl } from '../src/lib/site-path';
 import type { BlogIndex } from '../src/features/blog/types';
+import type { CommunityIndex } from '../src/features/community/types';
 import { isSearchIndex } from '../src/features/search/query';
 export async function collectFiles(dir: string): Promise<string[]> {
   const out: string[] = [];
@@ -70,6 +71,16 @@ export async function checkArtifacts(
     )
       throw new Error(`外部运行时资源: ${file}`);
   }
+  const community: CommunityIndex = JSON.parse(
+    await readFile(path.join(root, '.docusaurus/globalData.json'), 'utf8'),
+  )['community-content'].default;
+  if (
+    mode.target === 'release' &&
+    (community.preview ||
+      community.meeting?.example ||
+      community.events.some((event) => event.example || event.draft))
+  )
+    throw new Error('正式产物含社区示例或草稿');
   const notFound = await readFile(path.join(dir, '404.html'), 'utf8');
   if (!notFound.includes('<html')) throw new Error('缺少 404 页面');
   const blog = await readFile(path.join(dir, 'blog.html'), 'utf8');

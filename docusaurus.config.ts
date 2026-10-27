@@ -67,6 +67,7 @@ export default async function config(): Promise<Config> {
     ],
     plugins: [
       './plugins/search/index.ts',
+      './plugins/community/index.ts',
       ...(mode.source === 'none'
         ? ['./plugins/docs-placeholder/index.ts']
         : []),

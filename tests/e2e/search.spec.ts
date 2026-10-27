@@ -76,18 +76,18 @@ test('loading failures and invalid responses can be retried', async ({
   expect(attempts).toBe(3);
 });
 
-test('mobile and short landscape search fits both themes', async ({
-  page,
-}, testInfo) => {
-  for (const [width, height] of [
-    [320, 700],
-    [390, 844],
-    [844, 320],
-    [1280, 720],
-    [1440, 1000],
-    [1920, 1080],
-  ]) {
-    for (const colorScheme of ['light', 'dark'] as const) {
+for (const [width, height] of [
+  [320, 700],
+  [390, 844],
+  [844, 320],
+  [1280, 720],
+  [1440, 1000],
+  [1920, 1080],
+])
+  for (const colorScheme of ['light', 'dark'] as const)
+    test(`search fits ${width}x${height} in ${colorScheme}`, async ({
+      page,
+    }, testInfo) => {
       await page.setViewportSize({ width, height });
       await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
       await page.goto(width >= 1280 ? '/' : '/docs');
@@ -139,9 +139,7 @@ test('mobile and short landscape search fits both themes', async ({
         path: testInfo.outputPath(`search-${width}-${colorScheme}.png`),
       });
       await page.keyboard.press('Escape');
-    }
-  }
-});
+    });
 
 test('without JavaScript the search is clearly unavailable and content stays readable', async ({
   browser,

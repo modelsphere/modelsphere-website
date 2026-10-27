@@ -23,6 +23,7 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      - run: pnpm community:check
       - run: pnpm blog:check
       - run: BLOG_SOURCE_MODE=mock pnpm blog:check
       - name: Unit tests

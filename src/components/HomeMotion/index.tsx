@@ -4,7 +4,10 @@ import { useHistory } from '@docusaurus/router';
 const seenHomeHistories = new WeakSet<object>();
 
 /** Enhances unread sections after hydration; server-rendered content stays readable. */
-export function useHomeMotion(root: RefObject<HTMLElement | null>): void {
+export function useHomeMotion(
+  root: RefObject<HTMLElement | null>,
+  heroSelector = '#hero',
+): void {
   const history = useHistory();
   // Initial document loads also use POP, including entries with no location key.
   const isPopReturn = useRef(
@@ -32,7 +35,7 @@ export function useHomeMotion(root: RefObject<HTMLElement | null>): void {
       for (const child of children) pairOwners.set(child, block);
       return children;
     });
-    const hero = container.querySelector<HTMLElement>('#hero');
+    const hero = container.querySelector<HTMLElement>(heroSelector);
     const architecture = container.querySelector<HTMLElement>(
       '[data-home-architecture]',
     );
@@ -458,6 +461,10 @@ export function useHomeMotion(root: RefObject<HTMLElement | null>): void {
             : 0;
           const left =
             element.offsetLeft + element.offsetWidth / 2 <= rowCenter;
+          const centered =
+            horizontal &&
+            Math.abs(element.offsetLeft + element.offsetWidth / 2 - rowCenter) <
+              1;
           // Clip only at the page edge so every desktop pair travels the full distance.
           const offset = Number.isFinite(pairedDistance) ? pairedDistance : 60;
           const animation = element.animate(
@@ -466,9 +473,14 @@ export function useHomeMotion(root: RefObject<HTMLElement | null>): void {
                 ? [
                     {
                       opacity,
-                      transform: `translateX(${left ? -offset : offset}px)`,
+                      transform: centered
+                        ? `translateY(${token('--motion-distance-paired-stacked', '28px')})`
+                        : `translateX(${left ? -offset : offset}px)`,
                     },
-                    { opacity: 1, transform: 'translateX(0)' },
+                    {
+                      opacity: 1,
+                      transform: centered ? 'translateY(0)' : 'translateX(0)',
+                    },
                   ]
                 : [
                     {
@@ -649,5 +661,5 @@ export function useHomeMotion(root: RefObject<HTMLElement | null>): void {
       compact.removeEventListener('change', onBreakpoint);
       desktop.removeEventListener('change', onBreakpoint);
     };
-  }, [history, root]);
+  }, [history, root, heroSelector]);
 }

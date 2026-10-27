@@ -1,0 +1,216 @@
+{
+  "reviewedOn": "2026-10-27",
+  "projectUrl": "https://stitch.withgoogle.com/projects/3601238558355976464",
+  "canvasLabel": "社区生态-更新2",
+  "canvasInstanceId": "bca6163fc83341c59a25edbb4ea2c255-1792663612414",
+  "screen": "projects/3601238558355976464/screens/4543873634024602191",
+  "html": "projects/3601238558355976464/files/4509729593203531026",
+  "htmlSha256": "70a2b67710443b3a3c687fe6a066707365738fc8dc63931c7d328afaba5ffa4b",
+  "screenshot": "projects/3601238558355976464/files/2255733765505242110",
+  "sourceScreenshotPixels": {
+    "width": 2560,
+    "height": 6860
+  },
+  "sourceViewportCssPixels": 1280,
+  "sectionIds": [
+    "community-hero",
+    "community-maintainers",
+    "community-calendar",
+    "community-partners",
+    "community-channels"
+  ],
+  "sourceMeasurements": [
+    {
+      "top": 64,
+      "height": 359
+    },
+    {
+      "top": 423,
+      "height": 535
+    },
+    {
+      "top": 958,
+      "height": 719
+    },
+    {
+      "top": 1677,
+      "height": 665.5
+    },
+    {
+      "top": 2342.5,
+      "height": 736.5
+    }
+  ],
+  "sectionCopy": [
+    [
+      "首页",
+      "社区与生态",
+      "TRINITY ECOSYSTEM ARCHITECTURE",
+      "让 AI 基础设施优化成为全社会的",
+      "“公共资产”",
+      "参与ModelSphere开源社区，共同推动AI基础设施发展。"
+    ],
+    [
+      "COMMUNITY LEADERSHIP & GOVERNANCE",
+      "社区维护者",
+      "ModelSphere 由以下维护者共同推进，负责项目架构方向、PR 严格评审与生产稳定版本发布。",
+      "LM",
+      "Lu Mian",
+      "第四范式 (Paradigm)",
+      "@lumianph",
+      "ZH",
+      "Zhang Hao",
+      "第四范式 (Paradigm)",
+      "@zhanghaohit",
+      "AF",
+      "aceforeverd",
+      "第四范式 (Paradigm)",
+      "@aceforeverd",
+      "RT",
+      "remotego",
+      "第四范式 (Paradigm)",
+      "remotego",
+      "IM",
+      "imneov",
+      "睿思智联 (RiseUnion)",
+      "@imneov"
+    ],
+    [
+      "TECH TALKS & BI-WEEKLY CALENDAR",
+      "线上技术分享与社区例会日历",
+      "双周固化技术例会、一线 SRE 踩坑实录与前沿高性能算子直播分享",
+      "BI-WEEKLY SYNC",
+      "周期固定",
+      "ModelSphere 双周技术例会",
+      "每双周四早 11:00 - 12:00 (UTC+8)",
+      "下一期例会：2025年4月10日 (周四)",
+      "腾讯会议接入 ｜ 微信视频号实时同步",
+      "会议号:",
+      "829-411-903",
+      "(免密加入)",
+      "公开讨论标准议程：",
+      "同步核心平台 Roadmap 演进节奏与近期发版特性",
+      "现场评审社区新提交的 Model Catalog 调优配方 PR",
+      "一线运维 SRE 深度交流生产高并发故障与排障避坑",
+      "订阅例会日历 (iCal)",
+      "纪要 & 议题提交",
+      "直播预告 · LIVE",
+      "4月17日 20:00",
+      "《断流续写与 SLO 动态限流架构深潜》",
+      "主讲人: 模域平台核心架构师 ｜ 深入分析 K8s 引擎挂死后的零感接力设计",
+      "预约直播提醒",
+      "UPCOMING · 预告",
+      "4月24日 20:00",
+      "《LLM AutoTune 夜间网格寻优与北极星 A/B 实战》",
+      "主讲人: AutoTune 负责人 ｜ 百卡集群自动化调优流水线揭秘",
+      "预约提醒",
+      "RECORDED · 往期回放",
+      "累计播放 6.4k",
+      "《使用 CuTe DSL 重写 Kimi-K3 线性注意力 KDA 算子》",
+      "主讲人: 高性能算子团队 ｜ 附源码 GitHub PR 剖析与 PPT 下载",
+      "观看回放 & Slides"
+    ],
+    [
+      "INITIATORS & PARTNERS",
+      "社区发起单位与生态合作伙伴",
+      "模域 ModelSphere 开源社区由",
+      "范式智能",
+      "睿思智联",
+      "共同发起",
+      "CO-INITIATOR / 联合发起单位",
+      "范式智能 (PHANCY)",
+      "Enterprise AI Infrastructure",
+      "作为社区联合发起方，负责提供工业级异构算力集群底座验证支持、海量信创芯片软硬件适配数据沉淀，以及企业级生产落地场景的持续拓展与规范制定。",
+      "CO-INITIATOR / 联合发起单位",
+      "睿思智联 (RiseUnion)",
+      "Cloud-Native AI Middleware",
+      "作为社区联合发起方，主导核心推理中间件研发、AutoTune 调优搜索算法、Kubernetes 云原生推理算子设计，以及面向极端并发的智能路由网关工程演进。",
+      "硬件适配生态与企业共建伙伴计划",
+      "欢迎更多芯片与企业团队加入社区生态共建。",
+      "申请加入生态共建"
+    ],
+    [
+      "CONNECT WITH US",
+      "社区交流与连接渠道",
+      "无论是架构探讨、集群选型，还是实时故障排查，随时随地与核心团队保持对话",
+      "权威发布",
+      "官方微信公众号",
+      "公众号:「模域 ModelSphere」",
+      "第一时间获取最新版本发布动态、深度内核架构长文推送及线下沙龙活动一手资讯。",
+      "微信扫码关注公众号",
+      "双周刊载 ｜ 深度技术沉淀",
+      "实时答疑",
+      "微信技术交流群",
+      "ModelSphere User SIG Group",
+      "与核心架构师及生产 SRE 零距离交流，快速获得集群部署排障、配方微调建议及版本支持。",
+      "ModelSphere社群",
+      "扫码加入技术交流微信群",
+      "主干社区",
+      "GitHub 开源社区",
+      "github.com/modelsphere",
+      "Star 关注主干仓库，提交 Issue 报告环境问题，发起 PR 贡献代码或在 Discussions 规划下代算子。",
+      "GitHub Stars",
+      "14.8k",
+      "Forks",
+      "2.1k",
+      "License",
+      "Apache-2.0",
+      "前往 GitHub 组织"
+    ]
+  ],
+  "adaptations": [
+    "Local fonts and symbols; no runtime CDN.",
+    "Valid nested heading markup; GitHub profile links match the displayed handles.",
+    "Unconfigured calendar, reminder, replay and simulated QR actions are unavailable; no fabricated success or invitation.",
+    "Design dates and static example counts are retained verbatim; not live activity or telemetry.",
+    "Responsive mobile navigation and existing site dark palette; source light colors preserved.",
+    "Community-only source header and footer; other routes retain their existing layout."
+  ],
+  "headerCopy": [
+    "模域",
+    "ModelSphere",
+    "首页",
+    "模型目录",
+    "文档指南",
+    "博客洞见",
+    "社区生态",
+    "Star",
+    "快速开始"
+  ],
+  "footerCopy": [
+    "模域 ModelSphere",
+    "模域 ModelSphere",
+    "是由范式智能（PHANCY）与睿思智联（RiseUnion）共同发起，面向大模型推理的开源生产级基础设施社区，打通异构算力适配、云原生集群调度与极限性能调优，让大模型从“实验室能跑”直通“生产好用”。",
+    "核心产品",
+    "推理引擎运行时",
+    "模型加速套件",
+    "性能基准测评",
+    "分布式编排器",
+    "社区与生态",
+    "开发者社区 SIG",
+    "社区维护者治理",
+    "贡献者荣誉墙",
+    "线上技术日历",
+    "开发者资源",
+    "快速接入文档",
+    "RESTful / gRPC API",
+    "架构演进内幕",
+    "量化实战案例",
+    "© 2025 ModelSphere Foundation. Released under Apache-2.0 License.",
+    "NODE_CLUSTER: READY",
+    "TELEMETRY: P99 22ms"
+  ],
+  "userOverrides": [
+    {
+      "date": "2026-10-27",
+      "request": "使用用户提供的交流群二维码；公众号企业认证尚在进行，暂时移除公众号卡片。",
+      "asset": "static/community/wechat-group-qr.png",
+      "sha256": "569b38a7e1052347cf6415fd4caa26deed42432847e935b35dabe431297195cc",
+      "layout": "微信群和 GitHub 双列，手机纵排；保留加载动画。"
+    },
+    {
+      "date": "2026-10-27",
+      "request": "准备上线：删除三场 mock 活动及示例例会，增加“暂无活动”空状态，保留真实交流群入口。"
+    }
+  ]
+}
