@@ -162,7 +162,14 @@ test('restored modules contain narrow layouts and preserve working section links
   ).toBeVisible();
   await expect(
     page.getByRole('link', { name: '立即部署', exact: true }),
-  ).toHaveAttribute('href', '/docs/quickstart');
+  ).toHaveAttribute(
+    'href',
+    process.env.TEST_DOCS_MODE === 'mock' ? '/docs/quickstart' : '/docs',
+  );
+  const destination = await page
+    .getByRole('link', { name: '立即部署', exact: true })
+    .getAttribute('href');
+  expect((await page.request.get(destination!)).status()).toBe(200);
   await expect(
     page.getByRole('link', { name: '加入开发者交流群', exact: true }),
   ).toHaveAttribute('href', '#home-community');
