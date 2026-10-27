@@ -27,8 +27,13 @@ test('community preserves source layout and local navigation under the Pages pre
     '让 AI 基础设施优化成为全社会的“公共资产”',
   );
   await expect(
-    page.getByRole('link', { name: '快速开始', exact: true }),
-  ).toHaveAttribute('href', '/modelsphere-website/docs');
+    page.locator('.desktop-quickstart .header-primary-link'),
+  ).toHaveAttribute(
+    'href',
+    process.env.TEST_DOCS_MODE === 'mock'
+      ? '/modelsphere-website/docs/quickstart'
+      : '/modelsphere-website/docs',
+  );
   const localLinks = await page
     .locator('[data-community-design] a[href^="/"]')
     .evaluateAll((links) => links.map((link) => link.getAttribute('href')!));

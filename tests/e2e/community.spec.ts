@@ -31,15 +31,27 @@ test('community preserves approved copy, empty activities and the five-section o
     ))
       expect(text, `${id}: ${copy}`).toContain(copy);
   }
-  for (const [selector, fragments] of [
-    ['header[data-community-design]', source.headerCopy],
-    ['footer[data-community-design]', source.footerCopy],
-  ] as const) {
-    const text = (await page.locator(selector).textContent())!
-      .replace(/\s+/g, ' ')
-      .trim();
-    for (const fragment of fragments) expect(text).toContain(fragment);
-  }
+  const header = page.locator('.site-header');
+  await expect(header).toBeVisible();
+  await expect(header.locator('.desktop-nav .site-nav-link')).toHaveText([
+    '首页',
+    '模型目录',
+    '文档指南',
+    '博客',
+    '社区生态',
+  ]);
+  await expect(header.locator('.desktop-nav [aria-current="page"]')).toHaveText(
+    '社区生态',
+  );
+  await expect(header.locator('.header-search')).toBeEnabled();
+  await expect(header.locator('.theme-toggle')).toBeVisible();
+  const footerText = (await page
+    .locator('footer[data-community-design]')
+    .textContent())!
+    .replace(/\s+/g, ' ')
+    .trim();
+  for (const fragment of source.footerCopy)
+    expect(footerText).toContain(fragment);
   for (const handle of [
     'lumianph',
     'zhanghaohit',
@@ -102,6 +114,9 @@ test('community preserves desktop layout, colors, typography and local assets', 
   await page.goto('/community');
   await page.evaluate(() => document.fonts.ready);
   const actual = await page.evaluate(() => ({
+    headerBottom: document
+      .querySelector('.site-header')!
+      .getBoundingClientRect().bottom,
     sections: Array.from(document.querySelectorAll('main section')).map(
       (section) => ({
         top: section.getBoundingClientRect().top,
@@ -130,7 +145,10 @@ test('community preserves desktop layout, colors, typography and local assets', 
   }));
   for (const [index, section] of actual.sections.entries()) {
     if (index < 2) {
-      expect(section.top).toBeCloseTo(source.sourceMeasurements[index].top, 0);
+      expect(section.top - actual.headerBottom).toBeCloseTo(
+        source.sourceMeasurements[index].top - source.sourceMeasurements[0].top,
+        0,
+      );
       expect(section.height).toBeCloseTo(
         source.sourceMeasurements[index].height,
         0,
@@ -169,6 +187,8 @@ test('community stays readable on mobile, tablet and desktop in both themes', as
       await page.goto('/community');
       await page.evaluate(() => document.fonts.ready);
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+      await expect(page.locator('.site-header .header-search')).toBeVisible();
+      await expect(page.locator('.site-header .theme-toggle')).toBeVisible();
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,
