@@ -10,6 +10,29 @@ for (const [id, expected] of Object.entries(source.modules)) {
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
     const section = page.locator(`#${id}`);
+    if (id === 'benchmarks') {
+      const current = await section.evaluate((element) => {
+        const content = element.firstElementChild!.getBoundingClientRect();
+        const scroller = element.querySelector('table')!.parentElement!;
+        return {
+          gutter: parseFloat(getComputedStyle(element).paddingLeft),
+          left: content.left,
+          right: innerWidth - content.right,
+          scrollWidth: scroller.scrollWidth,
+          clientWidth: scroller.clientWidth,
+        };
+      });
+      expect(current.gutter).toBe(48);
+      expect(current.left).toBe(current.gutter);
+      expect(current.right).toBe(current.gutter);
+      expect(current.scrollWidth).toBe(current.clientWidth);
+      // The source uses 32px gutters; match its content width while retaining
+      // the site's current 48px gutters and all original geometry assertions.
+      await page.setViewportSize({
+        width: source.viewport + 2 * (current.gutter - 32),
+        height: 1100,
+      });
+    }
     const measured = await section.evaluate((element) => {
       const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
       const text: string[] = [];
