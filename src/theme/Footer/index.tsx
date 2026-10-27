@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React from 'react';
 import { HomeFooter } from '@site/src/components/HomeSections';
 import Link from '@docusaurus/Link';
@@ -183,7 +184,9 @@ function PortalFooter({ copyright }: { copyright?: string }) {
 }
 export default function Footer() {
   const { footer } = useThemeConfig();
-  const { pathname } = useLocation();
+  const { pathname: publicPathname } = useLocation();
+  const { localHref } = useSitePath();
+  const pathname = localHref(publicPathname);
   if (!footer) return null;
   if (pathname === '/') return <HomeFooter />;
   return pathname === '/docs' || pathname.startsWith('/docs/') ? (

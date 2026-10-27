@@ -438,7 +438,8 @@
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url('/fonts/material-symbols-capabilities.ttf') format('truetype');
+  src: url('../../static/fonts/material-symbols-capabilities.ttf')
+    format('truetype');
 }
 .capabilityIcon {
   display: inline-block;

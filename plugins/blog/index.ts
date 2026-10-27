@@ -33,7 +33,7 @@ export default async function blog(
         actions: {
           ...args.actions,
           addRoute(route) {
-            if (route.path === '/blog') {
+            if (route.path === `${context.baseUrl}blog`) {
               listAdded = true;
               args.actions.addRoute({ ...route, modules: {}, props: {} });
             } else args.actions.addRoute(route);
@@ -42,7 +42,7 @@ export default async function blog(
       });
       if (!listAdded)
         args.actions.addRoute({
-          path: '/blog',
+          path: `${context.baseUrl}blog`,
           component: options.blogListComponent,
           exact: true,
         });

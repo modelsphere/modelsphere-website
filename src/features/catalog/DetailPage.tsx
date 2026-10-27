@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect, useMemo, useState } from 'react';
 import Layout from '@theme/Layout';
 import Head from '@docusaurus/Head';
@@ -42,6 +43,7 @@ export default function DetailPage({ kind }: { kind: 'model' | 'recipe' }) {
   );
 }
 function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
+  const { siteHref } = useSitePath();
   const browser = useIsBrowser(),
     location = useLocation(),
     history = useHistory();
@@ -60,8 +62,8 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
       ? legacyRecipeReportHref(location.search, location.hash)
       : null;
   useEffect(() => {
-    if (legacyReport) history.replace(legacyReport);
-  }, [history, legacyReport]);
+    if (legacyReport) history.replace(siteHref(legacyReport));
+  }, [history, legacyReport, siteHref]);
   const state = useCatalog(params.get('dataVersion') ?? ''),
     c = state.catalog;
   const model = c.models.find((m) => m.name === modelId),
@@ -156,7 +158,8 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
     history.push(location.pathname + '?' + p.toString());
   }
   function chooseTab(tab: RecipeTab) {
-    if (tab !== activeTab) history.push(recipeTabHref(location.search, tab));
+    if (tab !== activeTab)
+      history.push(siteHref(recipeTabHref(location.search, tab)));
   }
   function moveTabFocus(event: React.KeyboardEvent<HTMLButtonElement>) {
     const index = recipeTabs.findIndex(

@@ -23,7 +23,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "serve": "node --import tsx scripts/serve-static.ts"
+    "serve": "node --import tsx scripts/serve-static.ts",
+    "test:pages": "playwright test --config playwright.pages.config.ts"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

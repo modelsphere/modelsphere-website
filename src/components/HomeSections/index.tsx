@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React from 'react';
 import './styles.css';
 
@@ -1167,6 +1168,7 @@ export function Benchmarks() {
   );
 }
 export function GetStarted() {
+  const { siteHref } = useSitePath();
   return (
     <section
       className="w-full px-margin py-space-md"
@@ -1201,7 +1203,7 @@ export function GetStarted() {
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
             <a
-              href="/docs/quickstart"
+              href={siteHref('/docs/quickstart')}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-blue-600 hover:bg-slate-50 transition-all font-semibold text-base shadow-md hover:shadow-lg"
             >
               <span>{'立即部署'}</span>
@@ -1248,6 +1250,7 @@ export function GetStarted() {
   );
 }
 export function HomeFooter() {
+  const { siteHref } = useSitePath();
   return (
     <footer
       className="w-full bg-white border-t border-slate-200 site-footer home-source-footer"
@@ -1263,7 +1266,7 @@ export function HomeFooter() {
               <img
                 alt="ModelSphere Logo"
                 className="h-7 w-auto object-contain"
-                src="/brand/modelsphere-symbol.png"
+                src={siteHref('/brand/modelsphere-symbol.png')}
                 width="35"
                 height="28"
               />
@@ -1302,7 +1305,7 @@ export function HomeFooter() {
                 </a>
               </li>
               <li>
-                <a href="/models">{'Model Catalog 模型库'}</a>
+                <a href={siteHref('/models')}>{'Model Catalog 模型库'}</a>
               </li>
               <li></li>
               <li></li>
@@ -1318,7 +1321,7 @@ export function HomeFooter() {
             </span>
             <ul className="flex flex-col gap-space-xs font-body-sm text-body-sm text-slate-600">
               <li>
-                <a href="/blog">{'博客洞察'}</a>
+                <a href={siteHref('/blog')}>{'博客洞察'}</a>
               </li>
               <li>
                 <span
@@ -1338,10 +1341,10 @@ export function HomeFooter() {
             </span>
             <ul className="flex flex-col gap-space-xs font-body-sm text-body-sm text-slate-600">
               <li>
-                <a href="/docs">{'技术文档'}</a>
+                <a href={siteHref('/docs')}>{'技术文档'}</a>
               </li>
               <li>
-                <a href="/blog">{'博客洞察'}</a>
+                <a href={siteHref('/blog')}>{'博客洞察'}</a>
               </li>
               <li></li>
               <li></li>

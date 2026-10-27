@@ -4,7 +4,8 @@
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url('/fonts/material-symbols-home-sections.ttf') format('truetype');
+  src: url('../../../static/fonts/material-symbols-home-sections.ttf')
+    format('truetype');
 }
 [data-home-design] {
   font-family: var(--font-body);

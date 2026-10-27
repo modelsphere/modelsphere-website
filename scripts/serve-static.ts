@@ -3,6 +3,7 @@ import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 const root = path.resolve('build');
+const baseUrl = process.env.SITE_BASE_URL ?? '/';
 const types: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'application/javascript',
@@ -16,9 +17,17 @@ const types: Record<string, string> = {
 };
 const server = createServer(async (req, res) => {
   try {
-    const name = decodeURIComponent(
+    let name = decodeURIComponent(
       new URL(req.url ?? '/', 'http://localhost').pathname,
     );
+    if (baseUrl !== '/') {
+      if (!name.startsWith(baseUrl)) {
+        res.writeHead(404);
+        res.end();
+        return;
+      }
+      name = '/' + name.slice(baseUrl.length);
+    }
     if (name.includes('..') || name.includes('\\')) {
       res.writeHead(400);
       res.end();

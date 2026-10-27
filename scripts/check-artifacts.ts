@@ -3,6 +3,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { resolveBuildMode, type BuildMode } from '../src/lib/build-mode';
+import { withoutBaseUrl } from '../src/lib/site-path';
 import type { BlogIndex } from '../src/features/blog/types';
 import { isSearchIndex } from '../src/features/search/query';
 export async function collectFiles(dir: string): Promise<string[]> {
@@ -83,7 +84,7 @@ export async function checkArtifacts(
     ),
   ) as Record<string, Record<string, unknown>>;
   const lists = Object.entries(routes).filter(([route]) =>
-    route.startsWith('/blog-'),
+    withoutBaseUrl(route, mode.baseUrl).startsWith('/blog-'),
   );
   if (
     lists.length !== 1 ||

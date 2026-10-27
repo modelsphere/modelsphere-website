@@ -7,6 +7,7 @@ import type { BlogContent } from '@docusaurus/plugin-content-blog';
 import type { BlogIndex } from '../../src/features/blog/types';
 import type { SearchIndex } from '../../src/features/search/query';
 import { markdownEntries } from './content';
+import { withoutBaseUrl } from '../../src/lib/site-path';
 
 export default function searchPlugin(context: LoadContext): Plugin {
   return {
@@ -46,13 +47,15 @@ export default function searchPlugin(context: LoadContext): Plugin {
             ...markdownEntries(await source(doc.source), {
               kind: 'docs',
               title: doc.title,
-              href: doc.permalink,
+              href: withoutBaseUrl(doc.permalink, context.baseUrl),
               summary: doc.description,
             }),
           );
         }
       for (const post of blog?.blogPosts ?? []) {
-        const summary = publicPosts.get(post.metadata.permalink);
+        const summary = publicPosts.get(
+          withoutBaseUrl(post.metadata.permalink, context.baseUrl),
+        );
         if (
           !summary ||
           post.metadata.unlisted ||
@@ -63,7 +66,7 @@ export default function searchPlugin(context: LoadContext): Plugin {
           ...markdownEntries(await source(post.metadata.source), {
             kind: 'blog',
             title: post.metadata.title,
-            href: post.metadata.permalink,
+            href: withoutBaseUrl(post.metadata.permalink, context.baseUrl),
             summary: summary.summary,
             tags: summary.tagIds.map((id) => tags.get(id) ?? '').join(' '),
           }),

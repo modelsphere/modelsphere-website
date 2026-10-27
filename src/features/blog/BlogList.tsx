@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React, {
   useEffect,
   useMemo,
@@ -22,6 +23,7 @@ import type { BlogIndex, BlogQuery } from './types';
 import styles from './styles.module.css';
 const initialQuery: BlogQuery = { q: '', category: '', tag: '', page: 1 };
 export default function BlogList() {
+  const { siteHref } = useSitePath();
   const index = usePluginData('docusaurus-plugin-content-blog') as BlogIndex;
   const browser = useIsBrowser();
   const location = useLocation();
@@ -47,7 +49,7 @@ export default function BlogList() {
   useEffect(() => {
     if (!browser) return;
     setDraft(parsed.query.q);
-    const normalized = queryHref(parsed.query) + location.hash;
+    const normalized = siteHref(queryHref(parsed.query) + location.hash);
     if (parsed.notices.length)
       noticeForHref.current = {
         href: normalized,
@@ -93,12 +95,13 @@ export default function BlogList() {
     location.pathname,
     parsed,
     history,
+    siteHref,
   ]);
   function commit(next: BlogQuery, paginate = false) {
     const normalized = parseQuery(queryHref(next).split('?')[1] ?? '', index);
     setDraft(normalized.query.q);
     setNotice(normalized.notices.join('；'));
-    const href = queryHref(normalized.query) + location.hash;
+    const href = siteHref(queryHref(normalized.query) + location.hash);
     noticeForHref.current = normalized.notices.length
       ? { href, message: normalized.notices.join('；') }
       : null;
@@ -153,7 +156,7 @@ export default function BlogList() {
         <h1 className="sr-only">博客洞见</h1>
         <div className={styles.breadcrumbBar}>
           <nav className={styles.container} aria-label="面包屑">
-            <a href="/">首页</a>
+            <a href={siteHref('/')}>首页</a>
             <span aria-hidden="true">/</span>
             <span aria-current="page">技术博客与动态</span>
           </nav>
@@ -381,10 +384,10 @@ export default function BlogList() {
               <nav className={styles.pagination} aria-label="文章分页">
                 {results.page > 1 ? (
                   <a
-                    href={
+                    href={siteHref(
                       queryHref({ ...query, page: results.page - 1 }) +
-                      location.hash
-                    }
+                        location.hash,
+                    )}
                     onClick={(event) => pageClick(event, results.page - 1)}
                   >
                     上一页
@@ -402,7 +405,9 @@ export default function BlogList() {
                     ) : (
                       <a
                         key={page}
-                        href={queryHref({ ...query, page }) + location.hash}
+                        href={siteHref(
+                          queryHref({ ...query, page }) + location.hash,
+                        )}
                         aria-current={
                           page === results.page ? 'page' : undefined
                         }
@@ -415,10 +420,10 @@ export default function BlogList() {
                 </div>
                 {results.page < results.pages ? (
                   <a
-                    href={
+                    href={siteHref(
                       queryHref({ ...query, page: results.page + 1 }) +
-                      location.hash
-                    }
+                        location.hash,
+                    )}
                     onClick={(event) => pageClick(event, results.page + 1)}
                   >
                     下一页

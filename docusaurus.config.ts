@@ -34,7 +34,7 @@ export default async function config(): Promise<Config> {
     tagline: '大模型推理基础设施',
     favicon: 'brand/modelsphere-symbol.png',
     url: mode.origin,
-    baseUrl: '/',
+    baseUrl: mode.baseUrl ?? '/',
     trailingSlash: false,
     staticDirectories: [
       'static',
@@ -92,8 +92,7 @@ export default async function config(): Promise<Config> {
       {
         tagName: 'script',
         attributes: {},
-        innerHTML:
-          "if(location.pathname==='/blog'&&location.search){document.documentElement.setAttribute('data-blog-query-pending','');setTimeout(function(){document.documentElement.removeAttribute('data-blog-query-pending')},5000)}",
+        innerHTML: `if(location.pathname===${JSON.stringify(`${mode.baseUrl ?? '/'}blog`)}&&location.search){document.documentElement.setAttribute('data-blog-query-pending','');setTimeout(function(){document.documentElement.removeAttribute('data-blog-query-pending')},5000)}`,
       },
       {
         tagName: 'meta',

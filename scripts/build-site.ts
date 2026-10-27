@@ -52,7 +52,6 @@ const code = await new Promise<number>((resolve) => {
 });
 if (code !== 0) process.exit(code);
 if (action !== 'dev') {
-  await checkArtifacts(process.cwd(), mode);
   let siteCommit: string | null = null;
   try {
     siteCommit = execFileSync('git', ['rev-parse', 'HEAD'], {
@@ -62,6 +61,15 @@ if (action !== 'dev') {
   } catch {
     /* Initial repository has no commits. */
   }
+  await writeFile(
+    'build/version.json',
+    JSON.stringify({
+      commit: siteCommit,
+      target: mode.target,
+      baseUrl: mode.baseUrl ?? '/',
+    }) + '\n',
+  );
+  await checkArtifacts(process.cwd(), mode);
   await writeFile(
     'reports/build.json',
     JSON.stringify(

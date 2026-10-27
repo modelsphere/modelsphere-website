@@ -1,3 +1,4 @@
+import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect, useRef } from 'react';
 import Link from '@docusaurus/Link';
 import { useLocation } from '@docusaurus/router';
@@ -13,7 +14,9 @@ const items = [
   { label: '社区生态', href: '/community' },
 ];
 export default function Navbar() {
-  const { pathname } = useLocation();
+  const { pathname: publicPathname } = useLocation();
+  const { localHref } = useSitePath();
+  const pathname = localHref(publicPathname);
   const { siteConfig } = useDocusaurusContext();
   const mock = Boolean(siteConfig.customFields?.docsMock);
   const isDocs = pathname === '/docs' || pathname.startsWith('/docs/');
