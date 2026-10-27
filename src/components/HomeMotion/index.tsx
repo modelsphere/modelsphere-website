@@ -525,6 +525,10 @@ export function useHomeMotion(
       }
     };
     const observePending = () => {
+      if (reduced.matches || enhancementStopped) {
+        finishAll();
+        return;
+      }
       observer?.disconnect();
       pairedObserver?.disconnect();
       introObserver?.disconnect();
@@ -633,8 +637,6 @@ export function useHomeMotion(
       typeof HTMLElement.prototype.animate !== 'function'
     )
       enhancementStopped = true;
-    initializeWhenVisible();
-
     container.addEventListener('click', onClick);
     container.addEventListener('focusin', onFocus);
     document.addEventListener('visibilitychange', onVisibility);
@@ -646,6 +648,9 @@ export function useHomeMotion(
     reduced.addEventListener('change', onPreference);
     compact.addEventListener('change', onBreakpoint);
     desktop.addEventListener('change', onBreakpoint);
+    initializeWhenVisible();
+    // Reconcile a preference change that arrived while the first layout was read.
+    if (reduced.matches) finishAll();
     return () => {
       finishAll();
       for (const restore of temporaryFocus.values()) restore();
