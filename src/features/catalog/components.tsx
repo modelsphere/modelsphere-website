@@ -202,6 +202,7 @@ export function RecipeCard({
   context?: 'catalog' | 'model';
 }) {
   const badge = role(r);
+  const gainPercent = Math.max(0, Math.min(100, r.quotedGain ?? 0));
   const Heading = context === 'model' ? 'h3' : 'h2';
   return (
     <article
@@ -231,7 +232,12 @@ export function RecipeCard({
                 : '部署配方'}
           </span>
         </div>
-        <div className={styles.gain}>
+        <div
+          className={styles.gain}
+          style={
+            { '--gain-progress': `${gainPercent}%` } as React.CSSProperties
+          }
+        >
           <div>
             <span>源报告记录 · 最佳负载</span>
             {r.quotedGain != null && reportUrl(r) ? (
@@ -256,11 +262,7 @@ export function RecipeCard({
           </div>
           {r.quotedGain != null && (
             <div className={styles.bar}>
-              <span
-                style={{
-                  width: `${Math.max(0, Math.min(100, (r.quotedGain / 200) * 100))}%`,
-                }}
-              />
+              <span />
             </div>
           )}
           <Link to={detailHref(r, version, undefined, returnTo)}>
@@ -310,9 +312,13 @@ export function RecipeCard({
         <div className={styles.cardActions}>
           <Link
             className={styles.secondary}
-            to={detailHref(r, version, undefined, returnTo)}
+            to={
+              badge === 'optimized'
+                ? reportHref(r, version, returnTo)
+                : detailHref(r, version, undefined, returnTo)
+            }
           >
-            查看配方详情
+            {badge === 'optimized' ? '对比报告' : '部署配置'}
           </Link>
           <CopyButton getText={copy} />
         </div>

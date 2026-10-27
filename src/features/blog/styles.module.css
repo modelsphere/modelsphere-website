@@ -456,10 +456,6 @@
   flex-shrink: 0;
   color: var(--color-text-muted);
 }
-.searchInput:focus-within {
-  outline: 2px solid var(--color-focus-ring);
-  outline-offset: 2px;
-}
 .searchInput:focus-within::before {
   border-color: var(--color-brand-primary);
 }
@@ -656,26 +652,23 @@
 }
 .readingGrid {
   display: grid;
-  grid-template-columns: minmax(0, 760px);
-  justify-content: center;
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   padding-block: 40px 64px;
   align-items: start;
 }
 .readingGrid[data-toc='true'] {
-  grid-template-columns: 200px minmax(0, 760px);
+  grid-template-columns: 200px minmax(0, 1fr);
 }
 .readingGrid[data-resources='true'] {
-  grid-template-columns: minmax(0, 760px) 200px;
+  grid-template-columns: minmax(0, 1fr) 200px;
 }
 .readingGrid[data-toc='true'][data-resources='true'] {
-  grid-template-columns: 200px minmax(0, 760px) 200px;
+  grid-template-columns: 200px minmax(0, 1fr) 200px;
 }
 .readingColumn {
   min-width: 0;
   width: 100%;
-  max-width: min(72ch, 760px);
-  justify-self: center;
 }
 .desktopToc,
 .desktopResources {
@@ -851,7 +844,7 @@
     font-size: 24px;
   }
   .readingGrid[data-toc][data-resources] {
-    grid-template-columns: minmax(0, 760px);
+    grid-template-columns: minmax(0, 1fr);
   }
   .desktopToc,
   .desktopResources {

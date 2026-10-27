@@ -314,6 +314,30 @@ test('skip-to-content still focuses main content and cross-page navigation start
   await skip.click();
   await expect(page.locator('main').first()).toBeFocused();
 });
+for (const recipeRole of ['baseline', 'recipe'])
+  test(`${recipeRole} recipe cards open deployment configuration`, async ({
+    page,
+  }) => {
+    await page.goto(`/models?role=${recipeRole}`);
+    await expect(page.getByText('公开目录 ·', { exact: false })).toBeVisible();
+    const cards = page.locator('[data-recipe-id]');
+    await expect(cards.first()).toBeVisible();
+    await expect(
+      cards.getByRole('link', { name: '部署配置', exact: true }),
+    ).toHaveCount(await cards.count());
+    await expect(
+      cards.getByRole('link', { name: '对比报告', exact: true }),
+    ).toHaveCount(0);
+    await cards
+      .first()
+      .getByRole('link', { name: '部署配置', exact: true })
+      .click();
+    await expect(
+      page.getByRole('tab', { name: '部署配置', selected: true }),
+    ).toBeVisible();
+    expect(new URL(page.url()).searchParams.get('tab')).toBeNull();
+  });
+
 for (const layout of ['cards', 'table'])
   test(`recipe details consolidate deployment, performance and history from ${layout}`, async ({
     page,
@@ -321,9 +345,18 @@ for (const layout of ['cards', 'table'])
     const catalog = `/models?q=mimo-v2.5&sort=name-asc&layout=${layout}`;
     await page.goto(catalog);
     await expect(page.locator('[data-catalog-enhanced="true"]')).toBeVisible();
-    await expect(
-      page.getByRole('link', { name: '查看配方详情', exact: true }),
-    ).toHaveCount(2);
+    if (layout === 'cards') {
+      await expect(
+        page.getByRole('link', { name: '部署配置', exact: true }),
+      ).toHaveCount(1);
+      await expect(
+        page.getByRole('link', { name: '对比报告', exact: true }),
+      ).toHaveCount(1);
+    } else {
+      await expect(
+        page.getByRole('link', { name: '查看配方详情', exact: true }),
+      ).toHaveCount(2);
+    }
     await expect(
       page.getByRole('link', { name: '查看对照报告', exact: true }),
     ).toHaveCount(0);
@@ -332,7 +365,10 @@ for (const layout of ['cards', 'table'])
         ? page.locator(`[data-recipe-id="${m.name}/${variant.id}"]`)
         : page.getByRole('row').filter({ hasText: variant.id });
     await recipe
-      .getByRole('link', { name: '查看配方详情', exact: true })
+      .getByRole('link', {
+        name: layout === 'cards' ? '对比报告' : '查看配方详情',
+        exact: true,
+      })
       .click();
     await expect(page).toHaveURL(/\/models\/recipe\?/);
     expect(new URL(page.url()).searchParams.get('dataVersion')).toBe(
@@ -341,6 +377,12 @@ for (const layout of ['cards', 'table'])
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
       variant.id,
     );
+    if (layout === 'cards') {
+      await expect(
+        page.getByRole('tab', { name: '性能对照', selected: true }),
+      ).toBeVisible();
+      await page.getByRole('tab', { name: '部署配置' }).click();
+    }
     await expect(
       page.getByRole('tab', { name: '部署配置', selected: true }),
     ).toBeVisible();
@@ -771,7 +813,7 @@ for (const width of [390, 1440])
         recipes.getByRole('button', { name: '复制完整配方' }),
       ).toHaveCount(model.variants.length);
       for (const link of await recipes
-        .getByRole('link', { name: '查看配方详情', exact: true })
+        .getByRole('link', { name: /^(部署配置|对比报告)$/, exact: true })
         .all()) {
         const url = new URL(
           (await link.getAttribute('href'))!,
