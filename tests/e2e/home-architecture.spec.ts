@@ -22,7 +22,7 @@ for (const width of [390, 1440]) {
   });
 
   for (const theme of ['light', 'dark'] as const) {
-    test(`community placeholder works in ${theme} at ${width}px`, async ({
+    test(`community design opens in ${theme} at ${width}px`, async ({
       page,
     }) => {
       await page.setViewportSize({ width, height: 900 });
@@ -37,14 +37,16 @@ for (const width of [390, 1440]) {
       await nav.getByRole('link', { name: '社区生态', exact: true }).click();
       await expect(page).toHaveURL(/\/community\/?$/);
       await expect(
-        page.getByRole('heading', { name: 'Coming soon…', exact: true }),
+        page.getByRole('heading', {
+          name: '让 AI 基础设施优化成为全社会的“公共资产”',
+          exact: true,
+        }),
       ).toBeVisible();
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
       if (width < 1280) {
-        await expect(page.locator('.mobile-menu')).not.toHaveAttribute(
-          'open',
-          '',
-        );
+        await expect(
+          page.locator('.community-mobile-menu'),
+        ).not.toHaveAttribute('open', '');
         await page.getByLabel('导航菜单', { exact: true }).click();
       }
       await expect(
@@ -59,12 +61,18 @@ for (const width of [390, 1440]) {
       ).toBe(true);
       await page.reload();
       await expect(
-        page.getByRole('heading', { name: 'Coming soon…', exact: true }),
+        page.getByRole('heading', {
+          name: '让 AI 基础设施优化成为全社会的“公共资产”',
+          exact: true,
+        }),
       ).toBeVisible();
       await expect(
-        page.getByRole('link', { name: '探索文档' }),
+        page.getByRole('link', { name: '快速开始', exact: true }),
       ).toHaveAttribute('href', '/docs');
-      await page.getByRole('link', { name: '返回首页' }).click();
+      await page
+        .getByRole('navigation', { name: 'Breadcrumb' })
+        .getByRole('link', { name: '首页', exact: true })
+        .click();
       await expect(page).toHaveURL(/\/$/);
       await expect(page.locator('#hero')).toBeVisible();
     });

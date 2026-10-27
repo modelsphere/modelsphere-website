@@ -1,6 +1,7 @@
 import { useSitePath } from '@site/src/lib/use-site-path';
 import React from 'react';
 import { HomeFooter } from '@site/src/components/HomeSections';
+import { CommunityFooter } from '@site/src/features/community/components';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import { useLocation } from '@docusaurus/router';
@@ -188,6 +189,8 @@ export default function Footer() {
   const { localHref } = useSitePath();
   const pathname = localHref(publicPathname);
   if (!footer) return null;
+  if (pathname === '/community' || pathname === '/community/')
+    return <CommunityFooter />;
   if (pathname === '/') return <HomeFooter />;
   return pathname === '/docs' || pathname.startsWith('/docs/') ? (
     <DocsFooter copyright={footer.copyright} />

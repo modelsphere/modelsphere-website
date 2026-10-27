@@ -810,8 +810,21 @@ for (const width of [390, 1440])
         model.variants.length,
       );
       await expect(
-        recipes.getByRole('button', { name: '复制完整配方' }),
+        recipes.getByRole('button', { name: '复制部署配置' }),
       ).toHaveCount(model.variants.length);
+      const copyButton = recipes
+        .getByRole('button', { name: '复制部署配置', exact: true })
+        .first();
+      const copyTooltip = recipes.getByRole('tooltip').first();
+      await expect(copyTooltip).toBeHidden();
+      await copyButton.hover();
+      await expect(copyTooltip).toHaveText('复制部署配置');
+      await expect(copyTooltip).toBeVisible();
+      await copyButton.press('Escape');
+      await expect(copyTooltip).toBeHidden();
+      await page.getByRole('button', { name: /切换到[深浅]色模式/ }).focus();
+      await copyButton.focus();
+      await expect(copyTooltip).toBeVisible();
       for (const link of await recipes
         .getByRole('link', { name: /^查看(部署配置|对照报告)$/, exact: true })
         .all()) {

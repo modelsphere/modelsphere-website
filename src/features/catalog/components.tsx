@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
 import Link from '@docusaurus/Link';
 import {
   baselineInfo,
@@ -159,14 +159,21 @@ export function CopyButton({
   getText: () => Promise<string>;
   label?: string;
 }) {
+  const tooltipId = useId();
+  const [tooltipDismissed, setTooltipDismissed] = useState(false);
   const [state, setState] = useState('');
   return (
     <span className={styles.copyWrap}>
       <button
         className={styles.copy}
-        title={label}
         aria-label={label}
+        aria-describedby={tooltipId}
         disabled={state === '复制中…'}
+        onMouseEnter={() => setTooltipDismissed(false)}
+        onFocus={() => setTooltipDismissed(false)}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') setTooltipDismissed(true);
+        }}
         onClick={async () => {
           setState('复制中…');
           try {
@@ -182,6 +189,14 @@ export function CopyButton({
       >
         <Icon name="copy" />
       </button>
+      <span
+        id={tooltipId}
+        role="tooltip"
+        className={styles.copyTooltip}
+        hidden={Boolean(state) || tooltipDismissed}
+      >
+        {label}
+      </span>
       <span className={styles.copyStatus} role="status">
         {state}
       </span>
@@ -320,7 +335,7 @@ export function RecipeCard({
           >
             {badge === 'optimized' ? '查看对照报告' : '查看部署配置'}
           </Link>
-          <CopyButton getText={copy} />
+          <CopyButton getText={copy} label="复制部署配置" />
         </div>
       </div>
     </article>
