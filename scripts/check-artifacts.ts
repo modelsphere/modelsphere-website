@@ -42,12 +42,17 @@ export async function checkArtifacts(
   if (mode.source === 'mock')
     await stat(path.join(dir, 'docs/quickstart.html'));
   for (const file of files) {
-    if (mode.target === 'release' && file.includes('example-blog-'))
+    if (
+      mode.target === 'release' &&
+      !(mode.publishExamples && mode.blogSource === 'mock') &&
+      file.includes('example-blog-')
+    )
       throw new Error(`Mock 博客资源泄漏: ${file}`);
     if (!/\.(html|js|json|map|css|xml|txt)$/.test(file)) continue;
     const text = await readFile(file, 'utf8');
     if (
       mode.target === 'release' &&
+      !(mode.publishExamples && mode.blogSource === 'mock') &&
       /example-blog-|示例作者|MOCK PREVIEW|BLOG LAB/.test(text)
     )
       throw new Error(`Mock 博客内容泄漏: ${file}`);

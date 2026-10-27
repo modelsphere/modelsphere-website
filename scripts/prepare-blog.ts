@@ -310,7 +310,11 @@ export async function readBlog(
   mode: BuildMode,
   today = new Date().toISOString().slice(0, 10),
 ) {
-  if (mode.target === 'release' && mode.blogSource === 'mock')
+  if (
+    mode.target === 'release' &&
+    mode.blogSource === 'mock' &&
+    !mode.publishExamples
+  )
     throw new Error('正式构建禁止使用 Mock 博客');
   const preview =
     mode.blogSource === 'mock' ||

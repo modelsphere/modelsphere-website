@@ -34,7 +34,9 @@ for (const route of [
   'models/detail?modelId=mimo-v2.5',
   'models/recipe?modelId=mimo-v2.5',
   'blog',
+  'blog/example-blog-platform',
   'docs',
+  'docs/quickstart',
   'community',
 ]) {
   const response = await fetch(new URL(route, base), {

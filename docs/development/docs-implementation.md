@@ -1,5 +1,7 @@
 # ModelSphere 文档栏目实施方案
 
+当前发布配置：`pnpm build` 默认启用 `SITE_PUBLISH_EXAMPLES=true`，正式网站展示《认识 ModelSphere》《快速开始（示例）》两篇文档，保留正文内示例说明并生成搜索索引。`SITE_PUBLISH_EXAMPLES=false pnpm build` 恢复准备页。以下实施方案和历史验证中的 release/none 隔离行为适用于关闭公开示例的构建，不代表当前默认发布配置。
+
 | 属性 | 内容 |
 | --- | --- |
 | 更新日期 | 2026-10-21 |

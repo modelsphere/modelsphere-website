@@ -16,8 +16,13 @@ test('blog navigation, empty release state and real 404 responses', async ({
   ).toHaveAttribute('aria-current', 'page');
   await expect(
     page
-      .locator('.community-footer')
+      .getByRole('contentinfo')
       .getByRole('link', { name: '架构演进内幕', exact: true }),
+  ).toHaveAttribute('href', '/blog');
+  await expect(
+    page
+      .getByRole('contentinfo')
+      .getByRole('link', { name: '量化实战案例', exact: true }),
   ).toHaveAttribute('href', '/blog');
   if (release) {
     await expect(
