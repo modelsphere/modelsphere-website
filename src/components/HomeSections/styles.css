@@ -57,6 +57,28 @@
   margin: 0;
   overflow-wrap: normal;
 }
+/* Keep the source table's column proportions independent of fallback fonts. */
+[data-home-design]#benchmarks table {
+  table-layout: fixed;
+}
+[data-home-design]#benchmarks th:nth-child(1) {
+  width: calc(100% * 148.53125 / 1214);
+}
+[data-home-design]#benchmarks th:nth-child(2) {
+  width: calc(100% * 121.5 / 1214);
+}
+[data-home-design]#benchmarks th:nth-child(3) {
+  width: calc(100% * 176.15625 / 1214);
+}
+[data-home-design]#benchmarks th:nth-child(4) {
+  width: calc(100% * 175.578125 / 1214);
+}
+[data-home-design]#benchmarks th:nth-child(5) {
+  width: calc(100% * 136.6875 / 1214);
+}
+[data-home-design]#benchmarks th:nth-child(6) {
+  width: calc(100% * 455.546875 / 1214);
+}
 [data-home-design] :is(tr, th, td) {
   border-width: 0;
   background: transparent;
