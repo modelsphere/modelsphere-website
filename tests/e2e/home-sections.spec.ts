@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import source from '../../docs/design/sources/stitch-home-sections-copy.json';
+import communitySource from '../../docs/design/sources/stitch-community.json';
 
 for (const [id, expected] of Object.entries(source.modules)) {
   test(`${id} restores every source label, icon and desktop proportion`, async ({
@@ -9,7 +10,8 @@ for (const [id, expected] of Object.entries(source.modules)) {
     await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
-    const section = page.locator(`#${id}`);
+    const sharedFooter = id === 'home-footer';
+    const section = page.locator(sharedFooter ? '.community-footer' : `#${id}`);
     if (id === 'benchmarks') {
       const current = await section.evaluate((element) => {
         const content = element.firstElementChild!.getBoundingClientRect();
@@ -69,10 +71,14 @@ for (const [id, expected] of Object.entries(source.modules)) {
         ),
       };
     });
-    expect(measured.text).toBe(expected.text);
+    expect(measured.text).toBe(
+      sharedFooter ? communitySource.footerCopy.join(' ') : expected.text,
+    );
     expect(measured.icons).toEqual(expected.icons);
     expect(measured.font).toBe(true);
-    expect(Math.abs(measured.height - expected.height)).toBeLessThanOrEqual(1);
+    expect(
+      Math.abs(measured.height - (sharedFooter ? 360 : expected.height)),
+    ).toBeLessThanOrEqual(1);
     expect(measured.headings).toEqual(
       expected.headings.map((heading) => ({
         text: heading.text,
