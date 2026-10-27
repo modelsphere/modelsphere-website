@@ -1,4 +1,5 @@
 import { useSitePath } from '@site/src/lib/use-site-path';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import React from 'react';
 import './styles.css';
 
@@ -1169,6 +1170,7 @@ export function Benchmarks() {
 }
 export function GetStarted() {
   const { siteHref } = useSitePath();
+  const { siteConfig } = useDocusaurusContext();
   return (
     <section
       className="w-full px-margin py-space-md"
@@ -1203,7 +1205,11 @@ export function GetStarted() {
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
             <a
-              href={siteHref('/docs/quickstart')}
+              href={siteHref(
+                siteConfig.customFields?.docsMock
+                  ? '/docs/quickstart'
+                  : '/docs',
+              )}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-blue-600 hover:bg-slate-50 transition-all font-semibold text-base shadow-md hover:shadow-lg"
             >
               <span>{'立即部署'}</span>
