@@ -114,7 +114,7 @@ test('catalog filters, recipe tabs, legacy redirects and return links preserve t
   await page.getByRole('button', { name: '搜索', exact: true }).click();
   await expect(page).toHaveURL(/\/modelsphere-website\/models\?/);
   const card = page.locator(`[data-recipe-id="${model.name}/${recipe.id}"]`);
-  await card.getByRole('link', { name: '对比报告', exact: true }).click();
+  await card.getByRole('link', { name: '查看对照报告', exact: true }).click();
   await expect(
     page.getByRole('tab', { name: '性能对照', selected: true }),
   ).toBeVisible();

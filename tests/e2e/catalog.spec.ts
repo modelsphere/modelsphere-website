@@ -323,14 +323,14 @@ for (const recipeRole of ['baseline', 'recipe'])
     const cards = page.locator('[data-recipe-id]');
     await expect(cards.first()).toBeVisible();
     await expect(
-      cards.getByRole('link', { name: '部署配置', exact: true }),
+      cards.getByRole('link', { name: '查看部署配置', exact: true }),
     ).toHaveCount(await cards.count());
     await expect(
-      cards.getByRole('link', { name: '对比报告', exact: true }),
+      cards.getByRole('link', { name: '查看对照报告', exact: true }),
     ).toHaveCount(0);
     await cards
       .first()
-      .getByRole('link', { name: '部署配置', exact: true })
+      .getByRole('link', { name: '查看部署配置', exact: true })
       .click();
     await expect(
       page.getByRole('tab', { name: '部署配置', selected: true }),
@@ -347,10 +347,10 @@ for (const layout of ['cards', 'table'])
     await expect(page.locator('[data-catalog-enhanced="true"]')).toBeVisible();
     if (layout === 'cards') {
       await expect(
-        page.getByRole('link', { name: '部署配置', exact: true }),
+        page.getByRole('link', { name: '查看部署配置', exact: true }),
       ).toHaveCount(1);
       await expect(
-        page.getByRole('link', { name: '对比报告', exact: true }),
+        page.getByRole('link', { name: '查看对照报告', exact: true }),
       ).toHaveCount(1);
     } else {
       await expect(
@@ -359,14 +359,14 @@ for (const layout of ['cards', 'table'])
     }
     await expect(
       page.getByRole('link', { name: '查看对照报告', exact: true }),
-    ).toHaveCount(0);
+    ).toHaveCount(layout === 'cards' ? 1 : 0);
     const recipe =
       layout === 'cards'
         ? page.locator(`[data-recipe-id="${m.name}/${variant.id}"]`)
         : page.getByRole('row').filter({ hasText: variant.id });
     await recipe
       .getByRole('link', {
-        name: layout === 'cards' ? '对比报告' : '查看配方详情',
+        name: layout === 'cards' ? '查看对照报告' : '查看配方详情',
         exact: true,
       })
       .click();
@@ -813,7 +813,7 @@ for (const width of [390, 1440])
         recipes.getByRole('button', { name: '复制完整配方' }),
       ).toHaveCount(model.variants.length);
       for (const link of await recipes
-        .getByRole('link', { name: /^(部署配置|对比报告)$/, exact: true })
+        .getByRole('link', { name: /^查看(部署配置|对照报告)$/, exact: true })
         .all()) {
         const url = new URL(
           (await link.getAttribute('href'))!,
