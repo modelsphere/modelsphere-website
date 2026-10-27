@@ -161,8 +161,6 @@ export default function CatalogPage() {
             <p>
               查阅模型的推理引擎、容器镜像、启动参数、GPU 硬件要求与基线 /
               调优报告。
-              <br className={styles.desktopBreak} />
-              每套配方保留来源和测量版本，让配置选择有据可查。
             </p>
           </header>
           <Stats catalog={c} />
@@ -232,7 +230,7 @@ export default function CatalogPage() {
                         options={[
                           {
                             value: 'improvement-desc',
-                            label: '按源报告记录增幅排序',
+                            label: '按吞吐量提升排序',
                           },
                           { value: 'name-asc', label: '按模型名称 A–Z' },
                           { value: 'name-desc', label: '按模型名称 Z–A' },
@@ -382,13 +380,13 @@ export default function CatalogPage() {
               ) : q.layout === 'table' ? (
                 <div className={styles.tableScroll}>
                   <table>
-                    <caption>模型部署目录 · 百分比引用源报告记录</caption>
+                    <caption>模型部署目录</caption>
                     <thead>
                       <tr>
                         <th>模型</th>
                         <th>配方 / 引擎</th>
                         <th>硬件</th>
-                        <th>源记录最佳增幅</th>
+                        <th>最佳负载提升</th>
                         <th>配方详情</th>
                       </tr>
                     </thead>
@@ -471,13 +469,12 @@ export default function CatalogPage() {
             </>
           )}
           <footer className={styles.catalogFoot}>
-            目录记录与实测结论由源项目维护。
             <a
               href={`${config.repository}/commit/${c.commit}`}
               target="_blank"
               rel="noreferrer"
             >
-              数据提交 {c.commit.slice(0, 7)} ↗
+              目录版本 {c.commit.slice(0, 7)} ↗
             </a>
           </footer>
         </div>

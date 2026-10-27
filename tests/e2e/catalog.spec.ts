@@ -61,6 +61,26 @@ test('source-backed list, dynamic filters, shareable queries, model/table views 
   await page.goto('/models');
   await expect(page.getByText('公开目录 ·', { exact: false })).toBeVisible();
   await expect(page.locator('[data-recipe-id]')).toHaveCount(12);
+  const statistics = page.getByRole('region', { name: '目录统计' });
+  await expect(statistics.locator(':scope > div')).toHaveCount(5);
+  const pairs = statistics.locator(':scope > div').nth(2);
+  await expect(pairs).toContainText('OPTIMIZED PAIRS');
+  await expect(pairs.locator('strong')).toHaveText('23');
+  await expect(pairs).toContainText('覆盖 79% 模型');
+  const median = statistics.locator(':scope > div').nth(3);
+  await expect(median).toContainText('MEDIAN IMPROVEMENT');
+  await expect(median.locator('strong')).toHaveText('+32.4%');
+  await expect(median).toContainText('范围 +5.3% 至 +195.3%');
+  const best = statistics.locator(':scope > div').nth(4);
+  await expect(best).toContainText('BEST IMPROVEMENT');
+  await expect(best.locator('strong')).toHaveText('+195.3%');
+  await expect(best.getByRole('link')).toHaveText(
+    'glm5.3 · sglang-tp4-b300-optimized',
+  );
+  await expect(best.getByRole('link')).toHaveAttribute(
+    'href',
+    /recipe\?.*modelId=glm5.3.*tab=performance/,
+  );
   await page
     .locator('label')
     .filter({ hasText: 'H100' })
@@ -502,9 +522,13 @@ for (const width of [320, 1440])
     );
     await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
     await expect(page.getByText('公开目录 ·', { exact: false })).toBeVisible();
-    await expect(
-      page.getByRole('combobox', { name: '配方版本' }).getByRole('option'),
-    ).toHaveCount(2);
+    const version = page.getByRole('combobox', { name: '配方版本' });
+    await expect(version).toHaveText(`当前版本 ${variant.version}`);
+    await version.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('listbox').getByRole('option')).toHaveCount(2);
+    await page.keyboard.press('Escape');
+    await expect(version).toBeFocused();
     const before = { ...counts };
     expect(before.report).toBe(0);
     const deployment = page.getByRole('tab', { name: '部署配置' });
@@ -603,8 +627,8 @@ test('history opens the exact configuration and keeps reports bound to their mea
     page.getByRole('tab', { name: '部署配置', selected: true }),
   ).toBeVisible();
   await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
-  await expect(page.getByRole('combobox', { name: '配方版本' })).toHaveValue(
-    oldVersion,
+  await expect(page.getByRole('combobox', { name: '配方版本' })).toHaveText(
+    `${oldVersion} · 日期未提供`,
   );
   await page.getByRole('button', { name: '复制完整配方' }).click();
   await expect(page.getByText('已复制', { exact: true })).toBeVisible();
@@ -622,6 +646,16 @@ test('history opens the exact configuration and keeps reports bound to their mea
     page.getByRole('tab', { name: '性能对照', selected: true }),
   ).toBeVisible();
   await page.getByRole('tab', { name: '部署配置' }).click();
+  await expect(
+    page.getByRole('tabpanel', { name: '部署配置' }).locator('pre').first(),
+  ).toHaveText(oldYaml);
+  await choose(page, '配方版本', `当前版本 ${variant.version}`);
+  expect(new URL(page.url()).searchParams.has('version')).toBe(false);
+  await expect(
+    page.getByRole('tabpanel', { name: '部署配置' }).locator('pre').first(),
+  ).toHaveText(yaml);
+  await choose(page, '配方版本', `${oldVersion} · 日期未提供`);
+  await expect(page).toHaveURL(new RegExp(`version=${oldVersion}`));
   await expect(
     page.getByRole('tabpanel', { name: '部署配置' }).locator('pre').first(),
   ).toHaveText(oldYaml);
@@ -664,8 +698,8 @@ test('an unknown tab falls back to deployment without discarding the configurati
     page.getByRole('tab', { name: '部署配置', selected: true }),
   ).toBeVisible();
   await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
-  await expect(page.getByRole('combobox', { name: '配方版本' })).toHaveValue(
-    variant.version,
+  await expect(page.getByRole('combobox', { name: '配方版本' })).toHaveText(
+    `${variant.version} · ${variant.releaseDate ?? '日期未提供'}`,
   );
 });
 
@@ -737,10 +771,21 @@ for (const width of [320, 390, 768, 1440])
         await expect(
           page.getByRole('tabpanel', { name, exact: true }),
         ).toBeVisible();
-        if (tab === 'deployment')
+        if (tab === 'deployment') {
           await expect(
             page.getByText('原始 YAML · SHA-256 校验通过'),
           ).toBeVisible();
+          await page.getByRole('combobox', { name: '配方版本' }).click();
+          const list = page.getByRole('listbox');
+          await expect(list).toBeVisible();
+          const box = (await list.boundingBox())!;
+          expect(box.x).toBeGreaterThanOrEqual(0);
+          expect(box.x + box.width).toBeLessThanOrEqual(width);
+          await page.screenshot({
+            path: info.outputPath('recipe-version-dropdown.png'),
+          });
+          await page.keyboard.press('Escape');
+        }
         if (tab === 'history')
           await expect(
             page.getByText('Published source revision'),
@@ -942,6 +987,11 @@ test('a newly published model appears in fixed routes without rebuilding the web
   await page.route('**/index-v2.json', (r) => r.fulfill({ json: newer }));
   await page.goto('/models?q=new-public-model');
   await expect(page.locator('[data-recipe-id]')).toHaveCount(1);
+  const statistics = page.getByRole('region', { name: '目录统计' });
+  await expect(statistics.locator('strong').first()).toHaveText('29');
+  await expect(statistics.locator(':scope > div').nth(2)).toContainText(
+    '覆盖 76% 模型',
+  );
   await page
     .getByRole('link', { name: 'New public model', exact: true })
     .click();
@@ -950,6 +1000,33 @@ test('a newly published model appears in fixed routes without rebuilding the web
     'New public model',
   );
   await expect(page.locator('main')).toContainText('可用部署配方 · 1');
+});
+
+test('statistics follow live measurements and show missing gains without invented percentages', async ({
+  page,
+}) => {
+  const newer = structuredClone(parseCatalog(baseline));
+  newer.commit = 'c'.repeat(40);
+  for (const model of newer.models)
+    for (const tuning of model.tuning) {
+      tuning.workloads = [];
+      delete tuning.uplift;
+    }
+  newer.models.find((model) => model.tuning.length)!.tuning[0].uplift = -2;
+  await page.route('**/index-v2.json', (route) =>
+    route.fulfill({ json: newer }),
+  );
+  await page.goto('/models');
+  await expect(page.getByText('公开目录 · ccccccc')).toBeVisible();
+  const statistics = page.getByRole('region', { name: '目录统计' });
+  await expect(statistics.locator('strong').nth(3)).toHaveText('-2.0%');
+  await expect(statistics.locator('strong').nth(4)).toHaveText('-2.0%');
+  delete newer.models.find((model) => model.tuning.length)!.tuning[0].uplift;
+  await page.reload();
+  await expect(page.getByText('公开目录 · ccccccc')).toBeVisible();
+  await expect(statistics.locator('strong').nth(3)).toHaveText('未提供');
+  await expect(statistics.locator('strong').nth(4)).toHaveText('未提供');
+  await expect(statistics.getByRole('link')).toHaveCount(0);
 });
 
 test('inconsistent configuration bytes and unreadable reports do not become verified facts', async ({
@@ -968,10 +1045,8 @@ test('inconsistent configuration bytes and unreadable reports do not become veri
   await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toHaveCount(0);
   await expect(page.locator('#benchmark')).toHaveCount(0);
   await page.goto(`/models/report?modelId=mimo-v2.5&recipeId=${variant.id}`);
-  await expect(page.locator('#benchmark')).toContainText(
-    '结构化报告暂时不可用',
-  );
+  await expect(page.locator('#benchmark')).toContainText('报告数据加载失败');
   await expect(
-    page.getByRole('link', { name: '打开完整原报告 ↗' }),
+    page.getByRole('link', { name: '查看完整报告 ↗' }),
   ).toHaveAttribute('href', /mimo-v2.5-h100-report.html/);
 });

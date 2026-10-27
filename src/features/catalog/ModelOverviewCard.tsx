@@ -17,7 +17,7 @@ export function ModelOverviewCard({
         {model.displayName ?? model.name}
       </Heading>
       <p className={styles.modelOverviewDescription}>
-        {model.description ?? '来源未提供模型说明。'}
+        {model.description ?? '暂无模型说明。'}
       </p>
       <div className={styles.modelOverviewFooter}>
         <div className={`${styles.chips} ${styles.modelOverviewTags}`}>
