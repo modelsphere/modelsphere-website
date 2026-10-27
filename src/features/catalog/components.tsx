@@ -33,9 +33,23 @@ export function Icon({
     | 'compare'
     | 'report'
     | 'chip'
+    | 'speed'
+    | 'rocket'
     | 'chevron';
 }) {
   const paths = {
+    speed: (
+      <>
+        <path d="M4 18a9 9 0 1 1 16 0M12 12l5-5" />
+        <circle cx="12" cy="12" r="1" />
+      </>
+    ),
+    rocket: (
+      <>
+        <path d="M9 15C7 9 13 3 21 3c0 8-6 14-12 12ZM9 9H5l-3 5h6m7 1v4l-5 3v-6M6 18l-3 3" />
+        <circle cx="16" cy="8" r="2" />
+      </>
+    ),
     chevron: <path d="m6 9 6 6 6-6" />,
     search: (
       <>
@@ -115,7 +129,7 @@ export function SourceState({
         {status === 'loading'
           ? '正在读取当前数据…'
           : status === 'live'
-            ? '来源：Model Catalog'
+            ? 'Model Catalog'
             : catalog.commit === baselineInfo.dataCommit
               ? '基线读取于 ' + baselineInfo.retrievedAt.slice(0, 10)
               : '保留所选版本的数据副本'}
@@ -130,12 +144,37 @@ export function SourceState({
 }
 export function Stats({ catalog }: { catalog: Catalog }) {
   const s = stats(catalog);
+  const percent = (value: number | null) =>
+    value == null ? '未提供' : `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
   const items = [
-    ['MODELS', s.models, '目录记录数（包含模拟模型）', 'box'],
+    ['MODELS', s.models, '模型总数', 'box'],
     ['RECIPES', s.recipes, s.engines, 'code'],
-    ['TUNED MODELS', s.tunedModels, '存在基线 / 调优比较记录', 'compare'],
-    ['PERF REPORTS', s.reports, '来源列出的性能报告', 'report'],
-    ['HARDWARE TYPES', s.hardware, '来源明确指定的加速器型号', 'chip'],
+    [
+      'OPTIMIZED PAIRS',
+      s.optimizedPairs,
+      `覆盖 ${s.optimizedCoverage}% 模型`,
+      'compare',
+    ],
+    [
+      'MEDIAN IMPROVEMENT',
+      percent(s.medianImprovement),
+      s.minImprovement == null
+        ? '暂无有效提升记录'
+        : `最佳负载 · 范围 ${percent(s.minImprovement)} 至 ${percent(s.bestImprovement)}`,
+      'speed',
+    ],
+    [
+      'BEST IMPROVEMENT',
+      percent(s.bestImprovement),
+      s.bestRecipe ? (
+        <Link to={reportHref(s.bestRecipe, catalog.commit)}>
+          {s.bestRecipe.model.name} · {s.bestRecipe.variant.id}
+        </Link>
+      ) : (
+        '暂无有效提升记录'
+      ),
+      'rocket',
+    ],
   ] as const;
   return (
     <section className={styles.stats} aria-label="目录统计">
@@ -232,7 +271,14 @@ export function RecipeCard({
               <span>· {topologyLabel(r.variant)}</span>
             </p>
             <Heading>
-              <Link to={modelHref(r.model, version, returnTo)}>
+              <Link
+                to={modelHref(r.model, version, returnTo)}
+                title={
+                  context === 'catalog'
+                    ? (r.model.displayName ?? r.model.name)
+                    : undefined
+                }
+              >
                 {r.model.displayName ?? r.model.name}
               </Link>
             </Heading>
@@ -241,7 +287,7 @@ export function RecipeCard({
             className={badge === 'optimized' ? styles.optimized : styles.badge}
           >
             {badge === 'optimized'
-              ? '有调优记录'
+              ? '已调优'
               : badge === 'baseline'
                 ? '基线'
                 : '部署配方'}
@@ -254,7 +300,7 @@ export function RecipeCard({
           }
         >
           <div>
-            <span>源报告记录 · 最佳负载</span>
+            <span>吞吐量提升</span>
             {r.quotedGain != null && reportUrl(r) ? (
               <Link
                 className={styles.gainLink}
@@ -291,15 +337,13 @@ export function RecipeCard({
           {(r.model.deprecated || r.variant.deprecated) && <span>已弃用</span>}
         </div>
         <p className={styles.description}>
-          {r.variant.description ?? r.model.description ?? '来源未提供说明。'}
+          {r.variant.description ?? r.model.description ?? '暂无说明。'}
         </p>
         {r.quotedGain != null && (
           <p className={styles.measurement}>
             {r.workload ?? '负载未提供'}
             {r.workload ? ' tokens' : ''} · 测于 v
             {r.tuning[0]?.optimized.split('@')[1] ?? '未提供'}
-            <br />
-            口径以原报告为准，不表示同条件排名。
           </p>
         )}
       </div>
@@ -345,11 +389,11 @@ export function SourceLinks({ r }: { r: Recipe }) {
   return (
     <div className={styles.actions}>
       <a href={sourceUrl(r.variant)} target="_blank" rel="noreferrer">
-        固定提交的配方来源 ↗
+        查看配方文件 ↗
       </a>
       {reportUrl(r) && (
         <a href={reportUrl(r)!} target="_blank" rel="noreferrer">
-          原始性能报告 ↗
+          查看性能报告 ↗
         </a>
       )}
       <a href={config.repository} target="_blank" rel="noreferrer">

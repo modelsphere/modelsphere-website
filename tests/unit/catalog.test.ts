@@ -44,11 +44,19 @@ describe('public catalog contract and provenance', () => {
     expect(stats(baseline)).toMatchObject({
       models: 28,
       recipes: 72,
+      optimizedPairs: 23,
+      optimizedCoverage: 79,
+      medianImprovement: 32.4,
+      minImprovement: 5.3,
+      bestImprovement: 195.3,
       tunedModels: 22,
       reports: 23,
       hardware: 6,
     });
     expect(baseline.models.some((m) => m.name === 'mock-llm')).toBe(true);
+    expect(stats(baseline).bestRecipe?.key).toBe(
+      'glm5.3/sglang-tp4-b300-optimized',
+    );
   });
   it('rejects inconsistent counts, traversal, duplicate identities and non-finite gains', () => {
     const bad = structuredClone(baseline);
@@ -88,6 +96,74 @@ describe('public catalog contract and provenance', () => {
     );
     expect(() => rawUrl('master', 'models/a/b.yaml')).toThrow();
     expect(safeUrl('javascript:alert(1)')).toBeNull();
+  });
+});
+describe('catalog improvement statistics', () => {
+  function withGains(gains: (number | undefined)[]): Catalog {
+    const models = structuredClone(baseline.models)
+      .filter((m) => m.tuning.length)
+      .slice(0, gains.length)
+      .map((m, i) => ({
+        ...m,
+        tuning: [{ ...m.tuning[0], workloads: [], uplift: gains[i] }],
+      }));
+    return { ...baseline, count: models.length, models };
+  }
+  it('calculates odd and even medians numerically, retaining zero and negative gains', () => {
+    expect(stats(withGains([10, -5, 0]))).toMatchObject({
+      optimizedPairs: 3,
+      optimizedCoverage: 100,
+      medianImprovement: 0,
+      minImprovement: -5,
+      bestImprovement: 10,
+    });
+    expect(stats(withGains([100, 2, 10, 4])).medianImprovement).toBe(7);
+    expect(stats(withGains([-10, -2])).bestImprovement).toBe(-2);
+  });
+  it('uses each pair’s best workload, falling back only when workloads are absent', () => {
+    const c = withGains([200, 10, undefined]);
+    c.models[0].tuning[0].workloads = [
+      { name: 'long', uplift: 5 },
+      { name: 'short', uplift: 20 },
+    ];
+    expect(stats(c)).toMatchObject({
+      optimizedPairs: 3,
+      medianImprovement: 15,
+      minImprovement: 10,
+      bestImprovement: 20,
+    });
+    expect(stats(c).bestRecipe?.model.name).toBe(c.models[0].name);
+  });
+  it('does not count older measurements or references to missing optimized recipes', () => {
+    const c = withGains([12]);
+    const t = c.models[0].tuning[0];
+    c.models[0].tuning.push(
+      { ...t, optimized: t.optimized.split('@')[0] + '@0.0.1', uplift: 999 },
+      { ...t, optimized: 'unavailable@1.0.0', uplift: 999 },
+    );
+    expect(stats(c)).toMatchObject({
+      optimizedPairs: 1,
+      medianImprovement: 12,
+      bestImprovement: 12,
+    });
+  });
+  it('keeps missing improvements and empty catalogs distinct from measured zero', () => {
+    for (const c of [withGains([]), withGains([undefined])])
+      expect(stats(c)).toMatchObject({
+        medianImprovement: null,
+        minImprovement: null,
+        bestImprovement: null,
+        bestRecipe: null,
+      });
+    expect(stats(withGains([])).optimizedCoverage).toBe(0);
+    expect(stats(withGains([0]))).toMatchObject({
+      medianImprovement: 0,
+      minImprovement: 0,
+      bestImprovement: 0,
+    });
+    const c = withGains([10]);
+    c.models[0].tuning = [];
+    expect(stats(c)).toMatchObject({ optimizedPairs: 0, optimizedCoverage: 0 });
   });
 });
 describe('catalog queries', () => {

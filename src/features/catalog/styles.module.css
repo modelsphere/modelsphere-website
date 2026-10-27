@@ -876,6 +876,15 @@
 .detailTop label {
   font-size: 13px;
 }
+.recipeVersion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
+.recipeVersion > span {
+  flex: none;
+}
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -1758,11 +1767,17 @@
 .catalog .cardHeading h2 {
   grid-row: 2;
   grid-column: 1 / -1;
+  min-width: 0;
   font-size: 18px;
   line-height: 1.4;
   margin: 0 0 12px;
-  min-height: 50px;
   font-weight: 700;
+}
+.catalog .cardHeading h2 a {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .catalog .optimized {
   color: var(--catalog-success);

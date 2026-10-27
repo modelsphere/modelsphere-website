@@ -22,7 +22,7 @@ export default function ReportPanel({
       })
       .catch(() => {
         if (!c.signal.aborted)
-          setError('结构化报告暂时不可用，仍可打开原报告。');
+          setError('报告数据加载失败，请重试或查看完整报告。');
       });
     return () => c.abort();
   }, [r.key, commit, retry]);
@@ -37,9 +37,7 @@ export default function ReportPanel({
     >
       <div className={styles.reportHeader}>
         <div>
-          <span className={styles.kicker}>
-            PERFORMANCE REPORT · 来源实测记录
-          </span>
+          <span className={styles.kicker}>PERFORMANCE REPORT</span>
           <h2 id="benchmark-title">基线与调优对照</h2>
           <p>
             {r.tuning[0]?.baseline} → {r.tuning[0]?.optimized}
@@ -51,12 +49,9 @@ export default function ReportPanel({
           target="_blank"
           rel="noreferrer"
         >
-          打开完整原报告 ↗
+          查看完整报告 ↗
         </a>
       </div>
-      <p className={styles.notice}>
-        记录来自公开报告，包含其特定负载与配置；不代表生产认证或跨配方统一性能排名。
-      </p>
       {error ? (
         <p role="status">
           {error} <button onClick={() => setRetry((n) => n + 1)}>重试</button>
@@ -100,7 +95,7 @@ export default function ReportPanel({
           </div>
           <div className={styles.tableScroll}>
             <table>
-              <caption>源报告记录的负载与 SLO 条件；缺失字段不推断</caption>
+              <caption>负载与 SLO 条件</caption>
               <thead>
                 <tr>
                   <th>负载</th>
@@ -135,13 +130,11 @@ export default function ReportPanel({
           </div>
           <div className={styles.tableScroll}>
             <table>
-              <caption>
-                元数据中保存的提升比例引用；完整吞吐、延迟、质量与计算口径请阅读原报告
-              </caption>
+              <caption>各负载吞吐量提升</caption>
               <thead>
                 <tr>
                   <th>负载（输入 + 输出 tokens）</th>
-                  <th>源记录增幅</th>
+                  <th>吞吐量提升</th>
                   <th>测量版本</th>
                 </tr>
               </thead>

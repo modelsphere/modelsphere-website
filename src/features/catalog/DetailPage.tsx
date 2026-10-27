@@ -30,6 +30,7 @@ import {
   type RecipeTab,
 } from './routes';
 import ReportPanel from './ReportPanel';
+import CatalogSelect from './CatalogSelect';
 import styles from './styles.module.css';
 
 export default function DetailPage({ kind }: { kind: 'model' | 'recipe' }) {
@@ -190,7 +191,7 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
           ? `${recipe.variant.id} · 配方详情`
           : (model?.displayName ?? '模型与配方详情')
       }
-      description="查阅模型配方、固定版本配置、历史记录与测试来源。"
+      description="查阅模型配方、部署配置、版本历史与性能测评。"
     >
       <Head>
         <meta name="robots" content="noindex,follow" />
@@ -357,34 +358,39 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                       >
                         <div className={styles.detailTop}>
                           <h2>部署配置</h2>
-                          <label>
-                            配方版本{' '}
-                            <select
-                              aria-label="配方版本"
+                          <label className={styles.recipeVersion}>
+                            <span>配方版本</span>
+                            <CatalogSelect
+                              label="配方版本"
                               value={requestedVersion}
-                              onChange={(e) => chooseVersion(e.target.value)}
-                            >
-                              <option value="">
-                                当前版本 {recipe.variant.version}
-                              </option>
-                              {requestedVersion && !revision && (
-                                <option value={requestedVersion}>
-                                  {requestedVersion} · 待确认版本
-                                </option>
-                              )}
-                              {revisions?.revisions.map((r) => (
-                                <option value={r.version} key={r.digest}>
-                                  {r.version} · {r.releaseDate ?? '日期未提供'}
-                                </option>
-                              ))}
-                            </select>
+                              onValueChange={chooseVersion}
+                              options={[
+                                {
+                                  value: '',
+                                  label: `当前版本 ${recipe.variant.version}`,
+                                },
+                                ...(requestedVersion && !revision
+                                  ? [
+                                      {
+                                        value: requestedVersion,
+                                        label: `${requestedVersion} · 待确认版本`,
+                                      },
+                                    ]
+                                  : []),
+                                ...(revisions?.revisions.map((r) => ({
+                                  value: r.version,
+                                  label: `${r.version} · ${r.releaseDate ?? '日期未提供'}`,
+                                })) ?? []),
+                              ]}
+                            />
                           </label>
                         </div>
                         {requestedVersion &&
                           requestedVersion !== recipe.variant.version && (
                             <p className={styles.notice}>
                               当前查看配置版本：{requestedVersion}
-                              。上方硬件和引擎摘要为目录当前配方；此版本的准确参数以已校验原文为准。
+                              。上方硬件和引擎摘要对应当前配方版本：
+                              {recipe.variant.version}。
                             </p>
                           )}
                         {historyError && (
@@ -417,14 +423,12 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                             </pre>
                             {facts && (
                               <details className={styles.more}>
-                                <summary>
-                                  原配方的启动参数（不补造运行命令）
-                                </summary>
+                                <summary>启动参数</summary>
                                 <pre className={styles.code}>
                                   <code>
                                     {facts.args.length
                                       ? facts.args.join('\n')
-                                      : '来源未提供 extraArgs'}
+                                      : '未提供 extraArgs'}
                                   </code>
                                 </pre>
                                 {facts.context != null && (
@@ -453,7 +457,6 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                                 当前选择的配置版本：{requestedVersion}
                                 。报告对应测量版本：
                                 {recipe.tuning[0]?.optimized}
-                                ；配置版本选择不改变测量记录。
                               </p>
                             )}
                             {(openedPerformance ||

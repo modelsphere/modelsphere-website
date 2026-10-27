@@ -250,9 +250,40 @@ export function modelHref(m: Model, version: string, returnTo?: string) {
 }
 export function stats(c: Catalog) {
   const rs = recipesOf(c);
+  const pairs = rs.flatMap((recipe) =>
+    recipe.tuning.map((t) => ({
+      recipe,
+      gain: t.workloads.length
+        ? Math.max(...t.workloads.map((w) => w.uplift))
+        : (t.uplift ?? null),
+    })),
+  );
+  const gains = pairs
+    .flatMap((p) => (p.gain == null ? [] : [p.gain]))
+    .sort((a, b) => a - b);
+  const middle = Math.floor(gains.length / 2);
+  const bestImprovement = gains.at(-1) ?? null;
   return {
     models: c.models.length,
     recipes: rs.length,
+    optimizedPairs: pairs.length,
+    optimizedCoverage: c.models.length
+      ? Math.round(
+          (new Set(pairs.map((p) => p.recipe.model.name)).size /
+            c.models.length) *
+            100,
+        )
+      : 0,
+    medianImprovement: gains.length
+      ? gains.length % 2
+        ? gains[middle]
+        : (gains[middle - 1] + gains[middle]) / 2
+      : null,
+    minImprovement: gains[0] ?? null,
+    bestImprovement,
+    bestRecipe:
+      pairs.find((p) => p.gain != null && p.gain === bestImprovement)?.recipe ??
+      null,
     tunedModels: c.models.filter((m) => m.tuning.length).length,
     reports: c.models.reduce((n, m) => n + m.reports.length, 0),
     hardware: new Set(rs.flatMap((r) => r.variant.requires.gpuProduct)).size,
