@@ -184,6 +184,13 @@ test('focus, direct anchors, history and reduced motion leave content readable',
   await observeMotion(page);
   await page.goto('/community');
   const focused = page.getByRole('link', { name: '@lumianph', exact: true });
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-has-hydrated',
+    'true',
+  );
+  await expect(
+    page.locator('#community-maintainers [data-home-pair] > :first-child'),
+  ).toHaveAttribute('data-home-pending', '');
   await focused.focus();
   await expect(
     page.locator('#community-maintainers [data-home-pending]'),
@@ -192,6 +199,10 @@ test('focus, direct anchors, history and reduced motion leave content readable',
   // Navigate from another document to exercise a direct hash load, not a same-page hash change.
   await page.goto('/docs');
   await page.goto('/community#community-channels');
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-has-hydrated',
+    'true',
+  );
   await expect(
     page.locator('#community-channels [data-home-pending]'),
   ).toHaveCount(0);
@@ -204,6 +215,10 @@ test('focus, direct anchors, history and reduced motion leave content readable',
     ),
   ).toBe(0);
   await page.goto('/community');
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-has-hydrated',
+    'true',
+  );
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('[data-home-pending]')).toHaveCount(0);
   expect(
