@@ -316,9 +316,7 @@ export async function readBlog(
     !mode.publishExamples
   )
     throw new Error('正式构建禁止使用 Mock 博客');
-  const preview =
-    mode.blogSource === 'mock' ||
-    (!mode.blogSource && mode.target !== 'release');
+  const preview = mode.blogSource === 'mock';
   const configPath = path.join(
     root,
     preview ? 'tests/fixtures/blog/config.json' : 'content/pages/blog.json',
@@ -348,6 +346,7 @@ export async function readBlog(
   if (entries.length && (await lstat(sourceDir)).isSymbolicLink())
     throw new Error('拒绝内容目录符号链接');
   const articles: PreparedArticle[] = [];
+  const excludedExamples = new Set<string>();
   for (const entry of entries) {
     if (!entry.isDirectory() || entry.isSymbolicLink())
       throw new Error('文章须使用独立目录');
@@ -355,7 +354,16 @@ export async function readBlog(
     const file = path.join(directory, 'index.md');
     await plainFile(file);
     const parsed = parseArticle(await readFile(file, 'utf8'));
-    if (parsed.meta.draft || (!preview && parsed.meta.example)) continue;
+    if (parsed.meta.draft) continue;
+    if (
+      !preview &&
+      mode.target === 'release' &&
+      !mode.publishExamples &&
+      parsed.meta.example
+    ) {
+      excludedExamples.add(parsed.meta.id);
+      continue;
+    }
     if (parsed.meta.id !== entry.name) throw new Error('文章 id 与目录名不符');
     if (!parsed.meta.publishedAt || parsed.meta.publishedAt > today)
       throw new Error('已发布文章需要有效且非未来的发布日期');
@@ -386,6 +394,8 @@ export async function readBlog(
     .map((article) => article.meta.slug);
   if (new Set(ids).size !== ids.length || new Set(slugs).size !== slugs.length)
     throw new Error('文章 id 或 slug 重复');
+  if (config.featuredId && excludedExamples.has(config.featuredId))
+    delete config.featuredId;
   if (config.featuredId && !ids.includes(config.featuredId))
     throw new Error('推荐文章不存在或未发布');
   for (const article of articles) {

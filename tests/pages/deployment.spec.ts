@@ -175,6 +175,14 @@ test('direct documents, blog routes, 404 responses and version metadata work und
     process.env.TEST_BUILD_TARGET ?? (mock ? 'preview' : 'release'),
   );
   expect(version.commit).toMatch(/^[a-f0-9]{40}$/);
+  expect(Array.isArray(version.blogRoutes)).toBe(true);
+  if (mock) expect(version.blogRoutes).toContain('/blog/example-blog-platform');
+  else expect(version.blogRoutes).toEqual([]);
+  for (const route of version.blogRoutes as string[]) {
+    const response = await request.get(new URL(route.slice(1), baseURL).href);
+    expect(response.status()).toBe(200);
+    expect(await response.text()).toContain('<h1');
+  }
   expect(Array.isArray(version.docsRoutes)).toBe(true);
   if (mock) expect(version.docsRoutes).toContain('/docs');
   else expect(version.docsRoutes).toEqual([]);

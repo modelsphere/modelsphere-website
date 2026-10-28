@@ -62,7 +62,7 @@ export async function checkArtifacts(
   for (const file of files) {
     if (
       mode.target === 'release' &&
-      !(mode.publishExamples && mode.blogSource === 'mock') &&
+      !mode.publishExamples &&
       file.includes('example-blog-')
     )
       throw new Error(`Mock 博客资源泄漏: ${file}`);
@@ -70,7 +70,7 @@ export async function checkArtifacts(
     const text = await readFile(file, 'utf8');
     if (
       mode.target === 'release' &&
-      !(mode.publishExamples && mode.blogSource === 'mock') &&
+      !mode.publishExamples &&
       /example-blog-|示例作者|MOCK PREVIEW|BLOG LAB/.test(text)
     )
       throw new Error(`Mock 博客内容泄漏: ${file}`);

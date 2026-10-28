@@ -2,19 +2,19 @@
 
 项目名称：`modelsphere-website`。
 
-当前文档源为 `content/docs/`，开发、预览、正式构建默认递归读取；新增 Markdown 会自动进入侧栏和搜索。维护格式与发布步骤见[技术文档实施与维护规范](docs/development/docs-implementation.md)。既有两篇文档仍保留示例说明。`tests/fixtures/docs/` 仅用于显式 mock 回归，`DOCS_SOURCE_MODE=none` 显示准备页。博客示例仍由 `SITE_PUBLISH_EXAMPLES` 控制。
+当前文档源为 `content/docs/`，开发、预览、正式构建默认递归读取；新增 Markdown 会自动进入侧栏和搜索。维护格式与发布步骤见[技术文档实施与维护规范](docs/development/docs-implementation.md)。既有两篇文档仍保留示例说明。`tests/fixtures/docs/` 仅用于显式 mock 回归，`DOCS_SOURCE_MODE=none` 显示准备页。博客默认读取 `content/blog/<id>/index.md` 与 `content/pages/blog.json`，新增及发布规范见[博客功能与内容维护](docs/development/blog-implementation.md)。既有博客示例保留标记，由 `SITE_PUBLISH_EXAMPLES` 控制；`tests/fixtures/blog/` 仅用于显式 mock 回归。
 
 面向 AI 基础设施、平台、算法与稳定性团队的公开官网，覆盖产品介绍、技术架构、模型目录与测评、快速开始与文档、技术博客、社区与生态。
 
-设计来源：[ModelSphere 推理基础设施官网](https://stitch.withgoogle.com/projects/3601238558355976464)。页面结构仅采用顶部“首页-更新”“模型目录”“博客洞见-更新”三张新版，底部旧稿仅参考 dark mode 色彩；[来源快照](docs/design/sources/stitch-foundations.json)记录当前采用范围与原始证据。Header 的独立来源覆盖和已实现文档双层 Footer 保留为既定特例。当前已实现首页、博客功能与文档栏目试点；博客使用隔离 Mock 预览，真实内容尚未接入，其他门户页面仍待实施。
+设计来源：[ModelSphere 推理基础设施官网](https://stitch.withgoogle.com/projects/3601238558355976464)。页面结构仅采用顶部“首页-更新”“模型目录”“博客洞见-更新”三张新版，底部旧稿仅参考 dark mode 色彩；[来源快照](docs/design/sources/stitch-foundations.json)记录当前采用范围与原始证据。Header 的独立来源覆盖和已实现文档双层 Footer 保留为既定特例。当前已实现首页、博客功能与文档栏目试点；博客与文档均已接入正式内容目录，当前保留明确标注的阅读示例。
 
 首页按 hero、四张同时展开的能力卡、断流续写、SLO、Tuning-Agent、最多四条合格测评、渐变 CTA 排列。Catalog 默认显示配方卡片，按源报告记录的最佳负载增幅降序，保留测量版本与口径提示，不表示统一吞吐排名；信息边界见[可靠性清单](docs/development/catalog-implementation.md)。博客推荐文章优先，采用分类、技术标签、搜索与可选社区侧栏；详情由 Markdown 生成独立阅读页。浅深主题共享布局与 Space Grotesk / Geist / JetBrains Mono 字体，Header 的 Inter 为既定例外；开发者文档保留标准阅读格式。
 
 ## 当前阶段
 
-已确认采用 **Docusaurus + React + TypeScript 统一全站**，博客首期使用 **Markdown/Git 发布**。门户、博客和开发者文档构建为一个静态站点；Model Catalog 使用自定义 React 界面读取独立数据源。当前已建立 Docusaurus 应用、依赖锁文件和 CI 配置，实现首页、博客列表与阅读页、两篇 Mock 文档及太阳／月亮主题切换。站内 Catalog 现已接入公开源；真实博客内容与文档同步尚未实施。首期选择公开仓库与 GitHub Pages 项目地址；是否已上线以 Actions 发布结果和线上版本为准。
+已确认采用 **Docusaurus + React + TypeScript 统一全站**，博客首期使用 **Markdown/Git 发布**。门户、博客和开发者文档构建为一个静态站点；Model Catalog 使用自定义 React 界面读取独立数据源。当前已建立 Docusaurus 应用、依赖锁文件和 CI 配置，实现首页、博客列表与阅读页、两篇 Mock 文档及太阳／月亮主题切换。站内 Catalog 现已接入公开源；博客与文档在本仓库正式目录维护，独立文档仓库同步尚未接入。首期选择公开仓库与 GitHub Pages 项目地址；是否已上线以 Actions 发布结果和线上版本为准。
 
-首页按最新首页稿实现六个区块：`hero`、`comparison`、`fault-tolerance`、`qos-scaling`、`autotune-evolution`、`get-started`。完整架构与机制图、说明文字和真实链接均在初始 HTML 中静态输出；首页标题按 D13 整体翻起渐显，引导语与简介从左滑入渐显，架构拓扑正文按 D14 从上向下揭示。屏外能力卡与各机制直接子块分别在自身起点进入 85% 触发线时入场；并排时左右聚合，堆叠时逐卡上移渐显。首屏按钮、技术标签、拓扑标题及其上方三张卡静态可用；架构数据与布局保持稳定，减少动效、无脚本及历史恢复显示最终态。机制说明链接到已核对的项目资料及固定提交，示意曲线明确标注为机制示意。现有资料不足以满足测评报告和完整测试条件要求，因此省略 `benchmarks`，不展示设计稿样例成绩。模型入口进入站内 `/models`，目录读取公开 Catalog 数据；正式 `/docs` 仍显示准备状态，预览构建中的 Mock 文档不发布为真实内容。
+首页按最新首页稿实现六个区块：`hero`、`comparison`、`fault-tolerance`、`qos-scaling`、`autotune-evolution`、`get-started`。完整架构与机制图、说明文字和真实链接均在初始 HTML 中静态输出；首页标题按 D13 整体翻起渐显，引导语与简介从左滑入渐显，架构拓扑正文按 D14 从上向下揭示。屏外能力卡与各机制直接子块分别在自身起点进入 85% 触发线时入场；并排时左右聚合，堆叠时逐卡上移渐显。首屏按钮、技术标签、拓扑标题及其上方三张卡静态可用；架构数据与布局保持稳定，减少动效、无脚本及历史恢复显示最终态。机制说明链接到已核对的项目资料及固定提交，示意曲线明确标注为机制示意。现有资料不足以满足测评报告和完整测试条件要求，因此省略 `benchmarks`，不展示设计稿样例成绩。模型入口进入站内 `/models`，目录读取公开 Catalog 数据；正式 `/docs` 读取 `content/docs/`，既有阅读示例保留说明。
 
 技术与发布边界以[工程与代码生成规范](docs/development/engineering.md)为依据；[架构说明](docs/design/architecture.html)、页面、组件、内容及交互规范描述同一套当前设计。修改直接覆盖原文，不保留并行架构副本。
 
@@ -26,7 +26,7 @@
 | 门户页面 | 自定义 React 页面与 CSS，遵循当前新稿与双主题规范 |
 | Model Catalog | 自定义 React UI，覆盖模型、配方、筛选、历史、测评及报告；不使用 `<model-catalog>` 或 iframe |
 | 博客 | 仓库中维护 Markdown、frontmatter 与图片；通过 PR 检查、预览和 Git 合并进入网站发布 |
-| 开发者文档 | 独立 Markdown 仓库按固定 commit 同步到 `/docs`，采用标准开发者文档布局，与网站统一构建发布 |
+| 开发者文档 | 本仓库 `content/docs/` 维护，递归生成侧栏和搜索，与网站统一构建发布 |
 | 搜索 | Header 本地全文搜索覆盖已发布站内文档和博客；博客列表保留独立字段筛选 |
 | 部署 | Docusaurus 静态产物 → GitHub Actions → GitHub Pages；Nginx 用于浏览器验收 |
 | 内容存储 | Git 管理正文、元数据与图片；首期不引入 CMS、数据库、素材上传服务或自建任务队列 |
@@ -85,7 +85,7 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 
 ## 本地运行博客
 
-运行 `pnpm dev:blog-mock` 后打开 `http://localhost:3000/blog`，查看 7 篇站内 Mock 文章和 1 条站外阅读示例。搜索、分类、标签、文章目录、代码复制与浅深主题均可操作。Mock 不进入正式产物；没有真实内容时正式博客显示空态，未配置的微信与知乎卡片隐藏。
+运行 `pnpm dev:blog` 后打开 `http://localhost:3000/blog`，查看正式目录中的文章；当前保留 7 篇站内阅读示例和 1 条站外示例。搜索、分类、标签、文章目录、代码复制与浅深主题均可操作。正式构建默认保留示例，设置 `SITE_PUBLISH_EXAMPLES=false` 可排除；未配置的微信与知乎卡片隐藏。固定回归样本另用 `pnpm dev:blog-mock` 预览。
 
 真实文章放入 `content/blog/<id>/index.md`，分类、标签与推荐项在 `content/pages/blog.json` 配置；使用 `pnpm dev:blog` 预览真实内容。格式、发布边界、响应式图片及验证命令见[博客功能与内容维护](docs/development/blog-implementation.md)。
 
@@ -93,14 +93,14 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 
 首期地址：[ModelSphere 官网](https://modelsphere.github.io/modelsphere-website/)。仓库设为公开后，源码与提交历史均公开。仓库 Settings → Pages 的 Source 使用 **GitHub Actions**，`github-pages` 环境只允许 `main` 分支发布。
 
-`.github/workflows/ci.yml` 对分支和 PR 执行格式、Lint、类型、内容检查及单测，随后分别验证根路径与 `/modelsphere-website/` 路径的 preview/mock、release/content 构建。候选通过 Nginx 浏览器检查后，只有 `main` 才上传已验证的正式产物并部署；发布阶段不重新构建。正式文档读取 `content/docs/`，博客仍保留已允许公开的示例；站点继续保留验证期的 noindex。
+`.github/workflows/ci.yml` 对分支和 PR 执行格式、Lint、类型、内容检查及单测，随后分别验证根路径与 `/modelsphere-website/` 路径的 preview/mock、release/content 构建。候选通过 Nginx 浏览器检查后，只有 `main` 才上传已验证的正式产物并部署；发布阶段不重新构建。正式文档读取 `content/docs/`，博客读取 `content/blog/` 和 `content/pages/blog.json`，保留已允许公开的示例；站点继续保留验证期的 noindex。
 
 发布参数固定为 `SITE_ORIGIN=https://modelsphere.github.io`、`SITE_BASE_URL=/modelsphere-website/`。`SITE_ORIGIN` 只含协议和域名；子目录单独配置，必须以 `/` 开始和结束。不设置 `SITE_BASE_URL` 时继续支持根路径部署。
 
 ```sh
 SITE_ORIGIN=https://modelsphere.github.io SITE_BASE_URL=/modelsphere-website/ pnpm build
 SITE_BASE_URL=/modelsphere-website/ pnpm serve
-E2E_BASE_URL=http://localhost:4173 TEST_DOCS_MODE=none pnpm test:pages
+E2E_BASE_URL=http://localhost:4173 TEST_DOCS_MODE=content pnpm test:pages
 ```
 
 每次合并后流水线重新验证合并提交，部署串行执行且检查候选仍是当前 `main`。发布后核对 `version.json` 的完整提交 SHA、代表路由、静态资源与真实 HTTP 404。线上代码版本与 Catalog 实时数据版本分别记录。

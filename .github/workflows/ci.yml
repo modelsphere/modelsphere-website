@@ -39,7 +39,7 @@ jobs:
         mode: [preview, release]
     env:
       SITE_ORIGIN: http://localhost:4173
-      BLOG_SOURCE_MODE: mock
+      BLOG_SOURCE_MODE: content
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -55,6 +55,7 @@ jobs:
         run: pnpm build:docs-preview
         env:
           DOCS_SOURCE_MODE: mock
+          BLOG_SOURCE_MODE: mock
       - name: Build release with public examples
         if: matrix.mode == 'release'
         run: pnpm build
@@ -64,13 +65,14 @@ jobs:
         env:
           SITE_BUILD_TARGET: preview
           DOCS_SOURCE_MODE: mock
+          BLOG_SOURCE_MODE: mock
       - name: Verify release artifact
         if: matrix.mode == 'release'
         run: pnpm artifacts:check
         env:
           SITE_BUILD_TARGET: release
           DOCS_SOURCE_MODE: content
-          BLOG_SOURCE_MODE: mock
+          BLOG_SOURCE_MODE: content
           SITE_PUBLISH_EXAMPLES: 'true'
       - run: docker build -f infra/docker/Dockerfile -t modelsphere-docs-test .
       - run: docker run -d --name docs-test -p 127.0.0.1:4173:8080 modelsphere-docs-test
@@ -103,7 +105,7 @@ jobs:
     env:
       SITE_ORIGIN: https://modelsphere.github.io
       SITE_BASE_URL: /modelsphere-website/
-      BLOG_SOURCE_MODE: mock
+      BLOG_SOURCE_MODE: content
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -119,6 +121,7 @@ jobs:
         run: pnpm build:docs-preview
         env:
           DOCS_SOURCE_MODE: mock
+          BLOG_SOURCE_MODE: mock
       - name: Build Pages release after mock
         if: matrix.mode == 'release'
         run: pnpm build
@@ -127,7 +130,7 @@ jobs:
         env:
           SITE_BUILD_TARGET: ${{ matrix.mode }}
           DOCS_SOURCE_MODE: ${{ matrix.mode == 'preview' && 'mock' || 'content' }}
-          BLOG_SOURCE_MODE: mock
+          BLOG_SOURCE_MODE: ${{ matrix.mode == 'preview' && 'mock' || 'content' }}
           SITE_PUBLISH_EXAMPLES: ${{ matrix.mode == 'release' && 'true' || 'false' }}
       - run: docker build --build-arg SITE_BASE_URL="$SITE_BASE_URL" -f infra/docker/Dockerfile -t modelsphere-pages-test .
       - run: docker run -d --name pages-test -p 127.0.0.1:4173:8080 modelsphere-pages-test

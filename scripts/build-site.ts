@@ -13,22 +13,19 @@ if (!['dev', 'preview', 'release'].includes(action))
 const examplesSetting =
   process.env.SITE_PUBLISH_EXAMPLES ??
   (action === 'release' ? 'true' : 'false');
-const publishExamples = examplesSetting === 'true';
 const env = {
   ...process.env,
   SITE_BUILD_TARGET: action === 'dev' ? 'local' : action,
   SITE_PUBLISH_EXAMPLES: examplesSetting,
   DOCS_SOURCE_MODE: process.env.DOCS_SOURCE_MODE ?? 'content',
-  BLOG_SOURCE_MODE:
-    process.env.BLOG_SOURCE_MODE ??
-    (action === 'release' ? (publishExamples ? 'mock' : 'content') : undefined),
+  BLOG_SOURCE_MODE: process.env.BLOG_SOURCE_MODE ?? 'content',
   SITE_ORIGIN:
     process.env.SITE_ORIGIN ??
     (action === 'release' ? undefined : 'http://localhost:3000'),
 };
 const mode = resolveBuildMode(env);
 const docs = await prepareDocs(process.cwd(), mode);
-await prepareBlog(process.cwd(), mode);
+const blog = await prepareBlog(process.cwd(), mode);
 await generateTokens();
 for (const dir of ['.docusaurus', 'build'])
   await rm(dir, { recursive: true, force: true });
@@ -69,6 +66,9 @@ if (action !== 'dev') {
       commit: siteCommit,
       target: mode.target,
       baseUrl: mode.baseUrl ?? '/',
+      blogRoutes: blog.posts
+        .filter((post) => post.kind === 'internal')
+        .map((post) => post.href),
       docsRoutes: docs.map((doc) =>
         doc.meta.slug === '/' ? '/docs' : `/docs${doc.meta.slug}`,
       ),

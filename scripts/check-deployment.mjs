@@ -8,6 +8,7 @@ if (!address || !/^[a-f0-9]{40}$/.test(commit ?? ''))
 const base = new URL(address.endsWith('/') ? address : address + '/');
 let deployed = false;
 let deployedDocs = [];
+let deployedBlogs = [];
 for (let attempt = 0; attempt < 24; attempt++) {
   try {
     const response = await fetch(
@@ -29,6 +30,16 @@ for (let attempt = 0; attempt < 24; attempt++) {
         )
       )
         throw new Error('Invalid documentation route manifest');
+      if (
+        !Array.isArray(version.blogRoutes) ||
+        !version.blogRoutes.every(
+          (route) =>
+            typeof route === 'string' &&
+            /^\/blog\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(route),
+        )
+      )
+        throw new Error('Invalid blog route manifest');
+      deployedBlogs = version.blogRoutes;
       deployedDocs = version.docsRoutes;
       deployed = true;
       break;
@@ -45,7 +56,7 @@ for (const route of new Set([
   'models/detail?modelId=mimo-v2.5',
   'models/recipe?modelId=mimo-v2.5',
   'blog',
-  'blog/example-blog-platform',
+  ...deployedBlogs.map((route) => route.slice(1)),
   'docs',
   ...deployedDocs.map((route) => route.slice(1)),
   'community',

@@ -3,6 +3,7 @@ import {
   mkdtemp,
   mkdir,
   readFile,
+  readdir,
   writeFile,
   rm,
   cp,
@@ -28,6 +29,7 @@ const release: BuildMode = {
 const preview: BuildMode = {
   target: 'preview',
   source: 'mock',
+  blogSource: 'mock',
   origin: 'http://localhost:4173',
 };
 function serialize(article: ReturnType<typeof parseArticle>) {
@@ -107,7 +109,76 @@ describe('blog publication boundary', () => {
     expect(
       result.articles.filter((a) => a.meta.kind === 'internal'),
     ).toHaveLength(7);
-    expect((await readBlog(process.cwd(), release)).articles).toHaveLength(0);
+  });
+  it('loads formal content by default in local, preview, and enabled release builds', async () => {
+    await temporary(async (root) => {
+      await mkdir(path.join(root, 'content/pages'), { recursive: true });
+      await copyFile(
+        'tests/fixtures/blog/config.json',
+        path.join(root, 'content/pages/blog.json'),
+      );
+      await cp('tests/fixtures/blog/posts', path.join(root, 'content/blog'), {
+        recursive: true,
+      });
+      for (const target of ['local', 'preview', 'release'] as const) {
+        const result = await readBlog(root, {
+          ...release,
+          target,
+          publishExamples: target === 'release',
+        });
+        expect(result.preview).toBe(false);
+        expect(result.articles).toHaveLength(8);
+        expect(
+          result.articles.every(
+            (article) =>
+              article.directory.startsWith(path.join(root, 'content/blog')) &&
+              article.meta.example,
+          ),
+        ).toBe(true);
+      }
+      const hidden = await readBlog(root, release);
+      expect(hidden.articles).toHaveLength(0);
+      expect(hidden.config.featuredId).toBeUndefined();
+    });
+  });
+  it('keeps mock and formal sources separate and clears stale staging when switching', async () => {
+    await withArticle(async (root, file) => {
+      await cp('tests/fixtures/blog', path.join(root, 'tests/fixtures/blog'), {
+        recursive: true,
+      });
+      expect((await prepareBlog(root, preview)).posts).toHaveLength(8);
+      const index = await prepareBlog(root, {
+        ...release,
+        publishExamples: true,
+      });
+      expect(index.preview).toBe(false);
+      expect(index.posts).toHaveLength(1);
+      await expect(
+        readFile(
+          path.join(root, '.generated/blog/example-blog-cache/index.md'),
+        ),
+      ).rejects.toThrow();
+      expect(
+        await readdir(path.join(root, '.generated/blog-public/blog-media')),
+      ).toEqual(['example-blog-platform']);
+      await changeMeta(file, (meta) => {
+        meta.draft = true;
+      });
+      expect(
+        (await prepareBlog(root, { ...release, publishExamples: true })).posts,
+      ).toHaveLength(0);
+    });
+  });
+  it('rejects an unknown featured article instead of silently dropping it', async () => {
+    await withArticle(async (root) => {
+      const configFile = path.join(root, 'content/pages/blog.json');
+      const config = JSON.parse(await readFile(configFile, 'utf8'));
+      await writeFile(
+        configFile,
+        JSON.stringify({ ...config, featuredId: 'missing' }),
+      );
+      await expect(readBlog(root, release)).rejects.toThrow('推荐文章');
+    });
   });
   it.each([
     '<script>x</script>',
