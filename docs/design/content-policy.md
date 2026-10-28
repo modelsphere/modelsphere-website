@@ -213,7 +213,7 @@ Docusaurus 负责侧栏、正文、标题目录、代码展示与自托管搜索
 
 ## 8 预览和发布校验
 
-正式技术文档从网站仓库 `content/docs/` 读取，递归校验后发布，草稿不进入暂存和搜索。当前目录中保留的阅读示例必须保留正文说明，不得改成真实数据或实测结论。`tests/fixtures/docs/` 只用于显式 mock 回归；公开博客示例仍由 `SITE_PUBLISH_EXAMPLES` 控制并保留 `example-` id。社区示例仍禁止进入正式产物。
+正式技术文档从网站仓库 `content/docs/` 读取，递归校验后发布，草稿不进入暂存和搜索。当前目录中保留的阅读示例必须保留正文说明，不得改成真实数据或实测结论。`tests/fixtures/docs/` 只用于显式 mock 回归；博客默认从 `content/blog/<id>/index.md` 与 `content/pages/blog.json` 读取，`tests/fixtures/blog/` 仅用于显式 mock 回归。迁入正式目录的博客示例仍由 `SITE_PUBLISH_EXAMPLES` 控制，并保留 `example: true`、既有 `example-` id 和可见示例说明。社区示例仍禁止进入正式产物。
 
 网站不渲染全局“示例预览／仅供界面验证”提示条；公开文档 Mock 保留正文内的示例说明。未公开的真实内容预览由外层预览界面显示“预览，未发布”及候选版本，限制内网鉴权并设置不索引，不能只靠隐藏 URL 或 noindex 保护草稿。
 

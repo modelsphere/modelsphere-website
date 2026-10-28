@@ -1,6 +1,6 @@
 # ModelSphere 官网工程与代码生成规范
 
-当前内容源：正式技术文档在本仓库 `content/docs/` 维护，开发、预览、正式构建默认读取并自动生成侧栏和搜索；独立文档仓库同步仍未接入。`DOCS_SOURCE_MODE=none` 关闭文档正文，显式 mock 来源仅用于固定示例回归。博客公开示例继续由 `SITE_PUBLISH_EXAMPLES` 控制，社区示例和草稿仍排除；内部规范不作为公开技术文档。具体新增规则以[技术文档实施与维护规范](docs-implementation.md)为准，覆盖下文旧的独立仓库计划及文档准备页描述。
+当前内容源：正式技术文档在本仓库 `content/docs/` 维护，开发、预览、正式构建默认读取并自动生成侧栏和搜索；独立文档仓库同步仍未接入。`DOCS_SOURCE_MODE=none` 关闭文档正文，显式 mock 来源仅用于固定示例回归。博客在 `content/blog/<id>/index.md` 维护，配置位于 `content/pages/blog.json`；开发、预览和正式构建默认读取正式目录，固定样本仅在 `BLOG_SOURCE_MODE=mock` 时读取。博客公开示例继续由 `SITE_PUBLISH_EXAMPLES` 控制，社区示例和草稿仍排除；内部规范不作为公开技术文档。具体新增规则以[技术文档实施与维护规范](docs-implementation.md)为准，覆盖下文旧的独立仓库计划及文档准备页描述。
 
 | 属性 | 内容 |
 | --- | --- |
@@ -113,7 +113,7 @@ docs/                          工程、设计规范及运行手册
 
 ### 4.2 博客 Markdown 与列表
 
-文章在 `content/blog/<id>/index.md` 中维护，图片使用同目录相对引用。从既有 `.md` 开始时将文件及图片加入 Git，按内容规范补齐 frontmatter；没有后台上传或导入按钮。版本历史由 Git 记录，首期不支持定时发布。
+文章在 `content/blog/<id>/index.md` 中维护，图片使用同目录相对引用。开发、预览与正式构建默认读取该目录，分类和推荐等配置位于 `content/pages/blog.json`，`tests/fixtures/blog/` 仅供显式 mock 回归。从既有 `.md` 开始时将文件及图片加入 Git，按内容规范补齐 frontmatter；没有后台上传或导入按钮。版本历史由 Git 记录，首期不支持定时发布。
 
 Docusaurus blog 插件负责文章详情与正文；通过 `blogListComponent` 定制 `/blog` 列表，设置 `postsPerPage: 'ALL'`、`archiveBasePath: null`，分页由站点统一的查询逻辑处理，不再创建同路径页面。插件配置和自定义列表必须经过实际构建验证。[博客插件](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog)。
 
@@ -122,7 +122,7 @@ Docusaurus blog 插件负责文章详情与正文；通过 `blogListComponent` �
 - 封面无已审核裁剪预览时使用 contain；有已审核预览时才按推荐位 16:9、列表位 3:2 裁剪并保留焦点。文章正文保留完整图片，卡片悬停不缩放封面。
 - 无脚本 HTML 包含全部已发布摘要及原生链接；增强成功后按每页 12 条展示，禁止脚本失败导致列表消失。
 - 保留 I05：无筛选时所有分页排除推荐文章，推荐区仅第一页展示；有筛选时从全部文章匹配。排序为发布日期降序、同日 id 升序。
-- 博客推荐、相关文章、博客搜索、RSS（如启用）和站点地图使用同一公开内容集合，排除草稿、示例和撤回内容。
+- 博客推荐、相关文章、博客搜索、RSS（如启用）和站点地图使用同一公开内容集合，排除草稿、未启用的示例和撤回内容。
 - 5,000 篇文章作为容量验证样本；摘要 gzip 后初始预算 2 MiB。超限时报告并修订索引方案，不偷偷取消完整无脚本列表。
 - 文章正文、目录和基础导航预生成 HTML；详情 slug 变更需显式重定向；撤回后详情返回 404。
 
