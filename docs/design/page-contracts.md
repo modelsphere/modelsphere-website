@@ -213,7 +213,7 @@ Catalog 模型详情的身份参数为 `modelId`，配方页为 `modelId` 和 `r
 | 顺序与 id | 内容与布局 | 实现要求 |
 | --- | --- | --- |
 | 1 `community-hero` | 面包屑、生态标签、主标题与说明 | 原稿 44px 桌面标题、浅紫底色和天蓝强调；不补回已删除的三张生态卡片 |
-| 2 `community-maintainers` | 五位维护者、单位、GitHub 账号；桌面三列 | 姓名与单位按原稿；链接与显示账号对应；不添加头像或维护者 |
+| 2 `community-maintainers` | 五位维护者、单位、GitHub 账号；桌面三列 | 姓名使用 GitHub 公开 Name，有值显示姓名、无值或仅空白时显示账号 ID；在 `src/features/community/components.tsx` 的 `maintainerNames` 中维护；原稿的“第四范式 (Paradigm)”统一显示为“范式智能（Phancy）”，链接与显示账号对应；不添加头像或维护者 |
 | 3 `community-calendar` | 双周例会、活动列表；桌面 5:7 双栏 | 已删除示例活动与例会；暂无内容时全宽展示“暂无活动”卡片与交流群入口；仅发布已确认的真实活动 |
 | 4 `community-partners` | 两家发起单位与共建横幅 | 按原稿名称、英文说明与合作介绍展示；保留原稿邮件入口 |
 | 5 `community-channels` | 微信群、GitHub 两列卡片 | 按用户确认暂时移除尚未认证的公众号；微信群使用用户提供的原始二维码，可打开原图；手机纵排 |
