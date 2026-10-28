@@ -23,6 +23,9 @@ test('community preserves source layout and local navigation under the Pages pre
     '/modelsphere-website/community/wechat-group-qr.png',
   );
   await expect(page.locator('#community-channels')).not.toContainText('公众号');
+  await expect(page.locator('body')).not.toContainText(
+    /14\.8k|2\.1k|GitHub Stars|Forks|NODE_CLUSTER: READY|TELEMETRY: P99 22ms/,
+  );
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     '让 AI 基础设施优化成为全社会的“公共资产”',
   );

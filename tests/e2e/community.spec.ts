@@ -10,6 +10,14 @@ const deferredAccountCopy = new Set([
   '微信扫码关注公众号',
   '双周刊载 ｜ 深度技术沉淀',
 ]);
+const removedPlaceholderCopy = new Set([
+  'GitHub Stars',
+  '14.8k',
+  'Forks',
+  '2.1k',
+  'NODE_CLUSTER: READY',
+  'TELEMETRY: P99 22ms',
+]);
 
 test('community preserves approved copy, empty activities and the five-section order', async ({
   page,
@@ -27,7 +35,9 @@ test('community preserves approved copy, empty activities and the five-section o
       .replace(/\s+/g, ' ')
       .trim();
     for (const copy of source.sectionCopy[index].filter(
-      (copy) => id !== 'community-channels' || !deferredAccountCopy.has(copy),
+      (copy) =>
+        !removedPlaceholderCopy.has(copy) &&
+        (id !== 'community-channels' || !deferredAccountCopy.has(copy)),
     ))
       expect(text, `${id}: ${copy}`).toContain(copy);
   }
@@ -50,8 +60,12 @@ test('community preserves approved copy, empty activities and the five-section o
     .textContent())!
     .replace(/\s+/g, ' ')
     .trim();
-  for (const fragment of source.footerCopy)
+  for (const fragment of source.footerCopy.filter(
+    (copy) => !removedPlaceholderCopy.has(copy),
+  ))
     expect(footerText).toContain(fragment);
+  for (const copy of removedPlaceholderCopy)
+    await expect(page.locator('body')).not.toContainText(copy);
   for (const handle of [
     'lumianph',
     'zhanghaohit',
@@ -95,6 +109,10 @@ test('community preserves approved copy, empty activities and the five-section o
     'GitHub 开源社区',
   ]);
   await expect(channels).not.toContainText('公众号');
+  await expect(channels).toContainText('Apache-2.0');
+  await expect(
+    channels.getByRole('link', { name: '前往 GitHub 组织', exact: true }),
+  ).toHaveAttribute('href', 'https://github.com/modelsphere');
   const qr = channels.getByRole('img', { name: '微信技术交流群入群二维码' });
   await expect(qr).toHaveAttribute('src', '/community/wechat-group-qr.png');
   expect(
