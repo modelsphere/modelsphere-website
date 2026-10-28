@@ -7,6 +7,7 @@ if (!address || !/^[a-f0-9]{40}$/.test(commit ?? ''))
   );
 const base = new URL(address.endsWith('/') ? address : address + '/');
 let deployed = false;
+let deployedDocs = [];
 for (let attempt = 0; attempt < 24; attempt++) {
   try {
     const response = await fetch(
@@ -19,6 +20,16 @@ for (let attempt = 0; attempt < 24; attempt++) {
       version.target === 'release' &&
       version.baseUrl === base.pathname
     ) {
+      if (
+        !Array.isArray(version.docsRoutes) ||
+        !version.docsRoutes.every(
+          (route) =>
+            typeof route === 'string' &&
+            /^\/docs(?:\/[a-z0-9-]+)*$/.test(route),
+        )
+      )
+        throw new Error('Invalid documentation route manifest');
+      deployedDocs = version.docsRoutes;
       deployed = true;
       break;
     }
@@ -28,7 +39,7 @@ for (let attempt = 0; attempt < 24; attempt++) {
   await setTimeout(5000);
 }
 if (!deployed) throw new Error(`Deployed version does not match ${commit}`);
-for (const route of [
+for (const route of new Set([
   '',
   'models',
   'models/detail?modelId=mimo-v2.5',
@@ -36,9 +47,9 @@ for (const route of [
   'blog',
   'blog/example-blog-platform',
   'docs',
-  'docs/quickstart',
+  ...deployedDocs.map((route) => route.slice(1)),
   'community',
-]) {
+])) {
   const response = await fetch(new URL(route, base), {
     signal: AbortSignal.timeout(15000),
   });

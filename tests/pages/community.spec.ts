@@ -30,7 +30,7 @@ test('community preserves source layout and local navigation under the Pages pre
     page.locator('.desktop-quickstart .header-primary-link'),
   ).toHaveAttribute(
     'href',
-    process.env.TEST_DOCS_MODE === 'mock'
+    process.env.TEST_DOCS_MODE !== 'none'
       ? '/modelsphere-website/docs/quickstart'
       : '/modelsphere-website/docs',
   );

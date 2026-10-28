@@ -2,16 +2,20 @@ import { mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import type { BuildMode } from '../src/lib/build-mode';
-import { readMockDocs } from './check-docs';
+import { readDocumentation, type ParsedDoc } from './check-docs';
 export async function prepareDocs(
   root: string,
   mode: BuildMode,
-): Promise<void> {
-  const docs = mode.source === 'mock' ? await readMockDocs(root) : [];
+): Promise<ParsedDoc[]> {
+  const docs = await readDocumentation(root, mode.source);
   await rm(path.join(root, '.generated'), { recursive: true, force: true });
   await mkdir(path.join(root, '.generated/docs'), { recursive: true });
-  for (const doc of docs)
+  for (const doc of docs) {
+    await mkdir(path.dirname(path.join(root, '.generated/docs', doc.file)), {
+      recursive: true,
+    });
     await writeFile(path.join(root, '.generated/docs', doc.file), doc.raw);
+  }
   await writeFile(
     path.join(root, '.generated/docs-input.json'),
     JSON.stringify({
@@ -22,5 +26,6 @@ export async function prepareDocs(
       })),
     }),
   );
+  return docs;
 }
 export { assertPrepared } from '../src/lib/prepared-input';

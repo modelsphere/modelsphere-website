@@ -171,7 +171,7 @@ Catalog 模型详情的身份参数为 `modelId`，配方页为 `modelId` 和 `r
 
 开发者在源仓库通过 Git PR 维护内容，合并后更新网站锁定 commit；网站 PR 检查、合并后重建并验证全站候选，提升同一网站产物。文档更新会重新构建网站，但不会引入未合并的博客草稿；失败保留整个旧站。
 
-目前没有真实文档。官网展示两篇保留示例说明的 Mock 文档，快速开始链接指向实际生成的 `/docs/quickstart`；正式构建默认同时展示示例博客与对应搜索索引。文档使用全站正式域名与 `/docs` 栏目，部署到 GitHub Pages 时沿用配置的项目 baseUrl。设置 `SITE_PUBLISH_EXAMPLES=false` 后恢复文档准备状态。
+技术文档源为网站仓库的 `content/docs/`，新增 Markdown 自动进入侧栏、正文和搜索。当前两篇阅读示例保留正文说明；快速开始在实际存在 `/docs/quickstart` 时启用，否则指向 `/docs`。文档使用全站正式域名与 `/docs` 栏目，部署到 GitHub Pages 时沿用项目 baseUrl。显式设置 `DOCS_SOURCE_MODE=none` 后显示文档准备状态。
 
 ## 8 技术博客与动态
 

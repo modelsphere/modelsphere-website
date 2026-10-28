@@ -18,9 +18,7 @@ const env = {
   ...process.env,
   SITE_BUILD_TARGET: action === 'dev' ? 'local' : action,
   SITE_PUBLISH_EXAMPLES: examplesSetting,
-  DOCS_SOURCE_MODE:
-    process.env.DOCS_SOURCE_MODE ??
-    (action === 'release' && !publishExamples ? 'none' : 'mock'),
+  DOCS_SOURCE_MODE: process.env.DOCS_SOURCE_MODE ?? 'content',
   BLOG_SOURCE_MODE:
     process.env.BLOG_SOURCE_MODE ??
     (action === 'release' ? (publishExamples ? 'mock' : 'content') : undefined),
@@ -29,7 +27,7 @@ const env = {
     (action === 'release' ? undefined : 'http://localhost:3000'),
 };
 const mode = resolveBuildMode(env);
-await prepareDocs(process.cwd(), mode);
+const docs = await prepareDocs(process.cwd(), mode);
 await prepareBlog(process.cwd(), mode);
 await generateTokens();
 for (const dir of ['.docusaurus', 'build'])
@@ -71,6 +69,9 @@ if (action !== 'dev') {
       commit: siteCommit,
       target: mode.target,
       baseUrl: mode.baseUrl ?? '/',
+      docsRoutes: docs.map((doc) =>
+        doc.meta.slug === '/' ? '/docs' : `/docs${doc.meta.slug}`,
+      ),
     }) + '\n',
   );
   await checkArtifacts(process.cwd(), mode);

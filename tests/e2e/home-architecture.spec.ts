@@ -108,7 +108,7 @@ for (const width of [390, 1440]) {
         page.locator('.desktop-quickstart .header-primary-link'),
       ).toHaveAttribute(
         'href',
-        process.env.TEST_DOCS_MODE === 'mock' ? '/docs/quickstart' : '/docs',
+        process.env.TEST_DOCS_MODE !== 'none' ? '/docs/quickstart' : '/docs',
       );
       await page
         .getByRole('navigation', { name: 'Breadcrumb' })

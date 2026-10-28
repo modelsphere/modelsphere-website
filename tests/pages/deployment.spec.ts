@@ -4,7 +4,7 @@ import baseline from '../../content/catalog/baseline.json';
 import report from '../fixtures/catalog/mimo-report.json';
 
 const prefix = '/modelsphere-website/';
-const mock = process.env.TEST_DOCS_MODE === 'mock';
+const mock = process.env.TEST_DOCS_MODE !== 'none';
 const model = baseline.models.find((m) => m.name === 'mimo-v2.5')!;
 const recipe = model.variants.find(
   (v) => v.id === 'sglang-tp8-h100-optimized',
@@ -175,6 +175,14 @@ test('direct documents, blog routes, 404 responses and version metadata work und
     process.env.TEST_BUILD_TARGET ?? (mock ? 'preview' : 'release'),
   );
   expect(version.commit).toMatch(/^[a-f0-9]{40}$/);
+  expect(Array.isArray(version.docsRoutes)).toBe(true);
+  if (mock) expect(version.docsRoutes).toContain('/docs');
+  else expect(version.docsRoutes).toEqual([]);
+  for (const route of version.docsRoutes as string[]) {
+    const response = await request.get(new URL(route.slice(1), baseURL).href);
+    expect(response.status()).toBe(200);
+    expect(await response.text()).toContain('<h1');
+  }
 });
 
 if (mock) {

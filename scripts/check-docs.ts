@@ -12,15 +12,20 @@ import { visit } from 'unist-util-visit';
 import { toString } from 'mdast-util-to-string';
 import GithubSlugger from 'github-slugger';
 import type { Root } from 'mdast';
-import { resolveBuildMode } from '../src/lib/build-mode';
+import { resolveBuildMode, type BuildMode } from '../src/lib/build-mode';
 export const mockFiles = ['overview.md', 'quickstart.md'];
 const metaSchema = z
   .object({
-    id: z.string().regex(/^example-[a-z0-9-]+$/),
+    id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     title: z.string().min(1),
-    slug: z.enum(['/', '/quickstart']),
+    slug: z
+      .string()
+      .regex(
+        /^\/(?:[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*)?$/,
+      ),
     sidebar_position: z.number().int().positive(),
     description: z.string().min(1),
+    draft: z.boolean().optional(),
   })
   .strict();
 export interface ParsedDoc {
@@ -50,8 +55,8 @@ export function parseDoc(file: string, raw: string): ParsedDoc {
     if (node.type === 'html' || node.type.startsWith('mdx'))
       throw new Error(`${file}: 不允许 HTML、JSX、import 或执行表达式`);
     if (node.type === 'heading') {
-      if (node.depth === 1)
-        throw new Error(`${file}: 正文从 h2 开始，禁止重复 h1`);
+      if (node.depth < 2 || node.depth > 4)
+        throw new Error(`${file}: 正文仅允许 h2–h4，禁止重复 h1`);
       anchors.add(slugger.slug(toString(node)));
     }
     if (node.type === 'link' || node.type === 'definition')
@@ -93,9 +98,14 @@ export function validateCollection(docs: ParsedDoc[]): void {
         throw new Error(`${doc.file}: 非法链接 ${url}`);
       const [name, fragment] = url.split('#');
       const decoded = decodeURIComponent(name);
-      if (decoded.includes('/') || decoded === '..')
+      if (decoded.startsWith('/') || decoded.includes('\\'))
         throw new Error('链接越过文档目录');
-      const target = decoded ? docs.find((d) => d.file === decoded) : doc;
+      const destination = path.posix.normalize(
+        path.posix.join(path.posix.dirname(doc.file), decoded),
+      );
+      if (destination === '..' || destination.startsWith('../'))
+        throw new Error('链接越过文档目录');
+      const target = decoded ? docs.find((d) => d.file === destination) : doc;
       if (!target) throw new Error(`${doc.file}: 文档链接不存在 ${url}`);
       if (fragment && !target.anchors.has(decodeURIComponent(fragment)))
         throw new Error(`${doc.file}: 锚点不存在 ${url}`);
@@ -124,12 +134,70 @@ export async function readMockDocs(root: string): Promise<ParsedDoc[]> {
     throw new Error('Mock 文档身份或路由不符合契约');
   return docs;
 }
+export async function readContentDocs(root: string): Promise<ParsedDoc[]> {
+  if (!(await lstat(path.join(root, 'content'))).isDirectory())
+    throw new Error('拒绝文档源父目录符号链接或非目录');
+  const directory = path.join(root, 'content/docs');
+  const docs: ParsedDoc[] = [];
+  async function read(relative: string): Promise<void> {
+    const absolute = path.join(directory, relative);
+    const info = await lstat(absolute);
+    if (info.isSymbolicLink()) throw new Error('拒绝文档符号链接');
+    if (info.isDirectory()) {
+      if (
+        relative &&
+        !/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/.test(
+          relative,
+        )
+      )
+        throw new Error(`文档目录须使用小写英文、数字和连字符：${relative}`);
+      for (const name of (await readdir(absolute)).sort())
+        await read(path.posix.join(relative, name));
+      return;
+    }
+    if (
+      !info.isFile() ||
+      !/^(?:[a-z0-9]+(?:-[a-z0-9]+)*\/)*[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(
+        relative,
+      )
+    )
+      throw new Error(`正式文档只接收小写命名的 Markdown 文件：${relative}`);
+    const doc = parseDoc(relative, await readFile(absolute, 'utf8'));
+    if (!doc.meta.draft) {
+      if (!doc.body.trim()) throw new Error(`${relative}: 正文不可为空`);
+      docs.push(doc);
+    }
+  }
+  await read('');
+  validateCollection(docs);
+  if (docs.filter((doc) => doc.meta.slug === '/').length !== 1)
+    throw new Error('正式文档必须有且只有一篇已发布的首页（slug: /）');
+  return docs;
+}
+export async function readDocumentation(
+  root: string,
+  source: BuildMode['source'],
+): Promise<ParsedDoc[]> {
+  if (source === 'content') return readContentDocs(root);
+  if (source === 'mock') return readMockDocs(root);
+  return [];
+}
 if (
   process.argv[1] &&
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 ) {
-  const mode = resolveBuildMode(process.env);
-  if (mode.source === 'mock')
-    console.log(`通过：${(await readMockDocs(process.cwd())).length} 篇文档`);
-  else console.log('none 模式：不读取 Mock 内容');
+  const mode = resolveBuildMode({
+    ...process.env,
+    SITE_BUILD_TARGET: process.env.SITE_BUILD_TARGET ?? 'local',
+    DOCS_SOURCE_MODE: process.env.DOCS_SOURCE_MODE ?? 'content',
+    SITE_ORIGIN: process.env.SITE_ORIGIN ?? 'http://localhost:3000',
+  });
+  readDocumentation(process.cwd(), mode.source)
+    .then((docs) => {
+      console.log(`通过：${docs.length} 篇文档（${mode.source}）`);
+    })
+    .catch((error) => {
+      console.error(error);
+      process.exitCode = 1;
+    });
 }

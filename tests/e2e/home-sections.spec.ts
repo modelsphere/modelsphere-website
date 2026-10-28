@@ -170,7 +170,7 @@ test('restored modules contain narrow layouts and preserve working section links
     page.getByRole('link', { name: '立即部署', exact: true }),
   ).toHaveAttribute(
     'href',
-    process.env.TEST_DOCS_MODE === 'mock' ? '/docs/quickstart' : '/docs',
+    process.env.TEST_DOCS_MODE !== 'none' ? '/docs/quickstart' : '/docs',
   );
   const destination = await page
     .getByRole('link', { name: '立即部署', exact: true })

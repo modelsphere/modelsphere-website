@@ -7,6 +7,7 @@ import { withoutBaseUrl } from '../src/lib/site-path';
 import type { BlogIndex } from '../src/features/blog/types';
 import type { CommunityIndex } from '../src/features/community/types';
 import { isSearchIndex } from '../src/features/search/query';
+import { readDocumentation } from './check-docs';
 export async function collectFiles(dir: string): Promise<string[]> {
   const out: string[] = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -32,15 +33,32 @@ export async function checkArtifacts(
   const dir = path.join(root, 'build');
   const files = await collectFiles(dir);
   const doc = await readFile(path.join(dir, 'docs.html'), 'utf8');
-  if (!doc.includes(mode.source === 'mock' ? '认识 ModelSphere' : '文档准备中'))
+  if (!doc.includes(mode.source === 'none' ? '文档准备中' : '<h1'))
     throw new Error('文档首页内容不正确');
   if (
     mode.source === 'none' &&
     files.some((f) => f.endsWith('/docs/quickstart.html'))
   )
     throw new Error('正式构建残留示例路由');
-  if (mode.source === 'mock')
-    await stat(path.join(dir, 'docs/quickstart.html'));
+  const docs = await readDocumentation(root, mode.source);
+  const docRoutes = new Set(
+    docs.map((item) =>
+      item.meta.slug === '/' ? '/docs' : `/docs${item.meta.slug}`,
+    ),
+  );
+  for (const file of files) {
+    const relative = path.relative(dir, file).split(path.sep).join('/');
+    if (
+      relative.startsWith('docs/') &&
+      relative.endsWith('.html') &&
+      !docRoutes.has(`/${relative.slice(0, -5)}`)
+    )
+      throw new Error(`文档产物包含未发布路由：${relative}`);
+  }
+  for (const route of docRoutes) {
+    const html = await readFile(path.join(dir, `${route}.html`), 'utf8');
+    if (!html.includes('<h1')) throw new Error(`文档缺少预生成正文：${route}`);
+  }
   for (const file of files) {
     if (
       mode.target === 'release' &&
@@ -57,7 +75,7 @@ export async function checkArtifacts(
     )
       throw new Error(`Mock 博客内容泄漏: ${file}`);
     if (
-      /ModelSphere 官网工程与代码生成规范|ModelSphere 文档栏目实施方案/.test(
+      /ModelSphere 官网工程与代码生成规范|ModelSphere 文档栏目实施方案|ModelSphere 技术文档实施与维护规范/.test(
         text,
       )
     )
@@ -130,7 +148,7 @@ export async function checkArtifacts(
       .map((post) => post.href),
   );
   for (const entry of search.entries) {
-    if (entry.kind === 'docs' && mode.source === 'none')
+    if (entry.kind === 'docs' && !docRoutes.has(entry.pageHref))
       throw new Error('未发布的文档进入搜索索引');
     if (entry.kind === 'blog' && !blogRoutes.has(entry.pageHref))
       throw new Error('未发布或站外博客进入搜索索引');
@@ -139,11 +157,13 @@ export async function checkArtifacts(
   for (const route of blogRoutes)
     if (!search.entries.some((entry) => entry.pageHref === route))
       throw new Error('公开博客缺少搜索索引');
-  if (
-    mode.source === 'mock' &&
-    !search.entries.some((entry) => entry.kind === 'docs')
-  )
-    throw new Error('预览文档缺少搜索索引');
+  for (const route of docRoutes)
+    if (
+      !search.entries.some(
+        (entry) => entry.kind === 'docs' && entry.pageHref === route,
+      )
+    )
+      throw new Error(`公开文档缺少搜索索引：${route}`);
 }
 if (
   process.argv[1] &&
