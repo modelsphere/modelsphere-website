@@ -2,7 +2,7 @@
 
 项目名称：`modelsphere-website`。
 
-当前博客与文档展示策略：`SITE_ORIGIN=https://modelsphere.github.io SITE_BASE_URL=/modelsphere-website/ pnpm build` 默认在正式产物中包含 7 篇站内示例博客、1 条站外示例及 2 篇示例文档，同时生成搜索索引。示例保留原有标识与正文说明，不代表实测结论。`SITE_PUBLISH_EXAMPLES=false` 可恢复无示例的正式构建；真实内容预览仍使用 `pnpm dev:blog`。本策略覆盖下文历史验证记录中的 release/none 描述，构建成功不表示已部署。
+当前文档源为 `content/docs/`，开发、预览、正式构建默认递归读取；新增 Markdown 会自动进入侧栏和搜索。维护格式与发布步骤见[技术文档实施与维护规范](docs/development/docs-implementation.md)。既有两篇文档仍保留示例说明。`tests/fixtures/docs/` 仅用于显式 mock 回归，`DOCS_SOURCE_MODE=none` 显示准备页。博客示例仍由 `SITE_PUBLISH_EXAMPLES` 控制。
 
 面向 AI 基础设施、平台、算法与稳定性团队的公开官网，覆盖产品介绍、技术架构、模型目录与测评、快速开始与文档、技术博客、社区与生态。
 
@@ -37,7 +37,7 @@
 
 Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-catalog/) 的功能。首期使用固定详情页面与查询参数，使新增模型无需重建网站即可访问；实时详情依赖 JavaScript，参数对应记录不存在时由页面显示错误，不承诺该情况返回 HTTP 404。无脚本可读构建时的版本化目录基线。
 
-文档内容仓库独立维护，但不独立部署；更新锁定 commit 会重新构建整个网站。当前没有真实文档，`/docs` 显示准备状态，快速开始入口仅在真实内容就绪后启用。网站仓库的 `docs/design` 和 `docs/development` 是内部规范，不能自动发布为开发者文档。
+技术文档在网站仓库的 `content/docs/` 维护，与网站统一构建发布。目录内按模块新增 Markdown，侧栏和搜索自动更新；快速开始入口根据实际公开路由启用。网站仓库的 `docs/design` 和 `docs/development` 是内部规范，不能自动发布为开发者文档。
 
 ## 保留的产品与工程约束
 
@@ -93,7 +93,7 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 
 首期地址：[ModelSphere 官网](https://modelsphere.github.io/modelsphere-website/)。仓库设为公开后，源码与提交历史均公开。仓库 Settings → Pages 的 Source 使用 **GitHub Actions**，`github-pages` 环境只允许 `main` 分支发布。
 
-`.github/workflows/ci.yml` 对分支和 PR 执行格式、Lint、类型、内容检查及单测，随后分别验证根路径与 `/modelsphere-website/` 路径的 preview/mock、release/none 构建。候选通过 Nginx 浏览器检查后，只有 `main` 才上传已验证的正式产物并部署；发布阶段不重新构建。正式站不会包含 Mock 博客或文档，文档目前显示准备状态，站点仍保留验证期的 noindex。
+`.github/workflows/ci.yml` 对分支和 PR 执行格式、Lint、类型、内容检查及单测，随后分别验证根路径与 `/modelsphere-website/` 路径的 preview/mock、release/content 构建。候选通过 Nginx 浏览器检查后，只有 `main` 才上传已验证的正式产物并部署；发布阶段不重新构建。正式文档读取 `content/docs/`，博客仍保留已允许公开的示例；站点继续保留验证期的 noindex。
 
 发布参数固定为 `SITE_ORIGIN=https://modelsphere.github.io`、`SITE_BASE_URL=/modelsphere-website/`。`SITE_ORIGIN` 只含协议和域名；子目录单独配置，必须以 `/` 开始和结束。不设置 `SITE_BASE_URL` 时继续支持根路径部署。
 
@@ -116,7 +116,7 @@ pnpm install --frozen-lockfile
 pnpm dev:docs
 ```
 
-打开 `http://localhost:3000/docs`。两篇源文件位于 `tests/fixtures/docs/`；修改后重新启动预览，使内容重新校验并同步。首访跟随系统，点击太阳／月亮按钮切换并记住浅深色偏好。
+打开 `http://localhost:3000/docs`。文档源文件位于 `content/docs/`；修改后重新启动预览，使内容重新校验并同步。首访跟随系统，点击太阳／月亮按钮切换并记住浅深色偏好。
 
 ```sh
 pnpm build:docs-preview
@@ -125,7 +125,7 @@ pnpm serve
 
 静态预览地址为 `http://localhost:4173/docs`。`pnpm serve` 是方便本地阅读的 Node 静态服务；正式静态服务验收使用 `infra/docker/` 的 Nginx 镜像。
 
-正式候选使用实际网站 origin，例如在 shell 中设置 `SITE_ORIGIN` 后运行 `pnpm build`。正式构建固定 `release + none`，包含首页，`/docs` 显示“文档准备中”，不会发布 Mock。没有域名配置时构建直接报错。
+正式候选使用实际网站 origin，例如在 shell 中设置 `SITE_ORIGIN` 后运行 `pnpm build`。正式构建默认 `release + content`，从 `content/docs/` 发布正文；显式设置 `DOCS_SOURCE_MODE=none` 才显示文档准备页。没有域名配置时构建直接报错。
 
 ```sh
 pnpm format:check
@@ -134,7 +134,7 @@ pnpm typecheck
 pnpm test
 ```
 
-浏览器检查在 Nginx 容器运行后，通过 `E2E_BASE_URL=http://localhost:4173 TEST_DOCS_MODE=mock pnpm test:e2e` 执行；正式候选改为 `TEST_DOCS_MODE=none`。具体步骤见 `.github/workflows/ci.yml`。
+浏览器检查在 Nginx 容器运行后，通过 `E2E_BASE_URL=http://localhost:4173 TEST_DOCS_MODE=mock pnpm test:e2e` 执行；正式候选改为 `TEST_DOCS_MODE=content`；显式 none 构建使用 `TEST_DOCS_MODE=none`。具体步骤见 `.github/workflows/ci.yml`。
 
 本节说明验证方法；每次变更的远程检查与发布状态以对应 PR 和 Actions 运行记录为准。
 

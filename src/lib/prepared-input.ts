@@ -6,6 +6,8 @@ export async function assertPrepared(
   root: string,
   mode: BuildMode,
 ): Promise<void> {
+  if (!(await lstat(path.join(root, '.generated'))).isDirectory())
+    throw new Error('拒绝暂存父目录符号链接或非目录');
   const record = JSON.parse(
     await readFile(path.join(root, '.generated/docs-input.json'), 'utf8'),
   ) as { mode: BuildMode; files: { name: string; sha256: string }[] };
@@ -19,7 +21,20 @@ export async function assertPrepared(
       .join(',') !== 'overview.md,quickstart.md'
   )
     throw new Error('非预期文档清单');
-  const names = await readdir(path.join(root, '.generated/docs'));
+  async function files(relative = ''): Promise<string[]> {
+    const directory = path.join(root, '.generated/docs', relative);
+    if (!(await lstat(directory)).isDirectory())
+      throw new Error('拒绝暂存符号链接或非目录');
+    const names: string[] = [];
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const name = path.posix.join(relative, entry.name);
+      if (entry.isDirectory()) names.push(...(await files(name)));
+      else if (entry.isFile()) names.push(name);
+      else throw new Error('拒绝暂存符号链接或非文件');
+    }
+    return names;
+  }
+  const names = await files();
   if (
     names.sort().join(',') !==
     record.files

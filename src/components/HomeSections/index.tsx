@@ -1206,9 +1206,7 @@ export function GetStarted() {
           <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
             <a
               href={siteHref(
-                siteConfig.customFields?.docsMock
-                  ? '/docs/quickstart'
-                  : '/docs',
+                String(siteConfig.customFields?.docsQuickstartHref ?? '/docs'),
               )}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-blue-600 hover:bg-slate-50 transition-all font-semibold text-base shadow-md hover:shadow-lg"
             >

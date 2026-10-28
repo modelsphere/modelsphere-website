@@ -18,7 +18,10 @@ export default function Navbar() {
   const { localHref } = useSitePath();
   const pathname = localHref(publicPathname);
   const { siteConfig } = useDocusaurusContext();
-  const mock = Boolean(siteConfig.customFields?.docsMock);
+  const quickstartHref = String(
+    siteConfig.customFields?.docsQuickstartHref ?? '/docs',
+  );
+  const isDocsPreview = Boolean(siteConfig.customFields?.docsMock);
   const isDocs = pathname === '/docs' || pathname.startsWith('/docs/');
   const header = useRef<HTMLElement>(null);
   const menu = useRef<HTMLDetailsElement>(null);
@@ -100,11 +103,8 @@ export default function Navbar() {
     ),
   );
   const quickstart = (
-    <Link
-      className="header-primary-link"
-      to={mock ? '/docs/quickstart' : '/docs'}
-    >
-      {mock ? '快速开始' : '文档指南'}
+    <Link className="header-primary-link" to={quickstartHref}>
+      {quickstartHref === '/docs/quickstart' ? '快速开始' : '文档指南'}
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -127,7 +127,11 @@ export default function Navbar() {
           </Link>
           <span className="header-badge">
             <span aria-hidden="true" />
-            {isDocs ? (mock ? '文档预览' : '开发者文档') : '开源推理平台'}
+            {isDocs
+              ? isDocsPreview
+                ? '文档预览'
+                : '开发者文档'
+              : '开源推理平台'}
           </span>
         </div>
         <nav className="desktop-nav" aria-label="主导航">

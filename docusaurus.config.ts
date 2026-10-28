@@ -4,6 +4,7 @@ import { resolveBuildMode } from './src/lib/build-mode';
 import { assertPrepared } from './src/lib/prepared-input';
 import { assertPreparedBlog } from './src/lib/prepared-blog';
 import { mkdir } from 'node:fs/promises';
+import { readDocumentation } from './scripts/check-docs';
 const prismTheme = {
   plain: {
     color: 'var(--color-text-primary)',
@@ -28,6 +29,7 @@ export default async function config(): Promise<Config> {
   const mode = resolveBuildMode(process.env);
   await assertPrepared(process.cwd(), mode);
   await assertPreparedBlog(process.cwd(), mode);
+  const docs = await readDocumentation(process.cwd(), mode.source);
   await mkdir('.generated/search-public', { recursive: true });
   return {
     title: '模域 ModelSphere',
@@ -44,13 +46,18 @@ export default async function config(): Promise<Config> {
     onBrokenLinks: 'throw',
     i18n: { defaultLocale: 'zh-CN', locales: ['zh-CN'] },
     markdown: { format: 'md', hooks: { onBrokenMarkdownLinks: 'throw' } },
-    customFields: { docsMock: mode.source === 'mock' },
+    customFields: {
+      docsMock: mode.source === 'mock',
+      docsQuickstartHref: docs.some((doc) => doc.meta.slug === '/quickstart')
+        ? '/docs/quickstart'
+        : '/docs',
+    },
     presets: [
       [
         'classic',
         {
           docs:
-            mode.source === 'mock'
+            mode.source !== 'none'
               ? {
                   path: '.generated/docs',
                   routeBasePath: 'docs',
