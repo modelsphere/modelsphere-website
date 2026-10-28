@@ -9,7 +9,7 @@ const id = z.string().regex(/^[a-z0-9][a-z0-9._-]*$/);
 const sha = z.string().regex(/^[a-f0-9]{40}$/);
 const digest = z.string().regex(/^sha256:[a-f0-9]{64}$/);
 const tuningSchema = z.object({
-  baseline: z.string(),
+  baseline: z.string().default(''),
   optimized: z.string(),
   uplift: z.number().finite().optional(),
   workloads: z
@@ -67,7 +67,7 @@ const catalogSchema = z.object({
         .optional(),
       reports: z.array(z.string()).default([]),
       tuning: z.array(tuningSchema).default([]),
-      variants: z.array(variantSchema),
+      variants: z.array(variantSchema).default([]),
     }),
   ),
 });
@@ -82,6 +82,16 @@ export interface Recipe {
   tuning: Tuning[];
   quotedGain: number | null;
   workload: string | null;
+}
+export interface ModelSummary {
+  model: Model;
+  recipes: Recipe[];
+  best: {
+    recipe: Recipe;
+    tuning: Tuning;
+    gain: number;
+    workload: string | null;
+  } | null;
 }
 export const config = source;
 export const baselineInfo = baselineSource;
@@ -162,36 +172,66 @@ export async function loadCatalog(signal?: AbortSignal) {
   return catalog;
 }
 export function recipesOf(catalog: Catalog): Recipe[] {
-  return catalog.models.flatMap((model) =>
-    model.variants.map((variant) => {
-      const mine = model.tuning.filter(
-        (t) => t.optimized.split('@')[0] === variant.id,
-      );
-      // Release dates belong to recipes; the benchmark stays bound to its explicitly measured version.
-      const latest = mine
-        .map((t) => t.optimized.split('@')[1] ?? '')
-        .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
-        .at(-1);
-      const tuning = mine.filter((t) => t.optimized.split('@')[1] === latest);
-      const values = tuning.flatMap<{ value: number; workload: string | null }>(
-        (t) =>
-          t.workloads.length
-            ? t.workloads.map((w) => ({ value: w.uplift, workload: w.name }))
-            : t.uplift == null
-              ? []
-              : [{ value: t.uplift, workload: null }],
-      );
-      const best = values.sort((a, b) => b.value - a.value)[0];
-      return {
-        key: `${model.name}/${variant.id}`,
-        model,
-        variant,
-        tuning,
-        quotedGain: best?.value ?? null,
-        workload: best?.workload ?? null,
-      };
-    }),
-  );
+  return catalog.models.flatMap(recipesForModel);
+}
+function recipesForModel(model: Model): Recipe[] {
+  return model.variants.map((variant) => {
+    const mine = model.tuning.filter(
+      (t) => t.optimized.split('@')[0] === variant.id,
+    );
+    // Release dates belong to recipes; the benchmark stays bound to its explicitly measured version.
+    const latest = mine
+      .map((t) => t.optimized.split('@')[1] ?? '')
+      .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
+      .at(-1);
+    const tuning = mine.filter((t) => t.optimized.split('@')[1] === latest);
+    const values = tuning.flatMap<{
+      value: number;
+      workload: string | null;
+      tuning: Tuning;
+    }>((t) =>
+      t.workloads.length
+        ? t.workloads.map((w) => ({
+            value: w.uplift,
+            workload: w.name,
+            tuning: t,
+          }))
+        : t.uplift == null
+          ? []
+          : [{ value: t.uplift, workload: null, tuning: t }],
+    );
+    const best = values.sort((a, b) => b.value - a.value)[0];
+    return {
+      key: `${model.name}/${variant.id}`,
+      model,
+      variant,
+      tuning: best
+        ? [best.tuning, ...tuning.filter((t) => t !== best.tuning)]
+        : tuning,
+      quotedGain: best?.value ?? null,
+      workload: best?.workload ?? null,
+    };
+  });
+}
+export function summarizeModel(model: Model): ModelSummary {
+  const recipes = recipesForModel(model);
+  const best = recipes
+    .filter((r) => r.quotedGain != null)
+    .sort(
+      (a, b) => b.quotedGain! - a.quotedGain! || a.key.localeCompare(b.key),
+    )[0];
+  return {
+    model,
+    recipes,
+    best: best
+      ? {
+          recipe: best,
+          tuning: best.tuning[0],
+          gain: best.quotedGain!,
+          workload: best.workload,
+        }
+      : null,
+  };
 }
 export function hardware(v: Variant) {
   return v.requires.gpus === 0

@@ -272,14 +272,10 @@ export function RecipeCard({
             </p>
             <Heading>
               <Link
-                to={modelHref(r.model, version, returnTo)}
-                title={
-                  context === 'catalog'
-                    ? (r.model.displayName ?? r.model.name)
-                    : undefined
-                }
+                to={detailHref(r, version, undefined, returnTo)}
+                title={r.variant.id}
               >
-                {r.model.displayName ?? r.model.name}
+                {r.variant.id}
               </Link>
             </Heading>
           </div>
@@ -293,6 +289,16 @@ export function RecipeCard({
                 : '部署配方'}
           </span>
         </div>
+        <dl className={styles.recipeModel}>
+          <div>
+            <dt>模型</dt>
+            <dd>
+              <Link to={modelHref(r.model, version, returnTo)}>
+                {r.model.displayName || r.model.name}
+              </Link>
+            </dd>
+          </div>
+        </dl>
         <div
           className={styles.gain}
           style={
@@ -326,9 +332,6 @@ export function RecipeCard({
               <span />
             </div>
           )}
-          <Link to={detailHref(r, version, undefined, returnTo)}>
-            {r.variant.id}
-          </Link>
         </div>
         <div className={styles.chips}>
           <span>{hardwareText(r.variant)}</span>

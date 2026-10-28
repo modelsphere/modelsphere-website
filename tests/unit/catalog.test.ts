@@ -6,6 +6,7 @@ import {
   baselineInfo,
   parseCatalog,
   recipesOf,
+  summarizeModel,
   stats,
   role,
   isDefault,
@@ -28,6 +29,7 @@ import {
   initialQuery,
   parseQuery,
   queryRecipes,
+  queryModels,
   queryHref,
   compare,
 } from '../../src/features/catalog/query';
@@ -199,7 +201,7 @@ describe('catalog queries', () => {
         q: 'vllm/vllm-openai',
       }).all.every((r) => r.variant.image?.repository === 'vllm/vllm-openai'),
     ).toBe(true);
-    const models = queryRecipes(baseline, {
+    const models = queryModels(baseline, {
       ...initialQuery,
       view: 'models',
       hardware: ['NVIDIA-H100-80GB-HBM3'],
@@ -248,6 +250,117 @@ describe('catalog queries', () => {
       queryRecipes(parseCatalog(large), { ...initialQuery, q: 'recipe-4999' })
         .total,
     ).toBe(1);
+  });
+});
+describe('model summaries and model queries', () => {
+  it('defaults omitted recipes and baseline references without inventing measurements', () => {
+    const model = baseline.models.find((m) => m.tuning.length)!;
+    const withoutRecipes = { ...model, variants: undefined };
+    expect(
+      parseCatalog({ ...baseline, count: 1, models: [withoutRecipes] })
+        .models[0].variants,
+    ).toEqual([]);
+    const withoutBaseline = { ...model.tuning[0], baseline: undefined };
+    const parsed = parseCatalog({
+      ...baseline,
+      count: 1,
+      models: [{ ...model, tuning: [withoutBaseline] }],
+    });
+    expect(summarizeModel(parsed.models[0]).best?.tuning.baseline).toBe('');
+  });
+  it('binds the best workload to its measured recipe and exact baseline', () => {
+    const model = structuredClone(
+      baseline.models.find((m) => m.name === 'gemma-4-26b-a4b-it')!,
+    );
+    const t = model.tuning[0];
+    model.tuning = [
+      { ...t, uplift: 999, workloads: [{ name: 'long', uplift: 20 }] },
+      {
+        ...t,
+        baseline: 'another-baseline@1.0.0',
+        workloads: [{ name: 'short', uplift: 30 }],
+      },
+      {
+        ...t,
+        optimized: t.optimized.split('@')[0] + '@0.0.1',
+        workloads: [{ name: 'old', uplift: 1000 }],
+      },
+      {
+        ...t,
+        optimized: 'missing@1.0.0',
+        workloads: [{ name: 'missing', uplift: 2000 }],
+      },
+    ];
+    const summary = summarizeModel(model);
+    expect(summary.recipes).toHaveLength(model.variants.length);
+    expect(summary.best).toMatchObject({
+      gain: 30,
+      workload: 'short',
+      tuning: { baseline: 'another-baseline@1.0.0', optimized: t.optimized },
+      recipe: {
+        tuning: [
+          expect.objectContaining({ baseline: 'another-baseline@1.0.0' }),
+          expect.anything(),
+        ],
+      },
+    });
+  });
+  it('distinguishes missing gains from zero and negative measurements', () => {
+    const model = structuredClone(
+      baseline.models.find((m) => m.tuning.length)!,
+    );
+    const t = model.tuning[0];
+    for (const gain of [0, -5]) {
+      model.tuning = [{ ...t, workloads: [], uplift: gain }];
+      expect(summarizeModel(model).best?.gain).toBe(gain);
+    }
+    model.tuning = [
+      { baseline: t.baseline, optimized: t.optimized, workloads: [] },
+    ];
+    expect(summarizeModel(model).best).toBeNull();
+    model.variants = [];
+    expect(summarizeModel(model)).toMatchObject({ recipes: [], best: null });
+  });
+  it('qualifies models by matching recipes, then summarizes all their recipes', () => {
+    const models = queryModels(baseline, {
+      ...initialQuery,
+      q: 'glm-5.3-flash',
+      hardware: ['NVIDIA-H100-80GB-HBM3'],
+    });
+    expect(models.total).toBe(1);
+    const summary = models.all[0];
+    expect(summary.recipes).toHaveLength(summary.model.variants.length);
+    expect(summary.best?.recipe.variant.id).toBe('sglang-tp8-b300-optimized');
+    expect(summary.best?.gain).toBe(12.5);
+    const sorted = queryModels(baseline, { ...initialQuery, view: 'models' });
+    expect(sorted.all[0].best?.gain).toBe(195.3);
+    const missing = sorted.all.findIndex((s) => !s.best);
+    expect(sorted.all.slice(missing).every((s) => s.best == null)).toBe(true);
+    expect(queryModels(baseline, { ...initialQuery, page: 999 }).page).toBe(3);
+  });
+  it('retains models without recipes when no recipe-specific filter is active', () => {
+    const model = {
+      ...baseline.models[0],
+      name: 'empty-model',
+      displayName: undefined,
+      description: undefined,
+      tuning: [],
+      variants: [],
+    };
+    const catalog = { ...baseline, count: 1, models: [model] };
+    expect(
+      queryModels(catalog, { ...initialQuery, q: 'empty-model' }).all[0],
+    ).toMatchObject({
+      model: { name: 'empty-model' },
+      recipes: [],
+      best: null,
+    });
+    expect(
+      queryModels(catalog, { ...initialQuery, engine: 'sglang' }).total,
+    ).toBe(0);
+    expect(
+      queryModels(catalog, { ...initialQuery, q: 'unmatched' }).total,
+    ).toBe(0);
   });
 });
 describe('configuration integrity and history ownership', () => {

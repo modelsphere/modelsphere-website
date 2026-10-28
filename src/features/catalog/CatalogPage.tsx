@@ -20,12 +20,14 @@ import {
   parseQuery,
   queryHref,
   queryRecipes,
+  queryModels,
   type Query,
 } from './query';
 import { Icon, RecipeCard, SourceState, Stats } from './components';
 import { useCatalog } from './useCatalog';
 import { legacyCatalogReportHref, reportHref } from './routes';
 import CatalogSelect from './CatalogSelect';
+import ModelCard, { ModelRecipeList, ModelTuning } from './ModelCard';
 import styles from './styles.module.css';
 
 export default function CatalogPage() {
@@ -43,7 +45,9 @@ export default function CatalogPage() {
     [browser, location.search, c],
   );
   const f = useMemo(() => facets(c), [c]),
-    result = useMemo(() => queryRecipes(c, q), [c, q]);
+    recipeResult = useMemo(() => queryRecipes(c, q), [c, q]),
+    modelResult = useMemo(() => queryModels(c, q), [c, q]);
+  const result = q.view === 'models' ? modelResult : recipeResult;
   const all = useMemo(() => recipesOf(c), [c]);
   const returnTo = localHref(location.pathname) + location.search;
   const legacyReport = browser
@@ -112,7 +116,8 @@ export default function CatalogPage() {
       history.push(href);
     }
   }
-  const items = browser ? result.items : result.all;
+  const items = browser ? recipeResult.items : recipeResult.all;
+  const modelItems = browser ? modelResult.items : modelResult.all;
   const select = (
     key: 'family' | 'engine' | 'tag',
     label: string,
@@ -213,6 +218,18 @@ export default function CatalogPage() {
                 </div>
                 <div className={styles.controls}>
                   <div className={styles.filters}>
+                    <span className={styles.select}>
+                      <CatalogSelect
+                        label="内容视图"
+                        active={q.view !== initialQuery.view}
+                        value={q.view}
+                        onValueChange={(value) => update({ view: value })}
+                        options={[
+                          { value: 'models', label: '模型视角' },
+                          { value: 'recipes', label: '配方视角' },
+                        ]}
+                      />
+                    </span>
                     {select('family', '全部模型家族', f.family)}
                     {select('engine', '全部推理引擎', f.engine)}
                     {select('tag', '全部技术标签', f.tag)}
@@ -230,7 +247,10 @@ export default function CatalogPage() {
                         options={[
                           {
                             value: 'improvement-desc',
-                            label: '按吞吐量提升排序',
+                            label:
+                              q.view === 'models'
+                                ? '按调优配方最佳提升排序'
+                                : '按吞吐量提升排序',
                           },
                           { value: 'name-asc', label: '按模型名称 A–Z' },
                           { value: 'name-desc', label: '按模型名称 Z–A' },
@@ -311,19 +331,6 @@ export default function CatalogPage() {
                   <summary>视图与更多筛选</summary>
                   <div>
                     <label className={styles.moreSelect}>
-                      <span>内容视图</span>
-                      <CatalogSelect
-                        label="内容视图"
-                        active={q.view !== initialQuery.view}
-                        value={q.view}
-                        onValueChange={(value) => update({ view: value })}
-                        options={[
-                          { value: 'recipes', label: '部署配方' },
-                          { value: 'models', label: '模型' },
-                        ]}
-                      />
-                    </label>
-                    <label className={styles.moreSelect}>
                       <span>配方角色</span>
                       <CatalogSelect
                         label="配方角色"
@@ -377,6 +384,52 @@ export default function CatalogPage() {
                   <h2>未找到匹配内容</h2>
                   <p>保留了当前筛选条件，可修改关键词或重置筛选。</p>
                 </div>
+              ) : q.layout === 'table' && q.view === 'models' ? (
+                <div className={styles.tableScroll}>
+                  <table className={styles.modelTable}>
+                    <caption>模型目录</caption>
+                    <thead>
+                      <tr>
+                        <th>模型 / 介绍</th>
+                        <th>调优对照</th>
+                        <th>可用配方</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {modelItems.map((summary) => (
+                        <tr
+                          key={summary.model.name}
+                          data-model-id={summary.model.name}
+                        >
+                          <th>
+                            <Link
+                              to={modelHref(summary.model, c.commit, returnTo)}
+                            >
+                              {summary.model.displayName || summary.model.name}
+                            </Link>
+                            <p>
+                              {summary.model.description || '暂无模型说明。'}
+                            </p>
+                          </th>
+                          <td>
+                            <ModelTuning
+                              summary={summary}
+                              version={c.commit}
+                              returnTo={returnTo}
+                            />
+                          </td>
+                          <td>
+                            <ModelRecipeList
+                              summary={summary}
+                              version={c.commit}
+                              returnTo={returnTo}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               ) : q.layout === 'table' ? (
                 <div className={styles.tableScroll}>
                   <table>
@@ -399,7 +452,11 @@ export default function CatalogPage() {
                             </Link>
                           </th>
                           <td>
-                            {r.variant.id}
+                            <Link
+                              to={detailHref(r, c.commit, undefined, returnTo)}
+                            >
+                              {r.variant.id}
+                            </Link>
                             <br />
                             {r.variant.engine}
                           </td>
@@ -436,15 +493,24 @@ export default function CatalogPage() {
                   className={styles.grid}
                   aria-label={q.view === 'recipes' ? '部署配方' : '模型列表'}
                 >
-                  {items.map((r) => (
-                    <RecipeCard
-                      key={r.key}
-                      r={r}
-                      version={c.commit}
-                      returnTo={returnTo}
-                      copy={() => loadYaml(r.variant)}
-                    />
-                  ))}
+                  {q.view === 'models'
+                    ? modelItems.map((summary) => (
+                        <ModelCard
+                          key={summary.model.name}
+                          summary={summary}
+                          version={c.commit}
+                          returnTo={returnTo}
+                        />
+                      ))
+                    : items.map((r) => (
+                        <RecipeCard
+                          key={r.key}
+                          r={r}
+                          version={c.commit}
+                          returnTo={returnTo}
+                          copy={() => loadYaml(r.variant)}
+                        />
+                      ))}
                 </section>
               )}
               {browser && result.total > 0 && (

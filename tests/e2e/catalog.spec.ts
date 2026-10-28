@@ -97,13 +97,313 @@ test('source-backed list, dynamic filters, shareable queries, model/table views 
   await expect(page.locator('[data-recipe-id]')).toHaveCount(2);
   await page.getByRole('button', { name: '表格视图' }).click();
   await expect(page.getByRole('table')).toBeVisible();
-  await page.getByText('视图与更多筛选').click();
-  await choose(page, '内容视图', '模型');
+  await choose(page, '内容视图', '模型视角');
   await expect(page.getByRole('table').locator('tbody tr')).toHaveCount(1);
   await page.reload();
   await expect(page.getByRole('table').locator('tbody tr')).toHaveCount(1);
   expect(errors).toEqual([]);
 });
+for (const width of [320, 390, 768, 1280, 1440])
+  for (const colorScheme of ['light', 'dark'] as const)
+    test(`distinct model and recipe cards at ${width}px in ${colorScheme}`, async ({
+      page,
+    }, info) => {
+      await page.setViewportSize({ width, height: 1000 });
+      await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
+      await page.goto('/models?q=mimo-v2.5');
+      const recipe = page.locator(`[data-recipe-id="${m.name}/${variant.id}"]`);
+      const title = recipe.getByRole('heading', { level: 2 }).getByRole('link');
+      await expect(title).toHaveText(variant.id);
+      const recipeWidth = (await recipe.boundingBox())!.width;
+      const recipeUrl = new URL(
+        (await title.getAttribute('href'))!,
+        'http://localhost',
+      );
+      expect(recipeUrl.pathname).toBe('/models/recipe');
+      expect(recipeUrl.searchParams.get('recipeId')).toBe(variant.id);
+      expect(recipeUrl.searchParams.get('dataVersion')).toBe(baseline.commit);
+      expect(recipeUrl.searchParams.has('tab')).toBe(false);
+      const modelLink = recipe
+        .locator('dl')
+        .filter({ has: page.getByText('模型', { exact: true }) })
+        .getByRole('link');
+      await expect(modelLink).toHaveText(m.displayName!);
+      await expect(modelLink).toHaveAttribute('href', /\/models\/detail\?/);
+      await title.click();
+      await expect(
+        page.getByRole('tab', { name: '部署配置', selected: true }),
+      ).toBeVisible();
+      await page.goBack();
+      await modelLink.click();
+      await expect(page).toHaveURL(/\/models\/detail\?/);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        m.displayName!,
+      );
+      await expect(
+        page
+          .getByRole('heading', { level: 3 })
+          .getByRole('link', { name: variant.id, exact: true }),
+      ).toHaveAttribute('href', /\/models\/recipe\?/);
+
+      const catalog = '/models?q=glm-5.3-flash&view=models';
+      await page.goto(catalog);
+      const model = baseline.models.find(
+        (model) => model.name === 'glm-5.3-flash',
+      )!;
+      const card = page.locator(`[data-model-id="${model.name}"]`);
+      await expect(page.locator('[data-recipe-id]')).toHaveCount(0);
+      await expect(card.getByRole('heading', { level: 2 })).toHaveText(
+        model.displayName!,
+      );
+      expect((await card.boundingBox())!.width).toBeCloseTo(recipeWidth, 0);
+      await expect(card).toContainText(model.description!);
+      await expect(card).toContainText('调优配方最佳提升+12.5%');
+      await expect(
+        card
+          .getByRole('definition')
+          .filter({ hasText: 'sglang-tp8-b300-baseline@' }),
+      ).toHaveCount(1);
+      await expect(
+        card.getByText(`可用配方 ${model.variants.length}`, { exact: true }),
+      ).toBeVisible();
+      const count = card.getByText(`可用配方 ${model.variants.length}`, {
+        exact: true,
+      });
+      const centers = await count.evaluate((element) => {
+        const middle = (node: Element) => {
+          const box = node.getBoundingClientRect();
+          return box.top + box.height / 2;
+        };
+        return {
+          label: middle(element.querySelector('span')!),
+          number: middle(element.querySelector('strong')!),
+          family: middle(element.closest('article')!.querySelector('p')!),
+        };
+      });
+      expect(Math.abs(centers.label - centers.number)).toBeLessThanOrEqual(1);
+      expect(Math.abs(centers.label - centers.family)).toBeLessThanOrEqual(1);
+      const countStyle = await count.evaluate((element) => {
+        const label = getComputedStyle(element);
+        const number = getComputedStyle(element.querySelector('strong')!);
+        return {
+          labelSize: parseFloat(label.fontSize),
+          numberSize: parseFloat(number.fontSize),
+          color: label.color,
+          background: getComputedStyle(element.closest('article')!)
+            .backgroundColor,
+        };
+      });
+      expect(countStyle.labelSize).toBeGreaterThanOrEqual(12);
+      expect(countStyle.labelSize).toBeLessThanOrEqual(14);
+      expect(countStyle.numberSize).toBeGreaterThan(countStyle.labelSize);
+      expect(countStyle.numberSize).toBeLessThan(
+        await card
+          .getByRole('heading', { level: 2 })
+          .evaluate((element) =>
+            parseFloat(getComputedStyle(element).fontSize),
+          ),
+      );
+      expect((await count.boundingBox())!.height).toBeLessThanOrEqual(24);
+      expect(countStyle.color).not.toBe(
+        await card.evaluate((element) => getComputedStyle(element).color),
+      );
+      const luminance = (color: string) => {
+        const channels = color
+          .match(/[\d.]+/g)!
+          .slice(0, 3)
+          .map((n) => Number(n) / 255);
+        const linear = channels.map((n) =>
+          n <= 0.04045 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4,
+        );
+        return linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722;
+      };
+      const colors = [
+        luminance(countStyle.color),
+        luminance(countStyle.background),
+      ].sort((a, b) => a - b);
+      expect((colors[1] + 0.05) / (colors[0] + 0.05)).toBeGreaterThanOrEqual(
+        4.5,
+      );
+      const view = page.getByRole('combobox', {
+        name: '内容视图',
+        exact: true,
+      });
+      await expect(view).toHaveText('模型视角');
+      const family = page.getByRole('combobox', {
+        name: '全部模型家族',
+        exact: true,
+      });
+      const [viewBox, familyBox] = await Promise.all([
+        view.boundingBox(),
+        family.boundingBox(),
+      ]);
+      expect(viewBox).not.toBeNull();
+      expect(familyBox).not.toBeNull();
+      const hardwareHeight = (await page
+        .getByRole('button', { name: /^全部硬件/ })
+        .boundingBox())!.height;
+      expect(hardwareHeight).toBe(width < 768 ? 44 : 32);
+      const searchHeight = await page
+        .getByRole('textbox', { name: '搜索模型目录' })
+        .evaluate(
+          (element) => element.parentElement!.getBoundingClientRect().height,
+        );
+      expect(searchHeight).toBe(width < 768 ? 48 : 40);
+      const viewToggleHeight = await page
+        .getByRole('button', { name: '卡片视图', exact: true })
+        .evaluate(
+          (element) => element.parentElement!.getBoundingClientRect().height,
+        );
+      expect(viewToggleHeight).toBe(hardwareHeight);
+      for (const name of [
+        '内容视图',
+        '全部模型家族',
+        '全部推理引擎',
+        '全部技术标签',
+        '排序方式',
+      ]) {
+        const box = await page
+          .getByRole('combobox', { name, exact: true })
+          .boundingBox();
+        expect(box!.height).toBeCloseTo(hardwareHeight, 0);
+      }
+      if (width < 768) expect(viewBox!.y).toBeLessThan(familyBox!.y);
+      else {
+        expect(viewBox!.x).toBeLessThan(familyBox!.x);
+        expect(viewBox!.y).toBeCloseTo(familyBox!.y, 0);
+      }
+      await expect(
+        page.getByRole('search').getByRole('combobox').first(),
+      ).toHaveAccessibleName('内容视图');
+      await expect(card.getByRole('list')).toHaveCount(0);
+      await expect(
+        card.getByRole('link', {
+          name: '查看 sglang-tp8-b300-optimized 性能对照',
+        }),
+      ).toHaveAttribute('href', /tab=performance/);
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth + 1,
+        ),
+      ).toBe(true);
+      await card.screenshot({
+        path: info.outputPath(`model-card-${width}-${colorScheme}.png`),
+      });
+      await page.getByRole('search').evaluate((element) =>
+        window.scrollTo({
+          top: window.scrollY + element.getBoundingClientRect().top - 80,
+          behavior: 'instant',
+        }),
+      );
+      await page.screenshot({
+        path: info.outputPath(
+          `catalog-perspective-count-${width}-${colorScheme}.png`,
+        ),
+      });
+      await card.getByRole('heading', { level: 2 }).getByRole('link').click();
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        model.displayName!,
+      );
+      const recipes = page.getByRole('region', { name: '可用部署配方' });
+      await expect(recipes.locator('[data-recipe-id]')).toHaveCount(
+        model.variants.length,
+      );
+      for (const v of model.variants) {
+        const link = recipes
+          .getByRole('heading', { level: 3 })
+          .getByRole('link', { name: v.id, exact: true });
+        const url = new URL(
+          (await link.getAttribute('href'))!,
+          'http://localhost',
+        );
+        expect(url.pathname).toBe('/models/recipe');
+        expect(url.searchParams.get('recipeId')).toBe(v.id);
+        expect(url.searchParams.get('modelId')).toBe(model.name);
+        expect(url.searchParams.get('dataVersion')).toBe(baseline.commit);
+        expect(url.searchParams.get('returnTo')).toBe(catalog);
+      }
+      await page.goBack();
+      await expect(page).toHaveURL(catalog);
+      await expect(card).toBeVisible();
+    });
+
+test('model cards default missing fields and include models without recipes', async ({
+  page,
+}) => {
+  const catalog = structuredClone(parseCatalog(baseline));
+  const model = catalog.models[0];
+  catalog.models = [model];
+  catalog.count = 1;
+  model.displayName = '';
+  model.description = '';
+  model.variants = [];
+  model.tuning = [];
+  await page.route('**/index-v2.json', (route) =>
+    route.fulfill({ json: catalog }),
+  );
+  await page.goto('/models?view=models');
+  const card = page.locator('[data-model-id]');
+  await expect(card).toHaveCount(1);
+  await expect(card.getByRole('heading', { level: 2 })).toHaveText(model.name);
+  await expect(card).toContainText('暂无模型说明。');
+  await expect(card.getByText('可用配方 0', { exact: true })).toBeVisible();
+  await expect(card.getByRole('list')).toHaveCount(0);
+  await expect(card.getByText('未提供', { exact: true })).toHaveCount(3);
+  await expect(card).not.toContainText('0.0%');
+  await expect(card.locator('a[href*="/models/recipe?"]')).toHaveCount(0);
+});
+
+test('model cards preserve measured zero without a report or baseline reference', async ({
+  page,
+}) => {
+  const catalog = structuredClone(parseCatalog(baseline));
+  const model = catalog.models.find((model) => model.name === m.name)!;
+  catalog.models = [model];
+  catalog.count = 1;
+  model.variants = model.variants.filter((v) => v.id === variant.id);
+  model.tuning = [
+    {
+      baseline: '',
+      optimized: `${variant.id}@${variant.version}`,
+      uplift: 0,
+      workloads: [],
+    },
+  ];
+  await page.route('**/index-v2.json', (route) =>
+    route.fulfill({ json: catalog }),
+  );
+  await page.goto('/models?view=models');
+  const card = page.locator('[data-model-id]');
+  await expect(card).toHaveCount(1);
+  await expect(card).toContainText('+0.0%');
+  await expect(card).toContainText('负载未提供');
+  await expect(card.getByText('未提供', { exact: true })).toHaveCount(1);
+  await expect(card.locator('a[href*="tab=performance"]')).toHaveCount(0);
+});
+
+test('model pagination and recipe filters keep complete model summaries', async ({
+  page,
+}) => {
+  await page.goto('/models?view=models');
+  await expect(page.locator('[data-model-id]')).toHaveCount(12);
+  await page.getByRole('button', { name: '下一页', exact: true }).click();
+  await expect(page).toHaveURL(/view=models&page=2/);
+  await page.reload();
+  await expect(page.locator('[data-model-id]')).toHaveCount(12);
+  await page.goto(
+    '/models?view=models&q=glm-5.3-flash&hardware=NVIDIA-H100-80GB-HBM3',
+  );
+  const card = page.locator('[data-model-id="glm-5.3-flash"]');
+  await expect(card.getByText('可用配方 4', { exact: true })).toBeVisible();
+  await expect(card.getByRole('listitem')).toHaveCount(0);
+  await expect(card).toContainText('+12.5%');
+  await page.getByRole('button', { name: '表格视图', exact: true }).click();
+  const table = page.getByRole('table', { name: '模型目录', exact: true });
+  await expect(table.locator('tbody tr')).toHaveCount(1);
+  await expect(table).toContainText('+12.5%');
+  await expect(table.getByRole('listitem')).toHaveCount(4);
+});
+
 for (const width of [390, 1440])
   for (const colorScheme of ['light', 'dark'] as const)
     test(`catalog dropdown keyboard, selection and dismissal at ${width}px in ${colorScheme}`, async ({
@@ -114,6 +414,18 @@ for (const width of [390, 1440])
       await page.setViewportSize({ width, height: 900 });
       await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
       await page.goto('/models?family=glm');
+      const perspective = page.getByRole('combobox', {
+        name: '内容视图',
+        exact: true,
+      });
+      await expect(perspective).toBeVisible();
+      await expect(perspective).toHaveText('配方视角');
+      await choose(page, '内容视图', '模型视角');
+      await expect(page).toHaveURL(/family=glm&view=models/);
+      await expect(page.locator('[data-model-id]').first()).toBeVisible();
+      await choose(page, '内容视图', '配方视角');
+      await expect(page).toHaveURL(/\/models\?family=glm$/);
+      await expect(page.locator('[data-recipe-id]').first()).toBeVisible();
       const trigger = page.getByRole('combobox', {
         name: '全部模型家族',
         exact: true,
