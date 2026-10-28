@@ -725,34 +725,7 @@ export function CommunityContent() {
                       '\n            Star 关注主干仓库，提交 Issue 报告环境问题，发起 PR 贡献代码或在 Discussions 规划下代算子。\n          '
                     }
                   </p>
-                  <div
-                    className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex flex-col gap-2 font-code-sm text-xs"
-                    aria-description="设计稿中的静态展示数据，并非实时 GitHub 统计。"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-600 flex items-center gap-1">
-                        <span
-                          className="material-symbols-outlined text-amber-500 text-[15px]"
-                          aria-hidden="true"
-                        >
-                          {'star'}
-                        </span>
-                        {' GitHub Stars'}
-                      </span>
-                      <span className="font-bold text-sky-700">{'14.8k'}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-600 flex items-center gap-1">
-                        <span
-                          className="material-symbols-outlined text-teal-600 text-[15px]"
-                          aria-hidden="true"
-                        >
-                          {'fork_right'}
-                        </span>
-                        {' Forks'}
-                      </span>
-                      <span className="font-bold text-teal-700">{'2.1k'}</span>
-                    </div>
+                  <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex flex-col gap-2 font-code-sm text-xs">
                     <div className="flex items-center justify-between">
                       <span className="text-slate-600 flex items-center gap-1">
                         <span
@@ -915,14 +888,6 @@ export function CommunityFooter() {
             {
               '© 2025 ModelSphere Foundation. Released under Apache-2.0 License.'
             }
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 rounded bg-slate-100 border border-slate-200/60 font-code-sm text-xs font-medium text-emerald-700">
-              {'NODE_CLUSTER: READY'}
-            </span>
-            <span className="px-2.5 py-1 rounded bg-slate-100 border border-slate-200/60 font-code-sm text-xs font-medium text-sky-700">
-              {'TELEMETRY: P99 22ms'}
-            </span>
           </div>
         </div>
       </div>

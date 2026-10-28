@@ -72,12 +72,20 @@ for (const [id, expected] of Object.entries(source.modules)) {
       };
     });
     expect(measured.text).toBe(
-      sharedFooter ? communitySource.footerCopy.join(' ') : expected.text,
+      sharedFooter
+        ? communitySource.footerCopy
+            .filter(
+              (copy) =>
+                copy !== 'NODE_CLUSTER: READY' &&
+                copy !== 'TELEMETRY: P99 22ms',
+            )
+            .join(' ')
+        : expected.text,
     );
     expect(measured.icons).toEqual(expected.icons);
     expect(measured.font).toBe(true);
     expect(
-      Math.abs(measured.height - (sharedFooter ? 360 : expected.height)),
+      Math.abs(measured.height - (sharedFooter ? 349 : expected.height)),
     ).toBeLessThanOrEqual(1);
     expect(measured.headings).toEqual(
       expected.headings.map((heading) => ({
