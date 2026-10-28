@@ -3,6 +3,7 @@ import {
   isDefault,
   role,
   recipesOf,
+  summarizeModel,
   topology,
   type Catalog,
   type Recipe,
@@ -143,28 +144,68 @@ export function queryRecipes(c: Catalog, q: Query) {
       );
     })
     .sort((a, b) => compare(a, b, q.sort));
-  const entries =
-    q.view === 'models'
-      ? Array.from(new Set(list.map((r) => r.model.name)))
-          .map((name) => {
-            const matching = list
-              .filter((r) => r.model.name === name)
-              .sort((a, b) => a.key.localeCompare(b.key));
-            return (
-              matching.find((r) => r.variant.id === r.model.defaultVariant) ??
-              matching[0]
-            );
-          })
-          .sort((a, b) =>
-            compare(
-              { ...a, quotedGain: null },
-              { ...b, quotedGain: null },
-              q.sort,
-            ),
-          )
-      : list;
+  return paginate(list, q.page);
+}
+export function queryModels(c: Catalog, q: Query) {
+  const matching = new Set(queryRecipes(c, q).all.map((r) => r.model.name));
+  const entries = c.models
+    .filter((model) => {
+      if (matching.has(model.name)) return true;
+      if (
+        model.variants.length ||
+        q.engine ||
+        q.role ||
+        q.hardware.length ||
+        q.topology
+      )
+        return false;
+      const text = [
+        model.name,
+        model.displayName,
+        model.description,
+        model.family,
+        model.source?.hf,
+        ...model.tags,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+      return (
+        (!q.q || text.includes(q.q.toLowerCase())) &&
+        (!q.family || model.family === q.family) &&
+        (!q.tag || model.tags.includes(q.tag)) &&
+        (!q.hidedep || !model.deprecated)
+      );
+    })
+    .map(summarizeModel)
+    .sort((a, b) => {
+      if (q.sort === 'improvement-desc') {
+        const missing = Number(a.best == null) - Number(b.best == null);
+        if (missing) return missing;
+        if (a.best && b.best && a.best.gain !== b.best.gain)
+          return b.best.gain - a.best.gain;
+      }
+      if (q.sort === 'updated-desc') {
+        const latest = (summary: typeof a) =>
+          summary.recipes
+            .flatMap((r) =>
+              r.variant.releaseDate ? [r.variant.releaseDate] : [],
+            )
+            .sort()
+            .at(-1) ?? '';
+        const date = latest(b).localeCompare(latest(a));
+        if (date) return date;
+      }
+      return (
+        (q.sort === 'name-desc' ? -1 : 1) *
+        a.model.name.localeCompare(b.model.name)
+      );
+    });
+  return paginate(entries, q.page);
+}
+function paginate<T>(entries: T[], requestedPage: number) {
   const pages = Math.max(1, Math.ceil(entries.length / PAGE_SIZE)),
-    page = Math.min(q.page, pages);
+    page = Math.min(requestedPage, pages);
   return {
     all: entries,
     total: entries.length,
