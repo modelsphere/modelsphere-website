@@ -6,6 +6,24 @@ import { useHomeMotion } from '@site/src/components/HomeMotion';
 import './styles.css';
 import { CommunityCalendar } from './Calendar';
 
+// GitHub profile names; fall back to the account ID when Name is empty.
+const maintainerNames: Partial<Record<string, string>> = {
+  lumianph: 'LU MIAN',
+  zhanghaohit: 'ZHANG Hao',
+  imneov: 'LiuFeng',
+};
+
+function MaintainerName({ login }: { login: string }) {
+  const name = maintainerNames[login]?.trim() || login;
+  return (
+    <div className="flex items-center justify-between">
+      <h4 className="font-headline-sm text-base md:text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors truncate">
+        {name}
+      </h4>
+    </div>
+  );
+}
+
 // Verbatim copy and source classes from Stitch canvas “社区生态-更新2”.
 // Unconfigured source actions do not claim a subscription or reminder was created.
 export function CommunityHeader() {
@@ -263,14 +281,10 @@ export function CommunityContent() {
                   <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white"></span>
                 </div>
                 <div className="flex flex-col gap-1 flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-headline-sm text-base md:text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors truncate">
-                      {'Lu Mian'}
-                    </h4>
-                  </div>
+                  <MaintainerName login="lumianph" />
                   <div className="flex items-center gap-2 font-code-sm text-xs truncate">
                     <span className="text-emerald-700 font-semibold">
-                      {'第四范式 (Paradigm)'}
+                      {'范式智能（Phancy）'}
                     </span>
                     <span className="text-slate-300">{'•'}</span>
                     <a
@@ -298,14 +312,10 @@ export function CommunityContent() {
                   <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white"></span>
                 </div>
                 <div className="flex flex-col gap-1 flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-headline-sm text-base md:text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors truncate">
-                      {'Zhang Hao'}
-                    </h4>
-                  </div>
+                  <MaintainerName login="zhanghaohit" />
                   <div className="flex items-center gap-2 font-code-sm text-xs truncate">
                     <span className="text-emerald-700 font-semibold">
-                      {'第四范式 (Paradigm)'}
+                      {'范式智能（Phancy）'}
                     </span>
                     <span className="text-slate-300">{'•'}</span>
                     <a
@@ -333,14 +343,10 @@ export function CommunityContent() {
                   <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white"></span>
                 </div>
                 <div className="flex flex-col gap-1 flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-headline-sm text-base md:text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors truncate">
-                      {'aceforeverd'}
-                    </h4>
-                  </div>
+                  <MaintainerName login="aceforeverd" />
                   <div className="flex items-center gap-2 font-code-sm text-xs truncate">
                     <span className="text-emerald-700 font-semibold">
-                      {'第四范式 (Paradigm)'}
+                      {'范式智能（Phancy）'}
                     </span>
                     <span className="text-slate-300">{'•'}</span>
                     <a
@@ -368,15 +374,10 @@ export function CommunityContent() {
                   <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white"></span>
                 </div>
                 <div className="flex flex-col gap-1 flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-headline-sm text-base md:text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors truncate community-maintainer-highlight community-maintainer-highlight">
-                      {'remotego'}
-                      <span></span>
-                    </h4>
-                  </div>
+                  <MaintainerName login="remotego" />
                   <div className="flex items-center gap-2 font-code-sm text-xs truncate">
                     <span className="text-emerald-700 font-semibold">
-                      {'第四范式 (Paradigm)'}
+                      {'范式智能（Phancy）'}
                     </span>
                     <span className="text-slate-300">{'•'}</span>
                     <a
@@ -407,11 +408,7 @@ export function CommunityContent() {
                   <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white"></span>
                 </div>
                 <div className="flex flex-col gap-1 flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-headline-sm text-base md:text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors truncate">
-                      <span className="">{'imneov'}</span>
-                    </h4>
-                  </div>
+                  <MaintainerName login="imneov" />
                   <div className="flex items-center gap-2 font-code-sm text-xs truncate">
                     <span className="text-emerald-700 font-semibold">
                       {'睿思智联 (RiseUnion)'}

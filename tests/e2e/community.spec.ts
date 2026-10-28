@@ -22,7 +22,7 @@ test('community preserves approved copy, empty activities and the five-section o
       .evaluateAll((sections) => sections.map((section) => section.id)),
   ).toEqual(source.sectionIds);
   for (const [index, id] of source.sectionIds.entries()) {
-    if (id === 'community-calendar') continue;
+    if (id === 'community-calendar' || id === 'community-maintainers') continue;
     const text = (await page.locator(`#${id}`).textContent())!
       .replace(/\s+/g, ' ')
       .trim();
@@ -63,6 +63,31 @@ test('community preserves approved copy, empty activities and the five-section o
       page.getByRole('link', { name: `@${handle}`, exact: true }),
     ).toHaveAttribute('href', `https://github.com/${handle}`);
   }
+  const maintainers = page.locator('#community-maintainers');
+  await expect(maintainers).not.toContainText('第四范式');
+  await expect(maintainers.getByRole('heading', { level: 4 })).toHaveText([
+    'LU MIAN',
+    'ZHANG Hao',
+    'aceforeverd',
+    'remotego',
+    'LiuFeng',
+  ]);
+  await expect(
+    maintainers.getByRole('heading', { name: '社区维护者', exact: true }),
+  ).toBeVisible();
+  const cards = maintainers.locator('[data-home-pair] > *');
+  await expect(cards).toHaveCount(5);
+  for (const [index, organization] of [
+    '范式智能（Phancy）',
+    '范式智能（Phancy）',
+    '范式智能（Phancy）',
+    '范式智能（Phancy）',
+    '睿思智联 (RiseUnion)',
+  ].entries())
+    await expect(cards.nth(index)).toContainText(organization);
+  await expect(cards.nth(2).getByRole('heading')).toHaveText('aceforeverd');
+  await expect(cards.nth(3).getByRole('heading')).toHaveText('remotego');
+  await expect(cards.nth(4).getByRole('heading')).toHaveText('LiuFeng');
   await expect(page.locator('main a[href="#"]')).toHaveCount(0);
   const channels = page.locator('#community-channels');
   await expect(channels.getByRole('heading', { level: 3 })).toHaveText([
