@@ -13,6 +13,7 @@ import { toString } from 'mdast-util-to-string';
 import GithubSlugger from 'github-slugger';
 import type { Root } from 'mdast';
 import { resolveBuildMode, type BuildMode } from '../src/lib/build-mode';
+import { isImageFile, readLocalImage } from './local-images';
 export const mockFiles = ['overview.md', 'quickstart.md'];
 const metaSchema = z
   .object({
@@ -35,6 +36,7 @@ export interface ParsedDoc {
   meta: z.infer<typeof metaSchema>;
   anchors: Set<string>;
   links: string[];
+  images: string[];
 }
 export function parseDoc(file: string, raw: string): ParsedDoc {
   const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/.exec(raw);
@@ -51,6 +53,12 @@ export function parseDoc(file: string, raw: string): ParsedDoc {
   const anchors = new Set<string>();
   const slugger = new GithubSlugger();
   const links: string[] = [];
+  const images: string[] = [];
+  const definitions = new Map<string, string>();
+  visit(tree, 'definition', (node) => {
+    if (!definitions.has(node.identifier))
+      definitions.set(node.identifier, node.url);
+  });
   visit(tree, (node) => {
     if (node.type === 'html' || node.type.startsWith('mdx'))
       throw new Error(`${file}: 不允许 HTML、JSX、import 或执行表达式`);
@@ -59,10 +67,13 @@ export function parseDoc(file: string, raw: string): ParsedDoc {
         throw new Error(`${file}: 正文仅允许 h2–h4，禁止重复 h1`);
       anchors.add(slugger.slug(toString(node)));
     }
-    if (node.type === 'link' || node.type === 'definition')
-      links.push(node.url);
-    if (node.type === 'image' || node.type === 'imageReference')
-      throw new Error(`${file}: 本轮文档不接收图片`);
+    if (node.type === 'link') links.push(node.url);
+    if (node.type === 'image') images.push(node.url);
+    if (node.type === 'linkReference' || node.type === 'imageReference') {
+      const url = definitions.get(node.identifier);
+      if (!url) throw new Error(`${file}: 未定义的 Markdown 引用`);
+      (node.type === 'imageReference' ? images : links).push(url);
+    }
     if (
       node.type === 'containerDirective' &&
       (!['note', 'info', 'warning'].includes(node.name) ||
@@ -72,7 +83,37 @@ export function parseDoc(file: string, raw: string): ParsedDoc {
     if (node.type === 'leafDirective' || node.type === 'textDirective')
       throw new Error(`${file}: 不允许自定义指令`);
   });
-  return { file, raw, body: match[2], meta, anchors, links };
+  return {
+    file,
+    raw,
+    body: match[2],
+    meta,
+    anchors,
+    links,
+    images: [
+      ...new Set(
+        images.map((url) => {
+          const decoded = decodeURIComponent(url);
+          if (
+            /[\\:#?]/.test(decoded) ||
+            decoded.startsWith('/') ||
+            Array.from(decoded).some(
+              (char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127,
+            )
+          )
+            throw new Error(`${file}: 图片必须使用文档目录内的相对路径`);
+          const destination = path.posix.normalize(
+            path.posix.join(path.posix.dirname(file), decoded),
+          );
+          if (destination === '..' || destination.startsWith('../'))
+            throw new Error(`${file}: 图片越过文档目录`);
+          if (!isImageFile(destination))
+            throw new Error(`${file}: 图片只支持 PNG/JPEG/WebP/GIF`);
+          return destination;
+        }),
+      ),
+    ],
+  };
 }
 export function validateCollection(docs: ParsedDoc[]): void {
   const ids = new Set<string>();
@@ -122,7 +163,10 @@ export async function readMockDocs(root: string): Promise<ParsedDoc[]> {
   for (const file of mockFiles) {
     const p = path.join(dir, file);
     if (!(await lstat(p)).isFile()) throw new Error('拒绝符号链接或非文件');
-    docs.push(parseDoc(file, await readFile(p, 'utf8')));
+    const doc = parseDoc(file, await readFile(p, 'utf8'));
+    if (doc.images.length)
+      throw new Error('固定 Mock 文档保持纯文本，不接收图片');
+    docs.push(doc);
   }
   validateCollection(docs);
   if (
@@ -155,13 +199,16 @@ export async function readContentDocs(root: string): Promise<ParsedDoc[]> {
         await read(path.posix.join(relative, name));
       return;
     }
+    if (info.isFile() && isImageFile(relative)) return;
     if (
       !info.isFile() ||
       !/^(?:[a-z0-9]+(?:-[a-z0-9]+)*\/)*[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(
         relative,
       )
     )
-      throw new Error(`正式文档只接收小写命名的 Markdown 文件：${relative}`);
+      throw new Error(
+        `正式文档只接收小写命名的 Markdown 文件和本地图片：${relative}`,
+      );
     const doc = parseDoc(relative, await readFile(absolute, 'utf8'));
     if (!doc.meta.draft) {
       if (!doc.body.trim()) throw new Error(`${relative}: 正文不可为空`);
@@ -169,6 +216,8 @@ export async function readContentDocs(root: string): Promise<ParsedDoc[]> {
     }
   }
   await read('');
+  for (const image of new Set(docs.flatMap((doc) => doc.images)))
+    await readLocalImage(directory, image);
   validateCollection(docs);
   if (docs.filter((doc) => doc.meta.slug === '/').length !== 1)
     throw new Error('正式文档必须有且只有一篇已发布的首页（slug: /）');

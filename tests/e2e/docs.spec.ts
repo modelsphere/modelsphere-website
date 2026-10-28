@@ -203,3 +203,51 @@ test('runtime does not request external scripts, fonts or data', async ({
   await page.waitForLoadState('networkidle');
   expect(foreign).toEqual([]);
 });
+
+if (process.env.TEST_DOCS_MODE === 'content') {
+  test('local documentation images load without scripts and stay within the mobile viewport', async ({
+    browser,
+    baseURL,
+  }) => {
+    for (const javaScriptEnabled of [true, false]) {
+      const context = await browser.newContext({
+        javaScriptEnabled,
+        viewport: { width: 390, height: 844 },
+      });
+      try {
+        const page = await context.newPage();
+        const address = new URL(
+          'docs',
+          baseURL!.endsWith('/') ? baseURL : `${baseURL}/`,
+        );
+        const response = await page.goto(address.href);
+        expect(response?.status()).toBe(200);
+        const image = page.getByRole('img', {
+          name: 'ModelSphere 标识',
+          exact: true,
+        });
+        await expect(image).toBeVisible();
+        await expect
+          .poll(() =>
+            image.evaluate((node: HTMLImageElement) => node.naturalWidth),
+          )
+          .toBeGreaterThan(0);
+        const src = await image.getAttribute('src');
+        const asset = new URL(src!, page.url());
+        expect(asset.pathname.startsWith(new URL(baseURL!).pathname)).toBe(
+          true,
+        );
+        const result = await context.request.get(asset.href);
+        expect(result.status()).toBe(200);
+        expect(result.headers()['content-type']).toContain('image/png');
+        expect(
+          await page.evaluate(
+            () => document.documentElement.scrollWidth <= innerWidth + 1,
+          ),
+        ).toBe(true);
+      } finally {
+        await context.close();
+      }
+    }
+  });
+}

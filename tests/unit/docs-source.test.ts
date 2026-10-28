@@ -8,6 +8,8 @@ import {
   rm,
   symlink,
   appendFile,
+  readFile,
+  copyFile,
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -22,10 +24,16 @@ async function fixture() {
   await cp('tests/fixtures/docs', path.join(root, 'tests/fixtures/docs'), {
     recursive: true,
   });
-  await mkdir(path.join(root, 'content'), { recursive: true });
-  await cp('content/docs', path.join(root, 'content/docs'), {
-    recursive: true,
-  });
+  await mkdir(path.join(root, 'content/docs'), { recursive: true });
+  for (const [source, target] of [
+    ['overview', 'index'],
+    ['quickstart', 'quickstart'],
+  ]) {
+    const raw = (await readFile(`tests/fixtures/docs/${source}.md`, 'utf8'))
+      .replace('id: example-', 'id: ')
+      .replaceAll('overview.md', 'index.md');
+    await writeFile(path.join(root, `content/docs/${target}.md`), raw);
+  }
   return root;
 }
 afterEach(async () => {
@@ -162,6 +170,109 @@ describe('Formal documentation source', () => {
       contentDoc(id, slug, body),
     );
     await expect(readContentDocs(root)).rejects.toThrow(message);
+  });
+  it('stages only referenced images, including shared and reference-style images, and detects tampering', async () => {
+    const root = await fixture();
+    await mkdir(path.join(root, 'content/docs/images'));
+    await mkdir(path.join(root, 'content/docs/guides'));
+    for (const name of ['shared.png', 'unused.png', '草稿 图.png'])
+      await copyFile(
+        'static/brand/modelsphere-logo.png',
+        path.join(root, 'content/docs/images', name),
+      );
+    await appendFile(
+      path.join(root, 'content/docs/index.md'),
+      '\n![品牌](./images/shared.png)\n',
+    );
+    await writeFile(
+      path.join(root, 'content/docs/guides/topic.md'),
+      contentDoc(
+        'topic',
+        '/guides/topic',
+        '## 图片\n\n![共享][logo]\n\n[logo]: ../images/shared.png\n',
+      ),
+    );
+    await writeFile(
+      path.join(root, 'content/docs/draft.md'),
+      contentDoc(
+        'draft',
+        '/draft',
+        '![草稿](./images/草稿%20图.png)\n![缺失](missing.png)',
+        true,
+      ),
+    );
+    const mode = resolveBuildMode({
+      SITE_ORIGIN: 'https://example.test',
+      DOCS_SOURCE_MODE: 'content',
+    });
+    const docs = await prepareDocs(root, mode);
+    expect(docs.find((doc) => doc.file === 'guides/topic.md')?.images).toEqual([
+      'images/shared.png',
+    ]);
+    expect(await readdir(path.join(root, '.generated/docs/images'))).toEqual([
+      'shared.png',
+    ]);
+    expect(
+      await readFile(path.join(root, '.generated/docs/images/shared.png')),
+    ).toEqual(await readFile('static/brand/modelsphere-logo.png'));
+    await assertPrepared(root, mode);
+    await appendFile(
+      path.join(root, '.generated/docs/images/shared.png'),
+      'tampered',
+    );
+    await expect(assertPrepared(root, mode)).rejects.toThrow('修改');
+    await prepareDocs(root, { ...mode, source: 'mock', publishExamples: true });
+    expect(await readdir(path.join(root, '.generated/docs'))).toEqual([
+      'overview.md',
+      'quickstart.md',
+    ]);
+    await prepareDocs(root, { ...mode, source: 'none' });
+    expect(await readdir(path.join(root, '.generated/docs'))).toEqual([]);
+  });
+  it('accepts encoded spaces and Chinese image names', async () => {
+    const root = await fixture();
+    await copyFile(
+      'static/brand/modelsphere-logo.png',
+      path.join(root, 'content/docs/架构 图.png'),
+    );
+    await appendFile(
+      path.join(root, 'content/docs/index.md'),
+      '\n![架构](./架构%20图.png)\n',
+    );
+    expect((await readContentDocs(root))[0].images).toEqual(['架构 图.png']);
+  });
+  it('rejects missing images, forged image types, and image symlinks', async () => {
+    const root = await fixture();
+    const image = path.join(root, 'content/docs/cover.png');
+    await appendFile(
+      path.join(root, 'content/docs/index.md'),
+      '\n![图片](cover.png)\n',
+    );
+    await expect(readContentDocs(root)).rejects.toThrow();
+    await writeFile(image, '<script>not an image</script>');
+    await expect(readContentDocs(root)).rejects.toThrow('扩展名');
+    await rm(image);
+    await symlink(path.resolve('static/brand/modelsphere-logo.png'), image);
+    await expect(readContentDocs(root)).rejects.toThrow('符号链接');
+  });
+  it.each([
+    'https://example.test/cover.png',
+    '//example.test/cover.png',
+    '/cover.png',
+    'data:image/png;base64,AAAA',
+    '../outside.png',
+    '%2e%2e%2foutside.png',
+    'images%5cprivate.png',
+    'cover.png#fragment',
+    'cover.png?download=1',
+    'image.svg',
+  ])('rejects unsafe or unsupported image destination %s', async (url) => {
+    const root = await fixture();
+    await appendFile(
+      path.join(root, 'content/docs/index.md'),
+      `\n![图片](${url})\n`,
+    );
+    await expect(readContentDocs(root)).rejects.toThrow();
   });
   it('requires a published homepage', async () => {
     const root = await fixture();

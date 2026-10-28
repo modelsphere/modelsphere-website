@@ -2,7 +2,7 @@
 
 项目名称：`modelsphere-website`。
 
-当前文档源为 `content/docs/`，开发、预览、正式构建默认递归读取；新增 Markdown 会自动进入侧栏和搜索。维护格式与发布步骤见[技术文档实施与维护规范](docs/development/docs-implementation.md)。既有两篇文档仍保留示例说明。`tests/fixtures/docs/` 仅用于显式 mock 回归，`DOCS_SOURCE_MODE=none` 显示准备页。博客默认读取 `content/blog/<id>/index.md` 与 `content/pages/blog.json`，新增及发布规范见[博客功能与内容维护](docs/development/blog-implementation.md)。既有博客示例保留标记，由 `SITE_PUBLISH_EXAMPLES` 控制；`tests/fixtures/blog/` 仅用于显式 mock 回归。
+当前文档源为 `content/docs/`，开发、预览、正式构建默认递归读取；新增 Markdown 会自动进入侧栏和搜索，支持通过相对路径引用目录内的 PNG、JPEG、WebP、GIF 图片。维护格式与发布步骤见[技术文档实施与维护规范](docs/development/docs-implementation.md)。既有两篇文档仍保留示例说明。`tests/fixtures/docs/` 仅用于显式 mock 回归，`DOCS_SOURCE_MODE=none` 显示准备页。博客默认读取 `content/blog/<id>/index.md` 与 `content/pages/blog.json`，新增及发布规范见[博客功能与内容维护](docs/development/blog-implementation.md)。既有博客示例保留标记，由 `SITE_PUBLISH_EXAMPLES` 控制；`tests/fixtures/blog/` 仅用于显式 mock 回归。
 
 面向 AI 基础设施、平台、算法与稳定性团队的公开官网，覆盖产品介绍、技术架构、模型目录与测评、快速开始与文档、技术博客、社区与生态。
 

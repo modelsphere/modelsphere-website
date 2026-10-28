@@ -57,6 +57,22 @@ describe('Markdown boundary', () => {
     expect(() => validateCollection([a, b])).toThrow('锚点');
     expect(() => validateCollection([b, b])).toThrow('重复');
   });
+  it('separates image references from document links without bypassing shared link validation', () => {
+    const doc = parseDoc(
+      'guide/topic.md',
+      text('![图片][asset]\n\n[asset]: ../images/cover.png'),
+    );
+    expect(doc.images).toEqual(['images/cover.png']);
+    expect(doc.links).toEqual([]);
+    expect(() => validateCollection([doc])).not.toThrow();
+    const linked = parseDoc(
+      'guide/topic.md',
+      text(
+        '![图片][asset]\n\n[普通链接][asset]\n\n[asset]: ../images/cover.png',
+      ),
+    );
+    expect(() => validateCollection([linked])).toThrow('不存在');
+  });
   it('rejects malformed or ambiguous frontmatter', () => {
     expect(() => parseDoc('overview.md', 'no frontmatter')).toThrow();
     expect(() =>

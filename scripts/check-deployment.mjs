@@ -69,7 +69,9 @@ for (const route of new Set([
   const html = await response.text();
   if (!html.includes('<html')) throw new Error(`${route}: missing HTML`);
   const assets = [
-    ...html.matchAll(/(?:src|href)="([^"#]+\.(?:js|css|png)(?:\?[^" ]*)?)"/g),
+    ...html.matchAll(
+      /(?:src|href)="([^"#]+\.(?:js|css|png|jpe?g|webp|gif)(?:\?[^" ]*)?)"/g,
+    ),
   ].map((match) => new URL(match[1], base));
   for (const asset of new Map(
     assets
