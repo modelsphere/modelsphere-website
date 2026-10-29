@@ -17,6 +17,7 @@ import {
 } from './data';
 import { reportHref } from './routes';
 import styles from './styles.module.css';
+import GainMeter from './GainMeter';
 
 export function Icon({
   name,
@@ -256,7 +257,6 @@ export function RecipeCard({
   context?: 'catalog' | 'model';
 }) {
   const badge = role(r);
-  const gainPercent = Math.max(0, Math.min(100, r.quotedGain ?? 0));
   const Heading = context === 'model' ? 'h3' : 'h2';
   return (
     <article
@@ -299,39 +299,15 @@ export function RecipeCard({
             </dd>
           </div>
         </dl>
-        <div
-          className={styles.gain}
-          style={
-            { '--gain-progress': `${gainPercent}%` } as React.CSSProperties
-          }
-        >
-          <div>
-            <span>吞吐量提升</span>
-            {r.quotedGain != null && reportUrl(r) ? (
-              <Link
-                className={styles.gainLink}
-                to={reportHref(r, version, returnTo)}
-                aria-label={`查看 ${r.variant.id} 性能对照`}
-              >
-                <strong>{`${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`}</strong>
-              </Link>
-            ) : (
-              <strong
-                className={
-                  r.quotedGain == null ? styles.unavailableGain : undefined
-                }
-              >
-                {r.quotedGain == null
-                  ? '未提供'
-                  : `${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`}
-              </strong>
-            )}
-          </div>
-          {r.quotedGain != null && (
-            <div className={styles.bar}>
-              <span />
-            </div>
-          )}
+        <div className={styles.gain}>
+          <GainMeter
+            value={r.quotedGain}
+            label="吞吐量提升"
+            valueHref={
+              reportUrl(r) ? reportHref(r, version, returnTo) : undefined
+            }
+            valueLabel={`查看 ${r.variant.id} 性能对照`}
+          />
         </div>
         <div className={styles.chips}>
           <span>{hardwareText(r.variant)}</span>
@@ -388,13 +364,19 @@ export function RecipeCard({
     </article>
   );
 }
-export function SourceLinks({ r }: { r: Recipe }) {
+export function SourceLinks({
+  r,
+  includeReport = true,
+}: {
+  r: Recipe;
+  includeReport?: boolean;
+}) {
   return (
     <div className={styles.actions}>
       <a href={sourceUrl(r.variant)} target="_blank" rel="noreferrer">
         查看配方文件 ↗
       </a>
-      {reportUrl(r) && (
+      {includeReport && reportUrl(r) && (
         <a href={reportUrl(r)!} target="_blank" rel="noreferrer">
           查看性能报告 ↗
         </a>

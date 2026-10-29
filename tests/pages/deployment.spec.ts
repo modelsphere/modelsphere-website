@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import baseline from '../../content/catalog/baseline.json';
-import report from '../fixtures/catalog/mimo-report.json';
+const report = readFileSync('tests/fixtures/catalog/mimo-report.html', 'utf8');
 
 const prefix = '/modelsphere-website/';
 const mock = process.env.TEST_DOCS_MODE !== 'none';
@@ -45,7 +45,7 @@ test.beforeEach(async ({ page }) => {
         });
       if (route.request().url().endsWith('mimo-v2.5-h100-report.html'))
         return route.fulfill({
-          body: `<script type="application/json" id="autotune-report-data">${JSON.stringify(report)}</script>`,
+          body: report,
           contentType: 'text/html',
         });
       return route.abort();
@@ -118,6 +118,9 @@ test('catalog filters, recipe tabs, legacy redirects and return links preserve t
   await expect(
     page.getByRole('tab', { name: '性能对照', selected: true }),
   ).toBeVisible();
+  await expect(
+    page.frameLocator('iframe[title="原始性能对照报告"]').locator('body'),
+  ).toContainText('119.9%');
   await page.getByRole('tab', { name: '部署配置' }).click();
   await expect(page).toHaveURL(/\/modelsphere-website\/models\/recipe\?/);
   await expect(

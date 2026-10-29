@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Original MiMo performance report fixture</title>
+  </head>
+  <body>
+    <h1>MiMo-V2.5 performance report</h1>
+    <p>NVIDIA H100 80GB HBM3 · 8 GPUs · CUDA 13.0</p>
+    <p>Input tokens: 50000 · output tokens: 1500 · TTFT p50 ≤ 8000 ms</p>
+    <p>Throughput improvement: +119.9%</p>
+    <button type="button" id="details">Show raw results</button>
+    <pre id="results" hidden>Original benchmark results</pre>
+    <script>
+      window.upstreamScriptExecuted = true;
+      try {
+        parent.document.body.dataset.reportEscaped = 'true';
+      } catch {
+        document.body.dataset.parentAccess = 'blocked';
+      }
+      document.getElementById('details').addEventListener('click', () => {
+        document.getElementById('results').hidden = false;
+      });
+    </script>
+  </body>
+</html>

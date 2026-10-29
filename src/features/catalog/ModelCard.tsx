@@ -9,6 +9,7 @@ import {
 } from './data';
 import { reportHref } from './routes';
 import styles from './styles.module.css';
+import GainMeter from './GainMeter';
 
 interface Props {
   summary: ModelSummary;
@@ -23,40 +24,21 @@ export function ModelTuning({ summary, version, returnTo }: Props) {
     summary.recipes.find(
       (r) => r.variant.id === best.tuning.baseline.split('@')[0],
     );
-  const gain = best
-    ? `${best.gain >= 0 ? '+' : ''}${best.gain.toFixed(1)}%`
-    : '未提供';
   return (
     <div className={styles.modelTuning}>
-      <div
-        className={styles.gain}
-        style={
-          {
-            '--gain-progress': `${Math.max(0, Math.min(100, best?.gain ?? 0))}%`,
-          } as React.CSSProperties
-        }
-      >
-        <div>
-          <span>调优配方最佳提升</span>
-          {best && reportUrl(best.recipe) ? (
-            <Link
-              className={styles.gainLink}
-              to={reportHref(best.recipe, version, returnTo)}
-              aria-label={`查看 ${best.recipe.variant.id} 性能对照`}
-            >
-              <strong>{gain}</strong>
-            </Link>
-          ) : (
-            <strong className={best ? undefined : styles.unavailableGain}>
-              {gain}
-            </strong>
-          )}
-        </div>
-        {best && (
-          <div className={styles.bar}>
-            <span />
-          </div>
-        )}
+      <div className={styles.gain}>
+        <GainMeter
+          value={best?.gain ?? null}
+          label="调优配方最佳提升"
+          valueHref={
+            best && reportUrl(best.recipe)
+              ? reportHref(best.recipe, version, returnTo)
+              : undefined
+          }
+          valueLabel={
+            best ? `查看 ${best.recipe.variant.id} 性能对照` : undefined
+          }
+        />
         {best && (
           <p className={styles.measurement}>
             {best.workload ? `${best.workload} tokens` : '负载未提供'} · 测于 v
