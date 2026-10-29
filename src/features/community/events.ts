@@ -7,7 +7,19 @@ export function eventStatus(event: CommunityEvent, now: number) {
   return event.replayUrl ? 'recorded' : 'ended';
 }
 
-export function eventDate(value: string, timeZone: string) {
+export function eventDate(value: string, timeZone: string, locale = 'zh-CN') {
+  if (locale === 'en')
+    return (
+      new Intl.DateTimeFormat('en', {
+        timeZone,
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23',
+      }).format(new Date(value)) + ` (${timeZone})`
+    );
   const parts = new Intl.DateTimeFormat('zh-CN', {
     timeZone,
     year: 'numeric',

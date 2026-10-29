@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React from 'react';
 import ReadingDisclosure from '@site/src/components/ReadingDisclosure';
 import { useDoc } from '@docusaurus/plugin-content-docs/client';
@@ -18,7 +19,7 @@ export default function DocItemLayout({ children }: Props) {
         {show && (
           <ReadingDisclosure
             className="docs-mobile-toc"
-            title="本页目录"
+            title={translate({ id: 'site.a610e0c62b3e', message: '本页目录' })}
             desktopSelector=".docs-toc"
           >
             {tocContent}
@@ -32,7 +33,9 @@ export default function DocItemLayout({ children }: Props) {
       </div>
       {show && (
         <aside className="docs-toc">
-          <p className="toc-heading">本页目录</p>
+          <p className="toc-heading">
+            {translate({ id: 'site.a610e0c62b3e', message: '本页目录' })}
+          </p>
           {tocContent}
         </aside>
       )}

@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from '@docusaurus/Link';
@@ -58,9 +59,15 @@ function SearchDialog({
     setError(false);
     fetch(url, { signal: controller.signal })
       .then(async (response) => {
-        if (!response.ok) throw new Error('搜索索引加载失败');
+        if (!response.ok)
+          throw new Error(
+            translate({ id: 'site.d53ee2728087', message: '搜索索引加载失败' }),
+          );
         const value: unknown = await response.json();
-        if (!isSearchIndex(value)) throw new Error('搜索索引格式无效');
+        if (!isSearchIndex(value))
+          throw new Error(
+            translate({ id: 'site.b903498d56e4', message: '搜索索引格式无效' }),
+          );
         if (!disposed) {
           cachedIndex = { url, index: value };
           setIndex(value);
@@ -81,16 +88,31 @@ function SearchDialog({
     [index, query, scope],
   );
   const status = error
-    ? '搜索暂时不可用，请重试。'
+    ? translate({
+        id: 'site.0bee6d3285b8',
+        message: '搜索暂时不可用，请重试。',
+      })
     : !index
-      ? '正在加载搜索…'
+      ? translate({ id: 'site.6ecb8e89c7cd', message: '正在加载搜索…' })
       : !index.entries.length
-        ? '暂无可搜索的已发布文档或博客。'
+        ? translate({
+            id: 'site.259ec2d1fa6b',
+            message: '暂无可搜索的已发布文档或博客。',
+          })
         : !query.trim()
-          ? '输入关键词，搜索文档和博客。'
+          ? translate({
+              id: 'site.8ece413016a8',
+              message: '输入关键词，搜索文档和博客。',
+            })
           : !results.length
-            ? '未找到相关内容，请尝试其他关键词或搜索范围。'
-            : `找到 ${results.length} 条结果`;
+            ? translate({
+                id: 'site.86a477779925',
+                message: '未找到相关内容，请尝试其他关键词或搜索范围。',
+              })
+            : translate(
+                { id: 'site.11101d0bfe7c', message: '找到 {v0} 条结果' },
+                { v0: results.length },
+              );
   return (
     <dialog
       ref={dialog}
@@ -162,14 +184,27 @@ function SearchDialog({
       <div className={styles.panel}>
         <div className={styles.header}>
           <div>
-            <h2 id="site-search-title">搜索文档和博客</h2>
-            <p id="site-search-hint">查找指南、技术文章与实践经验</p>
+            <h2 id="site-search-title">
+              {translate({
+                id: 'site.fd47b25677a7',
+                message: '搜索文档和博客',
+              })}
+            </h2>
+            <p id="site-search-hint">
+              {translate({
+                id: 'site.b87acde44ff1',
+                message: '查找指南、技术文章与实践经验',
+              })}
+            </p>
           </div>
           <button
             type="button"
             onClick={() => close()}
             className={styles.close}
-            aria-label="关闭搜索"
+            aria-label={translate({
+              id: 'site.ab008ef18dac',
+              message: '关闭搜索',
+            })}
           >
             ×
           </button>
@@ -186,7 +221,7 @@ function SearchDialog({
             <path d="m16 16 4 4" />
           </svg>
           <label className="sr-only" htmlFor="site-search-input">
-            搜索文档和博客
+            {translate({ id: 'site.fd47b25677a7', message: '搜索文档和博客' })}
           </label>
           <input
             ref={input}
@@ -194,7 +229,10 @@ function SearchDialog({
             type="search"
             value={draft}
             maxLength={100}
-            placeholder="输入关键词…"
+            placeholder={translate({
+              id: 'site.26b5de5a5e47',
+              message: '输入关键词…',
+            })}
             autoComplete="off"
             onChange={(event) => {
               setDraft(event.target.value);
@@ -216,7 +254,10 @@ function SearchDialog({
             <button
               type="button"
               className={styles.clear}
-              aria-label="清空搜索"
+              aria-label={translate({
+                id: 'site.b6f00afa6537',
+                message: '清空搜索',
+              })}
               onClick={() => {
                 composing.current = false;
                 setDraft('');
@@ -225,16 +266,23 @@ function SearchDialog({
                 input.current?.focus();
               }}
             >
-              清空
+              {translate({ id: 'site.1ef3de06b32e', message: '清空' })}
             </button>
           )}
         </div>
-        <div className={styles.filters} role="group" aria-label="搜索范围">
+        <div
+          className={styles.filters}
+          role="group"
+          aria-label={translate({
+            id: 'site.4e65d015121f',
+            message: '搜索范围',
+          })}
+        >
           {(
             [
-              ['all', '全部'],
-              ['docs', '文档'],
-              ['blog', '博客'],
+              ['all', translate({ id: 'site.5c55a67935af', message: '全部' })],
+              ['docs', translate({ id: 'site.2687ccdbb1d2', message: '文档' })],
+              ['blog', translate({ id: 'site.7855e5e9727e', message: '博客' })],
             ] as const
           ).map(([value, label]) => (
             <button
@@ -260,10 +308,15 @@ function SearchDialog({
               className={styles.retry}
               onClick={() => setAttempt((value) => value + 1)}
             >
-              重新加载
+              {translate({ id: 'site.7bdd5ce1e298', message: '重新加载' })}
             </button>
           )}
-          <ul aria-label="搜索结果">
+          <ul
+            aria-label={translate({
+              id: 'site.88d72ece7cf7',
+              message: '搜索结果',
+            })}
+          >
             {results.slice(0, limit).map((result) => (
               <li key={result.pageHref}>
                 <Link
@@ -272,7 +325,9 @@ function SearchDialog({
                   onClick={() => close(false)}
                 >
                   <span className={styles.source}>
-                    {result.kind === 'docs' ? '文档' : '博客'}
+                    {result.kind === 'docs'
+                      ? translate({ id: 'site.2687ccdbb1d2', message: '文档' })
+                      : translate({ id: 'site.7855e5e9727e', message: '博客' })}
                     <span aria-hidden="true"> / </span>
                     <span>{result.pageHref}</span>
                   </span>
@@ -304,13 +359,18 @@ function SearchDialog({
               className={styles.retry}
               onClick={() => setLimit((value) => value + 20)}
             >
-              显示更多结果
+              {translate({ id: 'site.f99de0a92aa6', message: '显示更多结果' })}
             </button>
           )}
         </div>
         <div className={styles.footer}>
-          ↑ ↓ 选择结果 <span>Enter 打开</span>
-          <span>Esc 关闭</span>
+          {translate({ id: 'site.ed817866d149', message: '↑ ↓ 选择结果 ' })}
+          <span>
+            {translate({ id: 'site.9d6d07c286e2', message: 'Enter 打开' })}
+          </span>
+          <span>
+            {translate({ id: 'site.412bd6bd4b88', message: 'Esc 关闭' })}
+          </span>
         </div>
       </div>
     </dialog>
@@ -361,11 +421,22 @@ export default function SiteSearch() {
         className="header-search"
         type="button"
         disabled={!browser}
-        aria-label="搜索文档和博客"
+        aria-label={translate({
+          id: 'site.fd47b25677a7',
+          message: '搜索文档和博客',
+        })}
         aria-haspopup="dialog"
         aria-expanded={open}
         title={
-          browser ? `搜索文档和博客（${shortcut}）` : '启用 JavaScript 后可搜索'
+          browser
+            ? translate(
+                { id: 'site.a974aa27ebae', message: '搜索文档和博客（{v0}）' },
+                { v0: shortcut },
+              )
+            : translate({
+                id: 'site.83d94d332796',
+                message: '启用 JavaScript 后可搜索',
+              })
         }
         onClick={() => {
           previousFocus.current = document.activeElement as HTMLElement;
@@ -383,7 +454,9 @@ export default function SiteSearch() {
           <circle cx="10.5" cy="10.5" r="6.5" />
           <path d="m16 16 4 4" />
         </svg>
-        <span>搜索文档和博客…</span>
+        <span>
+          {translate({ id: 'site.80ca10ed888d', message: '搜索文档和博客…' })}
+        </span>
         <kbd>{shortcut}</kbd>
       </button>
       {browser &&

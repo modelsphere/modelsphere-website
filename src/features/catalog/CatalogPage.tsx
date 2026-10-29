@@ -1,3 +1,5 @@
+import { translateCopy } from '@site/src/lib/translate-copy';
+import { translate } from '@docusaurus/Translate';
 import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Layout from '@theme/Layout';
@@ -138,8 +140,12 @@ export default function CatalogPage() {
   );
   return (
     <Layout
-      title="模型目录"
-      description="浏览 ModelSphere 模型部署配方、硬件要求、版本历史与源性能报告。"
+      title={translate({ id: 'site.34b3cac2a496', message: '模型目录' })}
+      description={translate({
+        id: 'site.d4db040011ae',
+        message:
+          '浏览 ModelSphere 模型部署配方、硬件要求、版本历史与源性能报告。',
+      })}
     >
       <main
         id="main-content"
@@ -148,10 +154,22 @@ export default function CatalogPage() {
       >
         <div className={styles.container}>
           <div className={styles.topbar}>
-            <nav aria-label="面包屑">
-              <Link to="/">首页</Link>
+            <nav
+              aria-label={translate({
+                id: 'site.6770d01e7d15',
+                message: '面包屑',
+              })}
+            >
+              <Link to="/">
+                {translate({ id: 'site.203c08e0d44a', message: '首页' })}
+              </Link>
               <span>/</span>
-              <span>模型目录（Model Catalog）</span>
+              <span>
+                {translate({
+                  id: 'site.5246cfab3d47',
+                  message: '模型目录（Model Catalog）',
+                })}
+              </span>
             </nav>
             <SourceState {...state} />
           </div>
@@ -161,20 +179,37 @@ export default function CatalogPage() {
               MODEL DEPLOYMENT RECIPES
             </span>
             <h1>
-              Model Catalog<span>模型部署配方与调优报告</span>
+              Model Catalog
+              <span>
+                {translate({
+                  id: 'site.cf8de3c1a445',
+                  message: '模型部署配方与调优报告',
+                })}
+              </span>
             </h1>
             <p>
-              查阅模型的推理引擎、容器镜像、启动参数、GPU 硬件要求与基线 /
-              调优报告。
+              {translate({
+                id: 'site.50d4088626c4',
+                message:
+                  '查阅模型的推理引擎、容器镜像、启动参数、GPU 硬件要求与基线 / 调优报告。',
+              })}
             </p>
           </header>
           <Stats catalog={c} />
           {state.unavailable ? (
             <p className={styles.notice} role="alert">
               {state.status === 'loading'
-                ? '正在读取指定目录版本…'
+                ? translate({
+                    id: 'site.f77b18ff38e7',
+                    message: '正在读取指定目录版本…',
+                  })
                 : state.error}{' '}
-              <Link to="/models">打开当前目录</Link>
+              <Link to="/models">
+                {translate({
+                  id: 'site.b7e877f61317',
+                  message: '打开当前目录',
+                })}
+              </Link>
             </p>
           ) : (
             <>
@@ -190,12 +225,23 @@ export default function CatalogPage() {
               >
                 <div className={styles.search}>
                   <Icon name="search" />
-                  <span className="sr-only">搜索模型目录</span>
+                  <span className="sr-only">
+                    {translate({
+                      id: 'site.2cd026674d25',
+                      message: '搜索模型目录',
+                    })}
+                  </span>
                   <input
                     ref={search}
-                    aria-label="搜索模型目录"
+                    aria-label={translate({
+                      id: 'site.2cd026674d25',
+                      message: '搜索模型目录',
+                    })}
                     value={draft}
-                    placeholder="搜索部署配方、模型名称、容器镜像、硬件型号…"
+                    placeholder={translate({
+                      id: 'site.6e086a60c3f6',
+                      message: '搜索部署配方、模型名称、容器镜像、硬件型号…',
+                    })}
                     onCompositionStart={() => {
                       composing.current = true;
                     }}
@@ -213,35 +259,85 @@ export default function CatalogPage() {
                   />
                   <kbd aria-hidden="true">/</kbd>
                   <button type="submit">
-                    搜索 <Icon name="arrow" />
+                    {translate({ id: 'site.ecfbffc6fb77', message: '搜索 ' })}
+                    <Icon name="arrow" />
                   </button>
                 </div>
                 <div className={styles.controls}>
                   <div className={styles.filters}>
                     <span className={styles.select}>
                       <CatalogSelect
-                        label="内容视图"
+                        label={translate({
+                          id: 'site.372a79bbe944',
+                          message: '内容视图',
+                        })}
                         active={q.view !== initialQuery.view}
                         value={q.view}
                         onValueChange={(value) => update({ view: value })}
                         options={[
-                          { value: 'models', label: '模型视角' },
-                          { value: 'recipes', label: '配方视角' },
+                          {
+                            value: 'models',
+                            label: translate({
+                              id: 'site.bb15403ee7c7',
+                              message: '模型视角',
+                            }),
+                          },
+                          {
+                            value: 'recipes',
+                            label: translate({
+                              id: 'site.c4d6c65764e8',
+                              message: '配方视角',
+                            }),
+                          },
                         ]}
                       />
                     </span>
-                    {select('family', '全部模型家族', f.family)}
-                    {select('engine', '全部推理引擎', f.engine)}
-                    {select('tag', '全部技术标签', f.tag)}
+                    {select(
+                      'family',
+                      translate({
+                        id: 'site.10d4914e1a9b',
+                        message: '全部模型家族',
+                      }),
+                      f.family,
+                    )}
+                    {select(
+                      'engine',
+                      translate({
+                        id: 'site.0ebae330da89',
+                        message: '全部推理引擎',
+                      }),
+                      f.engine,
+                    )}
+                    {select(
+                      'tag',
+                      translate({
+                        id: 'site.28f5ffb5f56f',
+                        message: '全部技术标签',
+                      }),
+                      f.tag,
+                    )}
                   </div>
                   <div className={styles.tools}>
                     <span role="status">
-                      共 <strong>{result.total}</strong> 个
-                      {q.view === 'recipes' ? '配方' : '模型'}
+                      {translate({ id: 'site.2428420e407f', message: '共 ' })}
+                      <strong>{result.total}</strong>{' '}
+                      {translate({ id: 'site.7aaf96ad52e0', message: ' 个' })}
+                      {q.view === 'recipes'
+                        ? translate({
+                            id: 'site.f25ff1efa238',
+                            message: '配方',
+                          })
+                        : translate({
+                            id: 'catalog.modelCountLabel',
+                            message: '模型',
+                          })}
                     </span>
                     <span className={styles.select}>
                       <CatalogSelect
-                        label="排序方式"
+                        label={translate({
+                          id: 'site.1ce6b1d7c95c',
+                          message: '排序方式',
+                        })}
                         value={q.sort}
                         onValueChange={(value) => update({ sort: value })}
                         options={[
@@ -249,19 +345,46 @@ export default function CatalogPage() {
                             value: 'improvement-desc',
                             label:
                               q.view === 'models'
-                                ? '按调优配方最佳提升排序'
-                                : '按吞吐量提升排序',
+                                ? translate({
+                                    id: 'site.f7e6d40ff9f5',
+                                    message: '按调优配方最佳提升排序',
+                                  })
+                                : translate({
+                                    id: 'site.26ba23cf9e57',
+                                    message: '按吞吐量提升排序',
+                                  }),
                           },
-                          { value: 'name-asc', label: '按模型名称 A–Z' },
-                          { value: 'name-desc', label: '按模型名称 Z–A' },
-                          { value: 'updated-desc', label: '按配方发布日期' },
+                          {
+                            value: 'name-asc',
+                            label: translate({
+                              id: 'site.e273b1d2eca6',
+                              message: '按模型名称 A–Z',
+                            }),
+                          },
+                          {
+                            value: 'name-desc',
+                            label: translate({
+                              id: 'site.1322e7738e4a',
+                              message: '按模型名称 Z–A',
+                            }),
+                          },
+                          {
+                            value: 'updated-desc',
+                            label: translate({
+                              id: 'site.6592019eaa05',
+                              message: '按配方发布日期',
+                            }),
+                          },
                         ]}
                       />
                     </span>
                     <div className={styles.viewButtons}>
                       <button
                         type="button"
-                        aria-label="卡片视图"
+                        aria-label={translate({
+                          id: 'site.7904ff565aaa',
+                          message: '卡片视图',
+                        })}
                         aria-pressed={q.layout === 'cards'}
                         onClick={() => update({ layout: 'cards' })}
                       >
@@ -269,7 +392,10 @@ export default function CatalogPage() {
                       </button>
                       <button
                         type="button"
-                        aria-label="表格视图"
+                        aria-label={translate({
+                          id: 'site.a3de52de404b',
+                          message: '表格视图',
+                        })}
                         aria-pressed={q.layout === 'table'}
                         onClick={() => update({ layout: 'table' })}
                       >
@@ -284,7 +410,11 @@ export default function CatalogPage() {
                     aria-pressed={!q.hardware.length}
                     onClick={() => update({ hardware: [] })}
                   >
-                    全部硬件 <small>{all.length}</small>
+                    {translate({
+                      id: 'site.a8b9eb42893a',
+                      message: '全部硬件 ',
+                    })}
+                    <small>{all.length}</small>
                   </button>
                   {f.hardware.map((x) => (
                     <label
@@ -324,40 +454,118 @@ export default function CatalogPage() {
                       update({ ...initialQuery, dataVersion: q.dataVersion });
                     }}
                   >
-                    重置筛选
+                    {translate({
+                      id: 'site.13a431e59b65',
+                      message: '重置筛选',
+                    })}
                   </button>
                 </div>
                 <details className={styles.more}>
-                  <summary>视图与更多筛选</summary>
+                  <summary>
+                    {translate({
+                      id: 'site.6724ef3be3e4',
+                      message: '视图与更多筛选',
+                    })}
+                  </summary>
                   <div>
                     <label className={styles.moreSelect}>
-                      <span>配方角色</span>
+                      <span>
+                        {translate({
+                          id: 'site.ace412e9d655',
+                          message: '配方角色',
+                        })}
+                      </span>
                       <CatalogSelect
-                        label="配方角色"
+                        label={translate({
+                          id: 'site.ace412e9d655',
+                          message: '配方角色',
+                        })}
                         active={Boolean(q.role)}
                         value={q.role}
                         onValueChange={(value) => update({ role: value })}
                         options={[
-                          { value: '', label: '全部角色' },
-                          { value: 'optimized', label: '有调优记录' },
-                          { value: 'baseline', label: '基线' },
-                          { value: 'default', label: '默认配方' },
-                          { value: 'recipe', label: '其他部署配方' },
+                          {
+                            value: '',
+                            label: translate({
+                              id: 'site.2878fe586472',
+                              message: '全部角色',
+                            }),
+                          },
+                          {
+                            value: 'optimized',
+                            label: translate({
+                              id: 'site.0100b669ea31',
+                              message: '有调优记录',
+                            }),
+                          },
+                          {
+                            value: 'baseline',
+                            label: translate({
+                              id: 'site.a7ac587ab52d',
+                              message: '基线',
+                            }),
+                          },
+                          {
+                            value: 'default',
+                            label: translate({
+                              id: 'site.bb88a59baf57',
+                              message: '默认配方',
+                            }),
+                          },
+                          {
+                            value: 'recipe',
+                            label: translate({
+                              id: 'site.ed34d7702f8e',
+                              message: '其他部署配方',
+                            }),
+                          },
                         ]}
                       />
                     </label>
                     <label className={styles.moreSelect}>
-                      <span>部署拓扑</span>
+                      <span>
+                        {translate({
+                          id: 'site.527ecfca8fad',
+                          message: '部署拓扑',
+                        })}
+                      </span>
                       <CatalogSelect
-                        label="部署拓扑"
+                        label={translate({
+                          id: 'site.527ecfca8fad',
+                          message: '部署拓扑',
+                        })}
                         active={Boolean(q.topology)}
                         value={q.topology}
                         onValueChange={(value) => update({ topology: value })}
                         options={[
-                          { value: '', label: '全部拓扑' },
-                          { value: 'single-node', label: '单节点' },
-                          { value: 'lws', label: '多节点 LWS' },
-                          { value: 'pd', label: 'Prefill / Decode 分离' },
+                          {
+                            value: '',
+                            label: translate({
+                              id: 'site.40dcb54875ac',
+                              message: '全部拓扑',
+                            }),
+                          },
+                          {
+                            value: 'single-node',
+                            label: translate({
+                              id: 'site.f8c3f7bee9ee',
+                              message: '单节点',
+                            }),
+                          },
+                          {
+                            value: 'lws',
+                            label: translate({
+                              id: 'site.c5807fa6fafa',
+                              message: '多节点 LWS',
+                            }),
+                          },
+                          {
+                            value: 'pd',
+                            label: translate({
+                              id: 'site.a0dc79c85d61',
+                              message: 'Prefill / Decode 分离',
+                            }),
+                          },
                         ]}
                       />
                     </label>
@@ -367,32 +575,72 @@ export default function CatalogPage() {
                         checked={q.hidedep}
                         onChange={(e) => update({ hidedep: e.target.checked })}
                       />{' '}
-                      隐藏已弃用记录
+                      {translate({
+                        id: 'site.4b3bdd5f1c7e',
+                        message: '隐藏已弃用记录',
+                      })}
                     </label>
                   </div>
                 </details>
               </form>
               <noscript>
                 <p className={styles.notice}>
-                  当前为构建时基线目录，版本 {c.commit}
-                  。搜索、筛选、分页与实时详情需要
-                  JavaScript；可通过来源链接阅读原始资料。
+                  {translate({
+                    id: 'site.5d82123dfc9f',
+                    message: '当前为构建时基线目录，版本 ',
+                  })}
+                  {c.commit}
+                  {translate({
+                    id: 'site.016d83ff8349',
+                    message:
+                      '。搜索、筛选、分页与实时详情需要 JavaScript；可通过来源链接阅读原始资料。',
+                  })}
                 </p>
               </noscript>
               {!result.total ? (
                 <div className={styles.empty}>
-                  <h2>未找到匹配内容</h2>
-                  <p>保留了当前筛选条件，可修改关键词或重置筛选。</p>
+                  <h2>
+                    {translate({
+                      id: 'site.04069b9f5e16',
+                      message: '未找到匹配内容',
+                    })}
+                  </h2>
+                  <p>
+                    {translate({
+                      id: 'site.df3a5ea67d00',
+                      message: '保留了当前筛选条件，可修改关键词或重置筛选。',
+                    })}
+                  </p>
                 </div>
               ) : q.layout === 'table' && q.view === 'models' ? (
                 <div className={styles.tableScroll}>
                   <table className={styles.modelTable}>
-                    <caption>模型目录</caption>
+                    <caption>
+                      {translate({
+                        id: 'site.34b3cac2a496',
+                        message: '模型目录',
+                      })}
+                    </caption>
                     <thead>
                       <tr>
-                        <th>模型 / 介绍</th>
-                        <th>调优对照</th>
-                        <th>可用配方</th>
+                        <th>
+                          {translate({
+                            id: 'site.4290314679b4',
+                            message: '模型 / 介绍',
+                          })}
+                        </th>
+                        <th>
+                          {translate({
+                            id: 'site.996fc25f11e3',
+                            message: '调优对照',
+                          })}
+                        </th>
+                        <th>
+                          {translate({
+                            id: 'site.c5591decc296',
+                            message: '可用配方',
+                          })}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -408,7 +656,11 @@ export default function CatalogPage() {
                               {summary.model.displayName || summary.model.name}
                             </Link>
                             <p>
-                              {summary.model.description || '暂无模型说明。'}
+                              {summary.model.description ||
+                                translate({
+                                  id: 'site.4acb91dda8b7',
+                                  message: '暂无模型说明。',
+                                })}
                             </p>
                           </th>
                           <td>
@@ -433,14 +685,44 @@ export default function CatalogPage() {
               ) : q.layout === 'table' ? (
                 <div className={styles.tableScroll}>
                   <table>
-                    <caption>模型部署目录</caption>
+                    <caption>
+                      {translate({
+                        id: 'site.ae941df6611c',
+                        message: '模型部署目录',
+                      })}
+                    </caption>
                     <thead>
                       <tr>
-                        <th>模型</th>
-                        <th>配方 / 引擎</th>
-                        <th>硬件</th>
-                        <th>最佳负载提升</th>
-                        <th>配方详情</th>
+                        <th>
+                          {translate({
+                            id: 'site.c98e118e0a43',
+                            message: '模型',
+                          })}
+                        </th>
+                        <th>
+                          {translate({
+                            id: 'site.4580d14d5c54',
+                            message: '配方 / 引擎',
+                          })}
+                        </th>
+                        <th>
+                          {translate({
+                            id: 'site.a0e5308a1627',
+                            message: '硬件',
+                          })}
+                        </th>
+                        <th>
+                          {translate({
+                            id: 'site.d8e84eb82b24',
+                            message: '最佳负载提升',
+                          })}
+                        </th>
+                        <th>
+                          {translate({
+                            id: 'site.4fd2e35fdb77',
+                            message: '配方详情',
+                          })}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -460,17 +742,26 @@ export default function CatalogPage() {
                             <br />
                             {r.variant.engine}
                           </td>
-                          <td>{hardwareText(r.variant)}</td>
+                          <td>{translateCopy(hardwareText(r.variant))}</td>
                           <td>
                             {r.quotedGain != null && reportUrl(r) ? (
                               <Link
                                 to={reportHref(r, c.commit, returnTo)}
-                                aria-label={`查看 ${r.variant.id} 性能对照`}
+                                aria-label={translate(
+                                  {
+                                    id: 'site.50123e2643ec',
+                                    message: '查看 {v0} 性能对照',
+                                  },
+                                  { v0: r.variant.id },
+                                )}
                               >
                                 {`${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`}
                               </Link>
                             ) : r.quotedGain == null ? (
-                              '未提供'
+                              translate({
+                                id: 'site.756762e293f2',
+                                message: '未提供',
+                              })
                             ) : (
                               `${r.quotedGain >= 0 ? '+' : ''}${r.quotedGain.toFixed(1)}%`
                             )}
@@ -480,7 +771,10 @@ export default function CatalogPage() {
                             <Link
                               to={detailHref(r, c.commit, undefined, returnTo)}
                             >
-                              查看配方详情
+                              {translate({
+                                id: 'site.ad28b6a65be6',
+                                message: '查看配方详情',
+                              })}
                             </Link>
                           </td>
                         </tr>
@@ -491,7 +785,17 @@ export default function CatalogPage() {
               ) : (
                 <section
                   className={styles.grid}
-                  aria-label={q.view === 'recipes' ? '部署配方' : '模型列表'}
+                  aria-label={
+                    q.view === 'recipes'
+                      ? translate({
+                          id: 'site.8be3a0d72f4d',
+                          message: '部署配方',
+                        })
+                      : translate({
+                          id: 'site.ea4bf042d1bc',
+                          message: '模型列表',
+                        })
+                  }
                 >
                   {q.view === 'models'
                     ? modelItems.map((summary) => (
@@ -514,21 +818,29 @@ export default function CatalogPage() {
                 </section>
               )}
               {browser && result.total > 0 && (
-                <nav className={styles.pagination} aria-label="目录分页">
+                <nav
+                  className={styles.pagination}
+                  aria-label={translate({
+                    id: 'site.aa64e4bdf879',
+                    message: '目录分页',
+                  })}
+                >
                   <button
                     disabled={result.page <= 1}
                     onClick={() => update({ page: result.page - 1 }, true)}
                   >
-                    上一页
+                    {translate({ id: 'site.c9b9ae7a6144', message: '上一页' })}
                   </button>
                   <span>
-                    第 {result.page} / {result.pages} 页
+                    {translate({ id: 'site.9552fe3bd366', message: '第 ' })}
+                    {result.page} / {result.pages}{' '}
+                    {translate({ id: 'site.85ca81cf6abd', message: ' 页' })}
                   </span>
                   <button
                     disabled={result.page >= result.pages}
                     onClick={() => update({ page: result.page + 1 }, true)}
                   >
-                    下一页
+                    {translate({ id: 'site.8a8542f69648', message: '下一页' })}
                   </button>
                 </nav>
               )}
@@ -540,7 +852,8 @@ export default function CatalogPage() {
               target="_blank"
               rel="noreferrer"
             >
-              目录版本 {c.commit.slice(0, 7)} ↗
+              {translate({ id: 'site.1ce41e26b4c9', message: '目录版本 ' })}
+              {c.commit.slice(0, 7)} ↗
             </a>
           </footer>
         </div>

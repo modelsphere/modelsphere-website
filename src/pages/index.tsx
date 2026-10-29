@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useRef } from 'react';
 import Layout from '@theme/Layout';
@@ -145,43 +146,73 @@ const capabilities: {
 }[] = [
   {
     icon: 'settings',
-    title: '开箱即用，面向生产',
+    title: translate({
+      id: 'site.bec8fb7e48fd',
+      message: '开箱即用，面向生产',
+    }),
     tag: 'Day One Ready',
     tone: 'blue',
-    description:
-      '几分钟内即可搭建面向生产环境的AI推理平台，开箱即具备模型服务、调度、弹性伸缩、可观测性和运维等核心能力。提供直观的统一WebUI面板，无需复杂的底层调优即可轻松接管集群。',
+    description: translate({
+      id: 'site.d510f1d10ada',
+      message:
+        '几分钟内即可搭建面向生产环境的AI推理平台，开箱即具备模型服务、调度、弹性伸缩、可观测性和运维等核心能力。提供直观的统一WebUI面板，无需复杂的底层调优即可轻松接管集群。',
+    }),
     href: sources.deployment,
-    linkLabel: '了解部署方式',
+    linkLabel: translate({ id: 'site.36dcd53c4e0a', message: '了解部署方式' }),
   },
   {
     icon: 'bolt',
-    title: '统一支持多种异构加速器',
+    title: translate({
+      id: 'site.fec20a70a47d',
+      message: '统一支持多种异构加速器',
+    }),
     tag: 'Any Accelerator',
     tone: 'green',
-    description:
-      '通过统一的平台无缝运行在多种异构AI硬件之上。原生兼容通用GPU，并深度基于EngineX适配华为昇腾、天数智芯、摩尔线程、海光等加速芯片，实现混合节点的统一纳管。',
+    description: translate({
+      id: 'site.49fbbc8d5654',
+      message:
+        '通过统一的平台无缝运行在多种异构AI硬件之上。原生兼容通用GPU，并深度基于EngineX适配华为昇腾、天数智芯、摩尔线程、海光等加速芯片，实现混合节点的统一纳管。',
+    }),
     href: sources.hardware,
-    linkLabel: '查看硬件与引擎说明',
+    linkLabel: translate({
+      id: 'site.a440b9d6fe4d',
+      message: '查看硬件与引擎说明',
+    }),
   },
   {
     icon: 'rocket_launch',
-    title: '第一时间性能调优和部署',
+    title: translate({
+      id: 'site.7da06f878c58',
+      message: '第一时间性能调优和部署',
+    }),
     tag: 'Zero-Day Ready',
     tone: 'green',
-    description:
-      '紧跟快速演进的模型生态，通过我们的推理性能优化社区，第一时间完成新模型适配和调优，让最新大模型能够快速导入、配置并部署到生产环境。',
+    description: translate({
+      id: 'site.eb1398dad3b6',
+      message:
+        '紧跟快速演进的模型生态，通过我们的推理性能优化社区，第一时间完成新模型适配和调优，让最新大模型能够快速导入、配置并部署到生产环境。',
+    }),
     href: sources.catalog,
-    linkLabel: '浏览模型与部署配方',
+    linkLabel: translate({
+      id: 'site.5139a1fd0121',
+      message: '浏览模型与部署配方',
+    }),
   },
   {
     icon: 'science',
-    title: '性能优化持续演进',
+    title: translate({ id: 'site.4229cb7a627b', message: '性能优化持续演进' }),
     tag: 'AutoTune Inside',
     tone: 'amber',
-    description:
-      '持续集成最新的推理优化能力，通过内置AutoTune根据模型、硬件和真实业务负载自动调优，在延迟、吞吐和资源效率之间持续获得更优表现。',
+    description: translate({
+      id: 'site.b0ecfac6f55e',
+      message:
+        '持续集成最新的推理优化能力，通过内置AutoTune根据模型、硬件和真实业务负载自动调优，在延迟、吞吐和资源效率之间持续获得更优表现。',
+    }),
     href: sources.autotune,
-    linkLabel: '了解 AutoTune 工作流',
+    linkLabel: translate({
+      id: 'site.a0d8f6e52488',
+      message: '了解 AutoTune 工作流',
+    }),
   },
 ];
 function CapabilityDetail({ index }: { index: number }) {
@@ -189,19 +220,32 @@ function CapabilityDetail({ index }: { index: number }) {
     return (
       <div
         className={styles.deploymentDetail}
-        aria-description="按设计稿展示的配置示例，非运行时监控数据。"
+        aria-description={translate({
+          id: 'site.9455d3f7bb51',
+          message: '按设计稿展示的配置示例，非运行时监控数据。',
+        })}
       >
         <div>
           <span>
             <CapabilityIcon name="published_with_changes" />
-            <span>自动弹性伸缩 (Auto-Scaling)</span>
+            <span>
+              {translate({
+                id: 'site.aa964d2c6910',
+                message: '自动弹性伸缩 (Auto-Scaling)',
+              })}
+            </span>
           </span>
           <strong>ENABLED: 4-32 Pods</strong>
         </div>
         <div>
           <span>
             <CapabilityIcon name="adjust" />
-            <span>基于服务质量的动态限流算法</span>
+            <span>
+              {translate({
+                id: 'site.5b48cc99943f',
+                message: '基于服务质量的动态限流算法',
+              })}
+            </span>
           </span>
           <strong>TTFT &lt; 10s, OPTS &gt; 20</strong>
         </div>
@@ -210,7 +254,12 @@ function CapabilityDetail({ index }: { index: number }) {
   if (index === 1)
     return (
       <div className={styles.hardwareDetail}>
-        {['华为昇腾', '天数智芯', '摩尔线程', '海光 DCU'].map((name) => (
+        {[
+          translate({ id: 'site.a5cd45a90a3c', message: '华为昇腾' }),
+          translate({ id: 'site.509f226edbb9', message: '天数智芯' }),
+          translate({ id: 'site.412b57e71203', message: '摩尔线程' }),
+          translate({ id: 'site.d823a5292eba', message: '海光 DCU' }),
+        ].map((name) => (
           <span key={name}>
             <i aria-hidden="true" />
             {name}
@@ -223,11 +272,22 @@ function CapabilityDetail({ index }: { index: number }) {
     return (
       <div
         className={styles.catalogDetail}
-        aria-description="按设计稿展示的模型与认证示例，实际适配范围请查看模型调优库。"
+        aria-description={translate({
+          id: 'site.bddd611f1f17',
+          message:
+            '按设计稿展示的模型与认证示例，实际适配范围请查看模型调优库。',
+        })}
       >
         <div>
-          <span>即日认证模型库</span>
-          <strong>100% 官方适配通过</strong>
+          <span>
+            {translate({ id: 'site.5a4f0d74e965', message: '即日认证模型库' })}
+          </span>
+          <strong>
+            {translate({
+              id: 'site.a05020f5efc2',
+              message: '100% 官方适配通过',
+            })}
+          </strong>
         </div>
         <div className={styles.recipeChips}>
           {[
@@ -246,15 +306,27 @@ function CapabilityDetail({ index }: { index: number }) {
   return (
     <div
       className={styles.tuningDetail}
-      aria-description="设计稿吞吐对比示例，不代表实测性能或收益保证。"
+      aria-description={translate({
+        id: 'site.c20f7eae5068',
+        message: '设计稿吞吐对比示例，不代表实测性能或收益保证。',
+      })}
     >
       <div className={styles.throughputHeading}>
-        <span>相对吞吐（优化后=100%）</span>
-        <strong>较基准提升约285%</strong>
+        <span>
+          {translate({
+            id: 'site.dd1ad085f57b',
+            message: '相对吞吐（优化后=100%）',
+          })}
+        </span>
+        <strong>
+          {translate({ id: 'site.eb427f189cbf', message: '较基准提升约285%' })}
+        </strong>
       </div>
       <div className={styles.throughputRow}>
         <div>
-          <span>常规基准产能</span>
+          <span>
+            {translate({ id: 'site.56b36f7824e3', message: '常规基准产能' })}
+          </span>
           <strong>26%</strong>
         </div>
         <div className={styles.throughputTrack}>
@@ -263,8 +335,12 @@ function CapabilityDetail({ index }: { index: number }) {
       </div>
       <div className={styles.throughputRow}>
         <div>
-          <span>优化后产能</span>
-          <strong>100% 满血</strong>
+          <span>
+            {translate({ id: 'site.86e2b520f820', message: '优化后产能' })}
+          </span>
+          <strong>
+            {translate({ id: 'site.5f18c4a2fda6', message: '100% 满血' })}
+          </strong>
         </div>
         <div className={styles.throughputTrack}>
           <span className={styles.optimizedBar} />
@@ -277,15 +353,25 @@ function CapabilityDescription({ index }: { index: number }) {
   if (index !== 2) return <>{capabilities[index].description}</>;
   return (
     <>
-      紧跟快速演进的模型生态，通过我们的
+      {translate({
+        id: 'site.23fb2722b771',
+        message: '紧跟快速演进的模型生态，通过我们的',
+      })}
       <a
         className={styles.communityLink}
         href="#benchmarks"
-        aria-label="推理性能优化社区"
+        aria-label={translate({
+          id: 'site.7299f3782e6c',
+          message: '推理性能优化社区',
+        })}
       >
-        推理性能优化社区
+        {translate({ id: 'site.7299f3782e6c', message: '推理性能优化社区' })}
       </a>
-      ，第一时间完成新模型适配和调优，让最新大模型能够快速导入、配置并部署到生产环境。
+      {translate({
+        id: 'site.39ed49ab3194',
+        message:
+          '，第一时间完成新模型适配和调优，让最新大模型能够快速导入、配置并部署到生产环境。',
+      })}
     </>
   );
 }
@@ -295,11 +381,23 @@ export default function Home() {
   useHomeMotion(root);
   return (
     <Layout
-      title="大模型推理基础设施"
-      description="模域 ModelSphere：基于 Kubernetes 的开源大模型推理基础设施，连接模型部署、异构算力、服务质量控制与负载驱动的性能优化。"
+      title={translate({
+        id: 'site.625f884dd1ff',
+        message: '大模型推理基础设施',
+      })}
+      description={translate({
+        id: 'site.6bf57cd5e260',
+        message:
+          '模域 ModelSphere：基于 Kubernetes 的开源大模型推理基础设施，连接模型部署、异构算力、服务质量控制与负载驱动的性能优化。',
+      })}
     >
       <Head>
-        <title>模域 ModelSphere | 大模型推理基础设施</title>
+        <title>
+          {translate({
+            id: 'site.ff92fe5c16c9',
+            message: '模域 ModelSphere | 大模型推理基础设施',
+          })}
+        </title>
       </Head>
       <main ref={root} id="main-content" data-home-page className={styles.page}>
         <section id="hero" className={styles.hero} aria-labelledby="home-title">
@@ -307,39 +405,100 @@ export default function Home() {
             <div
               className={styles.heroTags}
               role="list"
-              aria-label="首页能力速览"
+              aria-label={translate({
+                id: 'site.5c3a1b8b8536',
+                message: '首页能力速览',
+              })}
             >
               <span role="listitem" data-home-tag="architecture">
-                <span>先进推理服务架构</span>
+                <span>
+                  {translate({
+                    id: 'site.411d684baaee',
+                    message: '先进推理服务架构',
+                  })}
+                </span>
               </span>
               <span role="listitem" data-home-tag="day-one">
-                <span>新模型首日高性能部署</span>
+                <span>
+                  {translate({
+                    id: 'site.edd7e7d90181',
+                    message: '新模型首日高性能部署',
+                  })}
+                </span>
               </span>
               <span role="listitem" data-home-tag="hardware">
-                <span>广泛异构算力统一纳管</span>
+                <span>
+                  {translate({
+                    id: 'site.7d8e6b772d8d',
+                    message: '广泛异构算力统一纳管',
+                  })}
+                </span>
               </span>
               <span role="listitem" data-home-tag="evolution">
-                <span>性能持续自演进</span>
+                <span>
+                  {translate({
+                    id: 'site.e420b9734f39',
+                    message: '性能持续自演进',
+                  })}
+                </span>
               </span>
             </div>
             <div className={styles.heroCopy}>
               <h1 id="home-title" data-home-hero="title">
-                模域 ModelSphere<span>生产级算力部署与推理优化开源平台</span>
+                {translate({
+                  id: 'site.df36818e82c3',
+                  message: '模域 ModelSphere',
+                })}
+                <span>
+                  {translate({
+                    id: 'site.39ffbc1824a0',
+                    message: '生产级算力部署与推理优化开源平台',
+                  })}
+                </span>
               </h1>
               <p className={styles.heroLead} data-home-hero="lead">
-                让大模型推理从“能跑”到“生产好用”，让每张 GPU 化身高效 Token
-                产线。
+                {translate({
+                  id: 'site.f8ded20b4b87',
+                  message:
+                    '让大模型推理从“能跑”到“生产好用”，让每张 GPU 化身高效 Token 产线。',
+                })}
               </p>
               <p
                 className={styles.heroDescription}
                 data-home-hero="description"
               >
-                基于 Kubernetes 构建，将模型部署、缓存感知路由、
-                <a href="#qos-scaling">按 SLO 弹性伸缩</a>
-                、全维可观测性、
-                <a href="#fault-tolerance">挂起故障秒级自愈</a>与{' '}
-                <a href="#autotune-evolution">AutoTune 闭环</a>
-                组织成一套工业级推理调度系统，帮助开发者在复杂异构算力上稳定承载大规模生产流量。
+                {translate({
+                  id: 'site.d561bdc88e86',
+                  message: '基于 Kubernetes 构建，将模型部署、缓存感知路由、',
+                })}
+                <a href="#qos-scaling">
+                  {translate({
+                    id: 'site.cf231cb85b11',
+                    message: '按 SLO 弹性伸缩',
+                  })}
+                </a>
+                {translate({
+                  id: 'site.41e7fd9de764',
+                  message: '、全维可观测性、',
+                })}
+                <a href="#fault-tolerance">
+                  {translate({
+                    id: 'site.93ef299c39a9',
+                    message: '挂起故障秒级自愈',
+                  })}
+                </a>
+                {translate({ id: 'site.de1d5dd076fb', message: '与' })}{' '}
+                <a href="#autotune-evolution">
+                  {translate({
+                    id: 'site.e2dd36bf7a68',
+                    message: 'AutoTune 闭环',
+                  })}
+                </a>
+                {translate({
+                  id: 'site.3074a6a3cf99',
+                  message:
+                    '组织成一套工业级推理调度系统，帮助开发者在复杂异构算力上稳定承载大规模生产流量。',
+                })}
               </p>
             </div>
             <div className={styles.heroActions}>
@@ -347,7 +506,10 @@ export default function Home() {
                 className={`${styles.action} ${styles.primaryAction}`}
                 to="/docs"
               >
-                快速开始 Quickstart
+                {translate({
+                  id: 'site.f9fa4959f263',
+                  message: '快速开始 Quickstart',
+                })}
                 <Icon name="arrow" />
               </Link>
               <a
@@ -357,11 +519,23 @@ export default function Home() {
                 rel="noopener noreferrer"
               >
                 <Icon name="github" />
-                GitHub 源码仓库<span className="sr-only">（新窗口打开）</span>
+                {translate({
+                  id: 'site.810333d59b0f',
+                  message: 'GitHub 源码仓库',
+                })}
+                <span className="sr-only">
+                  {translate({
+                    id: 'site.34e6a1062052',
+                    message: '（新窗口打开）',
+                  })}
+                </span>
               </a>
               <Link className={styles.action} to={sources.catalog}>
                 <Icon name="tune" />
-                模型调优库 (Model Catalog)
+                {translate({
+                  id: 'site.97a2d37af57d',
+                  message: '模型调优库 (Model Catalog)',
+                })}
               </Link>
             </div>
             <ArchitectureDiagram />
@@ -370,13 +544,23 @@ export default function Home() {
         <section
           id="comparison"
           className={styles.section}
-          aria-label="四大核心技术"
+          aria-label={translate({
+            id: 'site.fc64e7e591f9',
+            message: '四大核心技术',
+          })}
         >
           <div className={styles.container}>
             <SectionHeading
               eyebrow="Architectural Pillars"
-              title="四大核心技术：直击大模型落地深水区"
-              description="为生产级严肃工程而生。模域将前沿学术成果与大规模线上运维沉淀收敛为标准化的平台体系。"
+              title={translate({
+                id: 'site.ac0a3c902f5f',
+                message: '四大核心技术：直击大模型落地深水区',
+              })}
+              description={translate({
+                id: 'site.82022bdb3c73',
+                message:
+                  '为生产级严肃工程而生。模域将前沿学术成果与大规模线上运维沉淀收敛为标准化的平台体系。',
+              })}
             />
             <div
               className={styles.capabilityGrid}
@@ -409,7 +593,13 @@ export default function Home() {
                           aria-label={
                             card.href.startsWith('/')
                               ? card.linkLabel
-                              : `${card.linkLabel}（新窗口打开）`
+                              : translate(
+                                  {
+                                    id: 'site.a1f30fa8216e',
+                                    message: '{v0}（新窗口打开）',
+                                  },
+                                  { v0: card.linkLabel },
+                                )
                           }
                         >
                           {card.title}

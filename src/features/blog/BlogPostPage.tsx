@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect, useRef, useState } from 'react';
 import Layout from '@theme/Layout';
@@ -60,8 +61,14 @@ export default function BlogPostPage({ content: Content }: Props) {
           region.setAttribute(
             'aria-label',
             region.tagName === 'PRE'
-              ? '代码，可横向滚动查看'
-              : '表格，可横向滚动查看',
+              ? translate({
+                  id: 'site.5a67b86b6df3',
+                  message: '代码，可横向滚动查看',
+                })
+              : translate({
+                  id: 'site.9469db3639c8',
+                  message: '表格，可横向滚动查看',
+                }),
           );
         } else {
           region.removeAttribute('tabindex');
@@ -88,7 +95,13 @@ export default function BlogPostPage({ content: Content }: Props) {
       resize.disconnect();
     };
   }, [location.pathname]);
-  if (!post) throw new Error('博客详情与摘要索引不一致');
+  if (!post)
+    throw new Error(
+      translate({
+        id: 'site.59f3a11ce896',
+        message: '博客详情与摘要索引不一致',
+      }),
+    );
   const sources = index.sources.filter((source) =>
     post.evidenceIds.includes(source.id),
   );
@@ -115,7 +128,7 @@ export default function BlogPostPage({ content: Content }: Props) {
   }
   const resources = (
     <>
-      <h2>关联资源</h2>
+      <h2>{translate({ id: 'site.c28c05bd87f5', message: '关联资源' })}</h2>
       <ul>
         {post.resources.map((resource) => (
           <li key={resource.href}>
@@ -134,17 +147,33 @@ export default function BlogPostPage({ content: Content }: Props) {
       </Head>
       <main id="main-content" tabIndex={-1} className={styles.blog}>
         <div className={styles.breadcrumbBar}>
-          <nav className={styles.container} aria-label="面包屑">
-            <a href={siteHref('/')}>首页</a>
+          <nav
+            className={styles.container}
+            aria-label={translate({
+              id: 'site.6770d01e7d15',
+              message: '面包屑',
+            })}
+          >
+            <a href={siteHref('/')}>
+              {translate({ id: 'site.203c08e0d44a', message: '首页' })}
+            </a>
             <span aria-hidden="true">/</span>
-            <a href={siteHref('/blog')}>博客洞见</a>
+            <a href={siteHref('/blog')}>
+              {translate({ id: 'site.7131e5de923b', message: '博客洞见' })}
+            </a>
             <span aria-hidden="true">/</span>
-            <span aria-current="page">文章正文</span>
+            <span aria-current="page">
+              {translate({ id: 'site.ae513850b3e4', message: '文章正文' })}
+            </span>
           </nav>
         </div>
         {index.preview && (
           <p className={`${styles.container} ${styles.previewNote}`}>
-            示例预览 · 本文用于验证博客阅读体验，不代表正式发布或实测结论。
+            {translate({
+              id: 'site.c64bbb9bf219',
+              message:
+                '示例预览 · 本文用于验证博客阅读体验，不代表正式发布或实测结论。',
+            })}
           </p>
         )}
         <div
@@ -155,15 +184,22 @@ export default function BlogPostPage({ content: Content }: Props) {
         >
           {hasToc && (
             <aside className={styles.desktopToc}>
-              <nav aria-label="文章章节目录">
-                <p>本页目录</p>
+              <nav
+                aria-label={translate({
+                  id: 'site.ee5ea296f6b0',
+                  message: '文章章节目录',
+                })}
+              >
+                <p>
+                  {translate({ id: 'site.a610e0c62b3e', message: '本页目录' })}
+                </p>
                 {toc}
               </nav>
             </aside>
           )}
           <div className={styles.readingColumn}>
             <a href={siteHref('/blog')} className={styles.back}>
-              ← 返回博客
+              {translate({ id: 'site.59b4733fddc2', message: '← 返回博客' })}
             </a>
             <article>
               <header className={styles.articleHeader}>
@@ -193,7 +229,10 @@ export default function BlogPostPage({ content: Content }: Props) {
               {hasToc && (
                 <ReadingDisclosure
                   className={styles.mobileToc}
-                  title="本页目录"
+                  title={translate({
+                    id: 'site.a610e0c62b3e',
+                    message: '本页目录',
+                  })}
                   desktopSelector={`.${styles.desktopToc}`}
                 >
                   {toc}
@@ -206,8 +245,19 @@ export default function BlogPostPage({ content: Content }: Props) {
                 </MDXContent>
               </div>
               {sources.length > 0 && (
-                <section className={styles.sources} aria-label="文章来源">
-                  <h2>来源与延伸阅读</h2>
+                <section
+                  className={styles.sources}
+                  aria-label={translate({
+                    id: 'site.d1c65ad15293',
+                    message: '文章来源',
+                  })}
+                >
+                  <h2>
+                    {translate({
+                      id: 'site.04b989d333f9',
+                      message: '来源与延伸阅读',
+                    })}
+                  </h2>
                   <ul>
                     {sources.map((source) => (
                       <li key={source.id}>
@@ -226,16 +276,31 @@ export default function BlogPostPage({ content: Content }: Props) {
                 onClick={copyLink}
               >
                 {copy === 'success'
-                  ? '已复制链接'
+                  ? translate({
+                      id: 'site.31d5f72a2e65',
+                      message: '已复制链接',
+                    })
                   : copy === 'copying'
-                    ? '正在复制'
-                    : '复制文章链接'}
+                    ? translate({
+                        id: 'site.f681c1f9edec',
+                        message: '正在复制',
+                      })
+                    : translate({
+                        id: 'site.e657f77d7ed0',
+                        message: '复制文章链接',
+                      })}
               </button>
               <span role="status">
                 {copy === 'error'
-                  ? '复制失败，请手动复制地址栏链接'
+                  ? translate({
+                      id: 'site.eb4e4dcd392f',
+                      message: '复制失败，请手动复制地址栏链接',
+                    })
                   : copy === 'success'
-                    ? '文章链接已复制'
+                    ? translate({
+                        id: 'site.0fb4f03d33dc',
+                        message: '文章链接已复制',
+                      })
                     : ''}
               </span>
             </div>
@@ -243,8 +308,16 @@ export default function BlogPostPage({ content: Content }: Props) {
               <aside className={styles.mobileResources}>{resources}</aside>
             )}
             {related.length > 0 && (
-              <section className={styles.related} aria-label="相关文章">
-                <h2>继续阅读</h2>
+              <section
+                className={styles.related}
+                aria-label={translate({
+                  id: 'site.9d06a8c8716b',
+                  message: '相关文章',
+                })}
+              >
+                <h2>
+                  {translate({ id: 'site.4ec2a77b1ae3', message: '继续阅读' })}
+                </h2>
                 <div>
                   {related.map((other) => (
                     <article key={other.id}>

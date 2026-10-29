@@ -1,0 +1,2451 @@
+{
+  "site.113cc63b2d9e": {
+    "message": "Catalog sources and reliability",
+    "description": "目录数据来源与可靠性"
+  },
+  "site.953b2e62e322": {
+    "message": "Understand which details come directly from sources, which rely on interpretation, and which are missing.",
+    "description": "明确区分来源记录、规则解释与源数据缺失信息。"
+  },
+  "site.43434840d163": {
+    "message": "← Model catalog",
+    "description": "← 模型目录"
+  },
+  "site.82054d3b1ba3": {
+    "message": "“Sourced” means a record can be traced to a public source. It does not mean this site has independently tested it or certified it for production. Current source:",
+    "description": "“有来源”表示能追溯到公开记录，不表示本站独立复测或提供生产认证。当前数据源："
+  },
+  "site.e1c66d4a3d91": {
+    "message": "Details explicitly recorded in verifiable sources",
+    "description": "明确记录，有可核查来源"
+  },
+  "site.e7de6c090c64": {
+    "message": "Model identifiers, names, families, technical tags, descriptions, and Hugging Face repository references.",
+    "description": "模型标识、名称、家族、技术标签、简介与 Hugging Face 仓库引用。"
+  },
+  "site.d23102d20914": {
+    "message": "Recipe identifiers, versions, engines, images, Chart requirements, hardware, GPU counts, and deployment topology.",
+    "description": "配方标识、版本、引擎名称、镜像引用、Chart 要求、硬件型号、GPU 数量与部署拓扑。"
+  },
+  "site.08f10f6e0bd9": {
+    "message": "Complete YAML files committed to Git, their SHA-256 digests, Git commits, recipe release dates, and version history. Each configuration is checked against its SHA-256 digest after loading.",
+    "description": "已提交的完整 YAML、其 SHA-256、Git 提交、配方发布日期与版本历史。配置加载后校验 SHA-256。"
+  },
+  "site.00399ee04cc5": {
+    "message": "The baseline and optimized versions explicitly linked to each tuning record, the recorded gain for each workload, and links to the original reports.",
+    "description": "调优记录明确绑定的 baseline / optimized 版本、各负载的记录增幅及原报告链接。"
+  },
+  "site.7c00d2a02d83": {
+    "message": "Model, recipe, and comparison counts and model coverage come from the current catalog. The catalog includes simulated models; a model may have multiple comparisons.",
+    "description": "模型数、配方数、调优对照组数和覆盖模型比例，均由当前目录计数。目录包含模拟模型；同一模型可有多组对照。"
+  },
+  "site.aa876f41acd8": {
+    "message": "Interpretation rules, defaults, and limitations",
+    "description": "经过规则解释，存在缺省或口径限制"
+  },
+  "site.d7fc8990d1a7": {
+    "message": "Throughput gain is the highest recorded percentage increase across a recipe’s workloads. Cards show the workload and the version used for measurement; sorting uses the same gain.",
+    "description": "“吞吐量提升”取该配方已记录负载中的最大百分比，卡片同时显示负载和测量版本；排序使用同一数值。"
+  },
+  "site.84db960e7e9a": {
+    "message": "Statistics use the latest measured version of each optimized recipe. Each comparison contributes its highest workload gain, or the recorded uplift if no workload breakdown is available. The median, range, and best gain are calculated from these values, excluding missing data. The best gain links to the corresponding recipe comparison.",
+    "description": "统计卡按每个优化配方的最新测量版本逐组统计；每组取最佳负载增幅，没有分负载时取记录中的 uplift。中位数、范围与最佳提升均由这些有效值计算，缺失值不参与；最佳提升链接到对应配方的性能对照。"
+  },
+  "site.5b3136f9d600": {
+    "message": "If defaultVariant is missing, the first recipe is used as the default, following the source’s convention. “Default” does not mean “official baseline”.",
+    "description": "缺少 defaultVariant 时，沿用来源约定，以第一套配方作为默认项；“默认”不表示“官方基线”。"
+  },
+  "site.1ec53c94e753": {
+    "message": "If topology is missing, the recipe is treated as single-node, following the source specification. Hardware names are abbreviated for display; full names remain in configurations and filters.",
+    "description": "缺少拓扑时按源协议解释为单节点；硬件简称为展示转换，完整名称保留在配置与筛选中。"
+  },
+  "site.65db57ab0bba": {
+    "message": "Some reports normalize throughput to a fixed GPU count, even when the baseline and candidate use different numbers of GPUs. Interpret the figures alongside the original report and the versions used for measurement.",
+    "description": "某些报告采用归一化到固定 GPU 数量的吞吐指标，baseline 与候选可能使用不同 GPU 数量。数值与测量版本按原报告阅读。"
+  },
+  "site.fbb2d8edf4c8": {
+    "message": "Recipe release dates come from Git commits, not benchmark runs. Neither the time of this retrieval nor the build baseline’s collection time indicates when the upstream data was validated.",
+    "description": "配方发布日期来自 Git 提交，不是压测日期；本次读取或基线采集时间也不是上游验证时间。"
+  },
+  "site.64cc3f646a04": {
+    "message": "Missing fields display “Not provided”; missing percentages are not replaced with zero. Only parameters explicitly included in the recipe are shown. None are inferred from its name.",
+    "description": "字段缺失时显示“未提供”，百分比不以 0 补齐；参数仅展示配方明确包含的值，不根据配方名称补造。"
+  },
+  "site.e08e2dbf52df": {
+    "message": "Unavailable in source data",
+    "description": "当前源数据没有，页面不补造"
+  },
+  "site.c5ec6c47649d": {
+    "message": "Catalog-wide production validation, hardware certification, CERTIFIED status, 100% official compatibility, and SLAs.",
+    "description": "全目录统一的生产验证、硬件适配认证、CERTIFIED、100% 官方适配和 SLA。"
+  },
+  "site.0a2e25346339": {
+    "message": "A single validated version across the catalog, real-time sync status, live service health, available cluster GPU inventory, and user sign-in.",
+    "description": "统一验证版本、实时同步状态、实时服务健康、集群可用 GPU 库存，以及用户登录能力。"
+  },
+  "site.938336e31cb7": {
+    "message": "Catalog-wide throughput medians or maxima under a unified methodology, and complete independent reproduction evidence.",
+    "description": "统一口径的全目录吞吐提升中位数 / 最高值结论和完整、独立复现证明。"
+  },
+  "site.7775290316ca": {
+    "message": "Design examples including Qwen H800 +29.3%, Kimi H200 CuTe +49.2%, DeepSeek Pro Ascend certification, and Qwen3.6-2.4T-A96B are not published as real records.",
+    "description": "原设计中的 Qwen H800 +29.3%、Kimi H200 CuTe +49.2%、DeepSeek Pro Ascend 认证配方、Qwen3.6-2.4T-A96B，均不作为真实记录发布。"
+  },
+  "site.dcc5452c3a87": {
+    "message": "Loading failures and version boundaries",
+    "description": "读取失败与版本边界"
+  },
+  "site.0534d9041172": {
+    "message": "Data currently comes from public GitHub Pages resources and raw files on GitHub. If loading fails, the versioned build baseline remains available with a retry option. The public source cannot retrieve arbitrary catalog snapshots. If a requested version cannot be restored, it is shown as unavailable rather than replaced with another version.",
+    "description": "当前先使用公开 GitHub Pages / raw GitHub。读取失败保留带版本的构建基线，并提供重试。该公开源没有任意目录快照接口；无法恢复指定版本时显示不可用，不切换成其他版本。"
+  },
+  "site.7b4971fa5af4": {
+    "message": "Build baseline retrieved: ",
+    "description": "构建基线采集："
+  },
+  "site.d6d4beaac0a5": {
+    "message": "; data commit: ",
+    "description": "；数据提交："
+  },
+  "site.01cca2c2836f": {
+    "message": "Community",
+    "description": "社区生态"
+  },
+  "site.cbb8c5a8bdb7": {
+    "message": "Join the ModelSphere open source community and help advance AI infrastructure.",
+    "description": "参与ModelSphere开源社区，共同推动AI基础设施发展。"
+  },
+  "site.bec8fb7e48fd": {
+    "message": "Ready to use, built for production",
+    "description": "开箱即用，面向生产"
+  },
+  "site.d510f1d10ada": {
+    "message": "Set up an AI inference platform for production in minutes, with model serving, scheduling, autoscaling, observability, and operations built in. Manage your cluster through a unified Web UI without complex low-level tuning.",
+    "description": "几分钟内即可搭建面向生产环境的AI推理平台，开箱即具备模型服务、调度、弹性伸缩、可观测性和运维等核心能力。提供直观的统一WebUI面板，无需复杂的底层调优即可轻松接管集群。"
+  },
+  "site.36dcd53c4e0a": {
+    "message": "Explore deployment",
+    "description": "了解部署方式"
+  },
+  "site.fec20a70a47d": {
+    "message": "Unified support for heterogeneous accelerators",
+    "description": "统一支持多种异构加速器"
+  },
+  "site.49fbbc8d5654": {
+    "message": "ModelSphere runs across heterogeneous AI hardware through one platform. It natively supports general-purpose GPUs and uses EngineX to integrate Huawei Ascend, Iluvatar CoreX, Moore Threads, and Hygon accelerators, bringing mixed-hardware nodes under unified management.",
+    "description": "通过统一的平台无缝运行在多种异构AI硬件之上。原生兼容通用GPU，并深度基于EngineX适配华为昇腾、天数智芯、摩尔线程、海光等加速芯片，实现混合节点的统一纳管。"
+  },
+  "site.a440b9d6fe4d": {
+    "message": "Explore hardware and engines",
+    "description": "查看硬件与引擎说明"
+  },
+  "site.7da06f878c58": {
+    "message": "Tune and deploy new models immediately",
+    "description": "第一时间性能调优和部署"
+  },
+  "site.eb1398dad3b6": {
+    "message": "Keep pace with the model ecosystem. Our inference optimization community adapts and tunes new models so you can import, configure, and deploy them to production quickly.",
+    "description": "紧跟快速演进的模型生态，通过我们的推理性能优化社区，第一时间完成新模型适配和调优，让最新大模型能够快速导入、配置并部署到生产环境。"
+  },
+  "site.5139a1fd0121": {
+    "message": "Browse models and recipes",
+    "description": "浏览模型与部署配方"
+  },
+  "site.4229cb7a627b": {
+    "message": "Continuously improving performance",
+    "description": "性能优化持续演进"
+  },
+  "site.b0ecfac6f55e": {
+    "message": "ModelSphere continuously integrates new inference optimizations. Built-in AutoTune adapts configurations to your models, hardware, and production workloads to improve latency, throughput, and resource efficiency.",
+    "description": "持续集成最新的推理优化能力，通过内置AutoTune根据模型、硬件和真实业务负载自动调优，在延迟、吞吐和资源效率之间持续获得更优表现。"
+  },
+  "site.a0d8f6e52488": {
+    "message": "Explore AutoTune",
+    "description": "了解 AutoTune 工作流"
+  },
+  "site.9455d3f7bb51": {
+    "message": "Configuration example from the design, not live monitoring data.",
+    "description": "按设计稿展示的配置示例，非运行时监控数据。"
+  },
+  "site.aa964d2c6910": {
+    "message": "Autoscaling",
+    "description": "自动弹性伸缩 (Auto-Scaling)"
+  },
+  "site.5b48cc99943f": {
+    "message": "Dynamic rate limiting based on service quality",
+    "description": "基于服务质量的动态限流算法"
+  },
+  "site.a5cd45a90a3c": {
+    "message": "Huawei Ascend",
+    "description": "华为昇腾"
+  },
+  "site.509f226edbb9": {
+    "message": "Iluvatar CoreX",
+    "description": "天数智芯"
+  },
+  "site.412b57e71203": {
+    "message": "Moore Threads",
+    "description": "摩尔线程"
+  },
+  "site.d823a5292eba": {
+    "message": "Hygon DCU",
+    "description": "海光 DCU"
+  },
+  "site.bddd611f1f17": {
+    "message": "Model and certification design examples. Check the model catalog for actual compatibility.",
+    "description": "按设计稿展示的模型与认证示例，实际适配范围请查看模型调优库。"
+  },
+  "site.5a4f0d74e965": {
+    "message": "Day-one model certification",
+    "description": "即日认证模型库"
+  },
+  "site.a05020f5efc2": {
+    "message": "100% official compatibility",
+    "description": "100% 官方适配通过"
+  },
+  "site.c20f7eae5068": {
+    "message": "Design example of throughput comparison; not a measured result or performance guarantee.",
+    "description": "设计稿吞吐对比示例，不代表实测性能或收益保证。"
+  },
+  "site.dd1ad085f57b": {
+    "message": "Relative throughput (optimized = 100%)",
+    "description": "相对吞吐（优化后=100%）"
+  },
+  "site.eb427f189cbf": {
+    "message": "About 285% above baseline",
+    "description": "较基准提升约285%"
+  },
+  "site.56b36f7824e3": {
+    "message": "Baseline capacity",
+    "description": "常规基准产能"
+  },
+  "site.86e2b520f820": {
+    "message": "Optimized capacity",
+    "description": "优化后产能"
+  },
+  "site.5f18c4a2fda6": {
+    "message": "100% capacity",
+    "description": "100% 满血"
+  },
+  "site.23fb2722b771": {
+    "message": "Keep pace with the model ecosystem through our ",
+    "description": "紧跟快速演进的模型生态，通过我们的"
+  },
+  "site.7299f3782e6c": {
+    "message": "inference optimization community",
+    "description": "推理性能优化社区"
+  },
+  "site.39ed49ab3194": {
+    "message": ", adapting and tuning new models for rapid import, configuration, and production deployment.",
+    "description": "，第一时间完成新模型适配和调优，让最新大模型能够快速导入、配置并部署到生产环境。"
+  },
+  "site.625f884dd1ff": {
+    "message": "LLM inference infrastructure",
+    "description": "大模型推理基础设施"
+  },
+  "site.6bf57cd5e260": {
+    "message": "ModelSphere: Kubernetes-based open source LLM inference infrastructure for model deployment, heterogeneous compute, service quality, and workload-driven optimization.",
+    "description": "模域 ModelSphere：基于 Kubernetes 的开源大模型推理基础设施，连接模型部署、异构算力、服务质量控制与负载驱动的性能优化。"
+  },
+  "site.ff92fe5c16c9": {
+    "message": "ModelSphere | LLM inference infrastructure",
+    "description": "模域 ModelSphere | 大模型推理基础设施"
+  },
+  "site.5c3a1b8b8536": {
+    "message": "Platform capabilities",
+    "description": "首页能力速览"
+  },
+  "site.411d684baaee": {
+    "message": "Advanced inference architecture",
+    "description": "先进推理服务架构"
+  },
+  "site.edd7e7d90181": {
+    "message": "High-performance deployment from day one",
+    "description": "新模型首日高性能部署"
+  },
+  "site.7d8e6b772d8d": {
+    "message": "Unified heterogeneous compute",
+    "description": "广泛异构算力统一纳管"
+  },
+  "site.e420b9734f39": {
+    "message": "Continuous performance improvement",
+    "description": "性能持续自演进"
+  },
+  "site.df36818e82c3": {
+    "message": "ModelSphere",
+    "description": "模域 ModelSphere"
+  },
+  "site.39ffbc1824a0": {
+    "message": "Open source platform for production deployment and inference optimization",
+    "description": "生产级算力部署与推理优化开源平台"
+  },
+  "site.f8ded20b4b87": {
+    "message": "Take LLM inference from a working prototype to reliable production, and turn every GPU into an efficient token factory.",
+    "description": "让大模型推理从“能跑”到“生产好用”，让每张 GPU 化身高效 Token 产线。"
+  },
+  "site.d561bdc88e86": {
+    "message": "Built on Kubernetes, ModelSphere brings model deployment, cache-aware routing, ",
+    "description": "基于 Kubernetes 构建，将模型部署、缓存感知路由、"
+  },
+  "site.cf231cb85b11": {
+    "message": "SLO-based autoscaling",
+    "description": "按 SLO 弹性伸缩"
+  },
+  "site.41e7fd9de764": {
+    "message": ", comprehensive observability, ",
+    "description": "、全维可观测性、"
+  },
+  "site.93ef299c39a9": {
+    "message": "recovery from hangs within seconds",
+    "description": "挂起故障秒级自愈"
+  },
+  "site.de1d5dd076fb": {
+    "message": " and ",
+    "description": "与"
+  },
+  "site.e2dd36bf7a68": {
+    "message": "the AutoTune feedback loop",
+    "description": "AutoTune 闭环"
+  },
+  "site.3074a6a3cf99": {
+    "message": " together in a production-grade inference scheduling system that reliably handles large-scale traffic on heterogeneous hardware.",
+    "description": "组织成一套工业级推理调度系统，帮助开发者在复杂异构算力上稳定承载大规模生产流量。"
+  },
+  "site.f9fa4959f263": {
+    "message": "Quickstart",
+    "description": "快速开始 Quickstart"
+  },
+  "site.810333d59b0f": {
+    "message": "GitHub repository",
+    "description": "GitHub 源码仓库"
+  },
+  "site.34e6a1062052": {
+    "message": " (opens in a new window)",
+    "description": "（新窗口打开）"
+  },
+  "site.97a2d37af57d": {
+    "message": "Model Catalog",
+    "description": "模型调优库 (Model Catalog)"
+  },
+  "site.fc64e7e591f9": {
+    "message": "Four core technologies",
+    "description": "四大核心技术"
+  },
+  "site.ac0a3c902f5f": {
+    "message": "Four core technologies for production LLMs",
+    "description": "四大核心技术：直击大模型落地深水区"
+  },
+  "site.82022bdb3c73": {
+    "message": "Built for production engineering. ModelSphere combines advances in research with experience operating large-scale services in a standardized platform.",
+    "description": "为生产级严肃工程而生。模域将前沿学术成果与大规模线上运维沉淀收敛为标准化的平台体系。"
+  },
+  "site.a1f30fa8216e": {
+    "message": "{v0} (opens in a new window)",
+    "description": "{v0}（新窗口打开）"
+  },
+  "site.6bd98e9b7b5f": {
+    "message": "Documentation navigation",
+    "description": "文档导航"
+  },
+  "site.efc1558e60b2": {
+    "message": "Developer docs",
+    "description": "开发者文档"
+  },
+  "site.e6e8c31c1bd9": {
+    "message": "From concepts to practice",
+    "description": "从概念到实践"
+  },
+  "site.e4f94fa189ea": {
+    "message": "Read step by step",
+    "description": "按章节逐步阅读"
+  },
+  "site.2b13a97ab17c": {
+    "message": "Mobile documentation navigation",
+    "description": "移动文档导航"
+  },
+  "site.a610e0c62b3e": {
+    "message": "On this page",
+    "description": "本页目录"
+  },
+  "site.203c08e0d44a": {
+    "message": "Home",
+    "description": "首页"
+  },
+  "site.34b3cac2a496": {
+    "message": "Model Catalog",
+    "description": "模型目录"
+  },
+  "site.fda4566fda7d": {
+    "message": "Documentation",
+    "description": "文档指南"
+  },
+  "site.7855e5e9727e": {
+    "message": "Blog",
+    "description": "博客"
+  },
+  "site.43156904caee": {
+    "message": "{v0} coming soon",
+    "description": "{v0}即将开放"
+  },
+  "site.88b73795b5a0": {
+    "message": " (coming soon)",
+    "description": "（即将开放）"
+  },
+  "site.334c20e1a480": {
+    "message": "Quickstart",
+    "description": "快速开始"
+  },
+  "site.8a61ea2fb255": {
+    "message": "Docs preview",
+    "description": "文档预览"
+  },
+  "site.704597bf3389": {
+    "message": "Open source inference",
+    "description": "开源推理平台"
+  },
+  "site.9bae68040509": {
+    "message": "Main navigation",
+    "description": "主导航"
+  },
+  "site.7a3a176413cc": {
+    "message": "ModelSphere GitHub (opens in a new window)",
+    "description": "ModelSphere GitHub（新窗口打开）"
+  },
+  "site.e35a36e26d52": {
+    "message": "Navigation menu",
+    "description": "导航菜单"
+  },
+  "site.a1d579490367": {
+    "message": "Mobile navigation",
+    "description": "移动主导航"
+  },
+  "site.ffbb1a447f85": {
+    "message": "ModelSphere",
+    "description": "模域"
+  },
+  "site.7131e5de923b": {
+    "message": "Blog insights",
+    "description": "博客洞见"
+  },
+  "site.8c59843609d4": {
+    "message": "Community and ecosystem",
+    "description": "社区与生态"
+  },
+  "site.0893c0424f2e": {
+    "message": "Make AI infrastructure optimization a ",
+    "description": "\n      让 AI 基础设施优化成为全社会的"
+  },
+  "site.028a5f6e2be9": {
+    "message": "shared resource",
+    "description": "“公共资产”"
+  },
+  "site.9165f482a905": {
+    "message": "Community maintainers",
+    "description": "社区维护者"
+  },
+  "site.31579bd3b6f1": {
+    "message": "The following maintainers guide the architecture, review pull requests, and publish stable production releases.",
+    "description": "\nModelSphere 由以下维护者共同推进，负责项目架构方向、PR 严格评审与生产稳定版本发布。\n"
+  },
+  "site.cbe1e8aa200d": {
+    "message": "Phancy",
+    "description": "范式智能（Phancy）"
+  },
+  "site.3986f9785b06": {
+    "message": "RiseUnion",
+    "description": "睿思智联 (RiseUnion)"
+  },
+  "site.98fcedca6dd0": {
+    "message": "Online technical talks and community meetings",
+    "description": "线上技术分享与社区例会日历"
+  },
+  "site.721f5a8ebb14": {
+    "message": "Community talks and meeting schedules will be announced here",
+    "description": "社区技术分享与例会安排将在这里公布"
+  },
+  "site.f330ad54f07f": {
+    "message": "Community founders and ecosystem partners",
+    "description": "社区发起单位与生态合作伙伴"
+  },
+  "site.3b8623b23db6": {
+    "message": "The ModelSphere open source community was co-founded by ",
+    "description": "\n        模域 ModelSphere 开源社区由 "
+  },
+  "site.c675275a63a8": {
+    "message": "Phancy",
+    "description": "范式智能"
+  },
+  "site.774163e6ec8a": {
+    "message": " and ",
+    "description": " 与 "
+  },
+  "site.aeafd074c2fc": {
+    "message": "RiseUnion",
+    "description": "睿思智联"
+  },
+  "site.c8456611a220": {
+    "message": ".",
+    "description": " 共同发起\n      "
+  },
+  "site.2912bec6369c": {
+    "message": "CO-FOUNDER",
+    "description": "\n              CO-INITIATOR / 联合发起单位\n            "
+  },
+  "site.12e49b14f011": {
+    "message": "PHANCY",
+    "description": "范式智能 (PHANCY)"
+  },
+  "site.3cc070cc56f5": {
+    "message": "As a community co-founder, Phancy supports validation of production-grade heterogeneous clusters, contributes hardware and software compatibility data for domestic chips, expands enterprise deployment use cases, and helps define standards.",
+    "description": "\n            作为社区联合发起方，负责提供工业级异构算力集群底座验证支持、海量信创芯片软硬件适配数据沉淀，以及企业级生产落地场景的持续拓展与规范制定。\n          "
+  },
+  "site.de57ac18e315": {
+    "message": "As a community co-founder, RiseUnion leads development of core inference middleware, AutoTune search algorithms, cloud-native Kubernetes inference operators, and intelligent routing gateways for high concurrency.",
+    "description": "\n            作为社区联合发起方，主导核心推理中间件研发、AutoTune 调优搜索算法、Kubernetes 云原生推理算子设计，以及面向极端并发的智能路由网关工程演进。\n          "
+  },
+  "site.85906b73debe": {
+    "message": "Hardware ecosystem and enterprise partnership program",
+    "description": "硬件适配生态与企业共建伙伴计划"
+  },
+  "site.470e382248f4": {
+    "message": "Chip vendors and enterprise teams are welcome to help build the ecosystem.",
+    "description": "欢迎更多芯片与企业团队加入社区生态共建。"
+  },
+  "site.e2caa71efc6d": {
+    "message": "Become a partner",
+    "description": "申请加入生态共建"
+  },
+  "site.cebdad8111ec": {
+    "message": "Connect with the community",
+    "description": "社区交流与连接渠道"
+  },
+  "site.89ab9255e823": {
+    "message": "Talk with the core team about architecture, cluster selection, and troubleshooting",
+    "description": "无论是架构探讨、集群选型，还是实时故障排查，随时随地与核心团队保持对话"
+  },
+  "site.2e212e970075": {
+    "message": "Live support",
+    "description": "实时答疑"
+  },
+  "site.c6e8323544d9": {
+    "message": "WeChat technical group",
+    "description": "微信技术交流群"
+  },
+  "site.55454bf1b266": {
+    "message": "Connect with architects and production SREs for deployment troubleshooting, recipe tuning, and release support.",
+    "description": "\n            与核心架构师及生产 SRE 零距离交流，快速获得集群部署排障、配方微调建议及版本支持。\n          "
+  },
+  "site.dd751622c21f": {
+    "message": "Open the full-size group QR code",
+    "description": "打开入群二维码原图"
+  },
+  "site.7842c842f4dd": {
+    "message": "WeChat technical group QR code",
+    "description": "微信技术交流群入群二维码"
+  },
+  "site.6d84003b6085": {
+    "message": "ModelSphere community",
+    "description": "ModelSphere社群"
+  },
+  "site.8835a79bd079": {
+    "message": "Open the QR code and scan it with WeChat to join",
+    "description": "打开入群二维码原图，使用微信扫码加入"
+  },
+  "site.2fffee3edd5a": {
+    "message": "Scan to join the WeChat technical group",
+    "description": "扫码加入技术交流微信群"
+  },
+  "site.726e8fe3b48a": {
+    "message": "Core community",
+    "description": "主干社区"
+  },
+  "site.c9a0666ada33": {
+    "message": "GitHub community",
+    "description": "GitHub 开源社区"
+  },
+  "site.d5eed28ffc8f": {
+    "message": "Star the repositories, report issues, contribute pull requests, or discuss the next generation of operators.",
+    "description": "\n            Star 关注主干仓库，提交 Issue 报告环境问题，发起 PR 贡献代码或在 Discussions 规划下代算子。\n          "
+  },
+  "site.5581608eea5e": {
+    "message": "Visit our GitHub organization",
+    "description": "前往 GitHub 组织"
+  },
+  "site.b0237d6403f1": {
+    "message": " is an open source production inference infrastructure community co-founded by Phancy and RiseUnion. It connects heterogeneous hardware, cloud-native scheduling, and performance tuning to bring LLMs from the lab into production.",
+    "description": " 是由范式智能（PHANCY）与睿思智联（RiseUnion）共同发起，面向大模型推理的开源生产级基础设施社区，打通异构算力适配、云原生集群调度与极限性能调优，让大模型从“实验室能跑”直通“生产好用”。"
+  },
+  "site.6db8afcd8915": {
+    "message": "Core products",
+    "description": "核心产品"
+  },
+  "site.0cde2d8a5585": {
+    "message": "Inference engine runtime",
+    "description": "推理引擎运行时"
+  },
+  "site.f7821c3f955a": {
+    "message": "Model acceleration toolkit",
+    "description": "模型加速套件"
+  },
+  "site.5f7a4b1ece53": {
+    "message": "Performance benchmarks",
+    "description": "性能基准测评"
+  },
+  "site.7d1bb773a6bf": {
+    "message": "Distributed orchestrator",
+    "description": "分布式编排器"
+  },
+  "site.a39d5d6a8909": {
+    "message": "Developer SIG",
+    "description": "开发者社区 SIG"
+  },
+  "site.b78151d50c19": {
+    "message": "Community governance",
+    "description": "社区维护者治理"
+  },
+  "site.2bcf194ad150": {
+    "message": "Contributors",
+    "description": "贡献者荣誉墙"
+  },
+  "site.536c0bc75f5d": {
+    "message": "Community event calendar",
+    "description": "线上技术日历"
+  },
+  "site.f0009e1a62b1": {
+    "message": "Developer resources",
+    "description": "开发者资源"
+  },
+  "site.ed82269fbd7e": {
+    "message": "Getting started docs",
+    "description": "快速接入文档"
+  },
+  "site.85f3058b9a7e": {
+    "message": "Architecture insights",
+    "description": "架构演进内幕"
+  },
+  "site.359c2cf95c95": {
+    "message": "Quantization case studies",
+    "description": "量化实战案例"
+  },
+  "site.4e3781d9fe4f": {
+    "message": "No destination available yet",
+    "description": "尚未提供可用入口"
+  },
+  "site.954d3f2da7c7": {
+    "message": "Next meeting to be announced",
+    "description": "下期例会时间待公布"
+  },
+  "site.bea3c79e398f": {
+    "message": "Next meeting: {v0}",
+    "description": "下一期例会：{v0}"
+  },
+  "site.9049fe96eb90": {
+    "message": "LIVE",
+    "description": "LIVE · 直播中"
+  },
+  "site.1a361d767b4e": {
+    "message": "UPCOMING",
+    "description": "UPCOMING · 预告"
+  },
+  "site.a56664baeece": {
+    "message": "RECORDED",
+    "description": "RECORDED · 往期回放"
+  },
+  "site.8e4e27c58386": {
+    "message": "ENDED",
+    "description": "ENDED · 已结束"
+  },
+  "site.a6aa7a7a8149": {
+    "message": "Design example, preview only",
+    "description": "设计示例，仅在预览显示"
+  },
+  "site.cdfb4de102ae": {
+    "message": "Speaker: {v0} | {v1}",
+    "description": "主讲人: {v0} ｜ {v1}"
+  },
+  "site.36d0dfdd19e4": {
+    "message": "No events yet",
+    "description": "暂无活动"
+  },
+  "site.d7e283c7e482": {
+    "message": "New community events will be announced here. Join the technical group to stay connected.",
+    "description": "新的社区活动将在这里公布，欢迎加入技术交流群参与交流。"
+  },
+  "site.63cf5ec0d286": {
+    "message": "Join the technical group",
+    "description": "加入技术交流群"
+  },
+  "site.90200bca3781": {
+    "message": " Regular schedule",
+    "description": " 周期固定\n            "
+  },
+  "site.a5dae2ffab33": {
+    "message": "Meeting ID: ",
+    "description": "会议号: "
+  },
+  "site.0764b01cd0d6": {
+    "message": "Join the meeting",
+    "description": "进入会议"
+  },
+  "site.32c728ffed5b": {
+    "message": "To be announced",
+    "description": "待公布"
+  },
+  "site.44e6af891009": {
+    "message": "Regular meeting agenda:",
+    "description": "公开讨论标准议程："
+  },
+  "site.94a8621d625f": {
+    "message": "Subscribe to the meeting calendar (iCal)",
+    "description": "订阅例会日历 (iCal)"
+  },
+  "site.a4baa7d79235": {
+    "message": "Minutes and topic proposals",
+    "description": "纪要 & 议题提交"
+  },
+  "site.8f417ce17785": {
+    "message": "Community technical meeting",
+    "description": "社区技术例会"
+  },
+  "site.4a67073b6a8e": {
+    "message": "Meeting schedule to be announced.",
+    "description": "例会安排待公布。"
+  },
+  "site.2afccffad3ec": {
+    "message": "Community events",
+    "description": "社区活动列表"
+  },
+  "site.60ee2a8db7df": {
+    "message": "More events and past sessions (",
+    "description": "更多活动与往期记录（"
+  },
+  "site.d53ee2728087": {
+    "message": "Failed to load search index",
+    "description": "搜索索引加载失败"
+  },
+  "site.b903498d56e4": {
+    "message": "Invalid search index",
+    "description": "搜索索引格式无效"
+  },
+  "site.0bee6d3285b8": {
+    "message": "Search is temporarily unavailable. Please try again.",
+    "description": "搜索暂时不可用，请重试。"
+  },
+  "site.6ecb8e89c7cd": {
+    "message": "Loading search…",
+    "description": "正在加载搜索…"
+  },
+  "site.259ec2d1fa6b": {
+    "message": "No published docs or posts are available to search.",
+    "description": "暂无可搜索的已发布文档或博客。"
+  },
+  "site.8ece413016a8": {
+    "message": "Enter keywords to search docs and blog posts.",
+    "description": "输入关键词，搜索文档和博客。"
+  },
+  "site.86a477779925": {
+    "message": "No results found. Try different keywords or change the search scope.",
+    "description": "未找到相关内容，请尝试其他关键词或搜索范围。"
+  },
+  "site.11101d0bfe7c": {
+    "message": "{v0} results found",
+    "description": "找到 {v0} 条结果"
+  },
+  "site.fd47b25677a7": {
+    "message": "Search docs and blog",
+    "description": "搜索文档和博客"
+  },
+  "site.b87acde44ff1": {
+    "message": "Find guides, technical articles, and engineering insights",
+    "description": "查找指南、技术文章与实践经验"
+  },
+  "site.ab008ef18dac": {
+    "message": "Close search",
+    "description": "关闭搜索"
+  },
+  "site.26b5de5a5e47": {
+    "message": "Enter keywords…",
+    "description": "输入关键词…"
+  },
+  "site.b6f00afa6537": {
+    "message": "Clear search",
+    "description": "清空搜索"
+  },
+  "site.1ef3de06b32e": {
+    "message": "Clear",
+    "description": "清空"
+  },
+  "site.4e65d015121f": {
+    "message": "Search scope",
+    "description": "搜索范围"
+  },
+  "site.5c55a67935af": {
+    "message": "All",
+    "description": "全部"
+  },
+  "site.2687ccdbb1d2": {
+    "message": "Docs",
+    "description": "文档"
+  },
+  "site.7bdd5ce1e298": {
+    "message": "Reload",
+    "description": "重新加载"
+  },
+  "site.88d72ece7cf7": {
+    "message": "Search results",
+    "description": "搜索结果"
+  },
+  "site.f99de0a92aa6": {
+    "message": "Show more results",
+    "description": "显示更多结果"
+  },
+  "site.ed817866d149": {
+    "message": "↑ ↓ Select result ",
+    "description": "↑ ↓ 选择结果 "
+  },
+  "site.9d6d07c286e2": {
+    "message": "Enter Open",
+    "description": "Enter 打开"
+  },
+  "site.412bd6bd4b88": {
+    "message": "Esc Close",
+    "description": "Esc 关闭"
+  },
+  "site.a974aa27ebae": {
+    "message": "Search docs and blog ({v0})",
+    "description": "搜索文档和博客（{v0}）"
+  },
+  "site.83d94d332796": {
+    "message": "Enable JavaScript to search",
+    "description": "启用 JavaScript 后可搜索"
+  },
+  "site.80ca10ed888d": {
+    "message": "Search docs and blog…",
+    "description": "搜索文档和博客…"
+  },
+  "site.5a67b86b6df3": {
+    "message": "Code; scroll horizontally to view",
+    "description": "代码，可横向滚动查看"
+  },
+  "site.9469db3639c8": {
+    "message": "Table; scroll horizontally to view",
+    "description": "表格，可横向滚动查看"
+  },
+  "site.59f3a11ce896": {
+    "message": "Blog post does not match the summary index",
+    "description": "博客详情与摘要索引不一致"
+  },
+  "site.c28c05bd87f5": {
+    "message": "Related resources",
+    "description": "关联资源"
+  },
+  "site.6770d01e7d15": {
+    "message": "Breadcrumbs",
+    "description": "面包屑"
+  },
+  "site.ae513850b3e4": {
+    "message": "Article content",
+    "description": "文章正文"
+  },
+  "site.c64bbb9bf219": {
+    "message": "Example preview · This article demonstrates the reading experience and is not an official publication or measured result.",
+    "description": "示例预览 · 本文用于验证博客阅读体验，不代表正式发布或实测结论。"
+  },
+  "site.ee5ea296f6b0": {
+    "message": "Article sections",
+    "description": "文章章节目录"
+  },
+  "site.59b4733fddc2": {
+    "message": "← Back to blog",
+    "description": "← 返回博客"
+  },
+  "site.d1c65ad15293": {
+    "message": "Article sources",
+    "description": "文章来源"
+  },
+  "site.04b989d333f9": {
+    "message": "Sources and further reading",
+    "description": "来源与延伸阅读"
+  },
+  "site.31d5f72a2e65": {
+    "message": "Link copied",
+    "description": "已复制链接"
+  },
+  "site.f681c1f9edec": {
+    "message": "Copying",
+    "description": "正在复制"
+  },
+  "site.e657f77d7ed0": {
+    "message": "Copy article link",
+    "description": "复制文章链接"
+  },
+  "site.eb4e4dcd392f": {
+    "message": "Copy failed. Copy the address from your browser manually",
+    "description": "复制失败，请手动复制地址栏链接"
+  },
+  "site.0fb4f03d33dc": {
+    "message": "Article link copied",
+    "description": "文章链接已复制"
+  },
+  "site.9d06a8c8716b": {
+    "message": "Related articles",
+    "description": "相关文章"
+  },
+  "site.4ec2a77b1ae3": {
+    "message": "Keep reading",
+    "description": "继续阅读"
+  },
+  "site.3f0eb0817130": {
+    "message": "ModelSphere technical articles, release news, and engineering practices.",
+    "description": "ModelSphere 技术文章、版本动态与工程实践。"
+  },
+  "site.7d205aabf9b4": {
+    "message": "Technical blog and updates",
+    "description": "技术博客与动态"
+  },
+  "site.6c37157c0285": {
+    "message": "Example preview · These articles demonstrate blog layouts and interactions and are not official publications or measured results.",
+    "description": "示例预览 · 以下文章仅用于验证博客排版与交互，不代表正式发布或实测结论。"
+  },
+  "site.073e542c41bc": {
+    "message": "Featured articles",
+    "description": "推荐文章"
+  },
+  "site.b210d576d0b1": {
+    "message": "All article summaries are shown below. Enable JavaScript to search, filter, and browse by page.",
+    "description": "以下展示全部文章摘要；启用脚本后可搜索、筛选和分页。"
+  },
+  "site.a68dbd81c80f": {
+    "message": "Article categories",
+    "description": "文章分类"
+  },
+  "site.1ab08ebf5324": {
+    "message": "All articles",
+    "description": "全部文章"
+  },
+  "site.a8322456d17d": {
+    "message": "Search articles",
+    "description": "搜索文章"
+  },
+  "site.7fc5b6f873c7": {
+    "message": "Title, author, technical keyword, or PR number",
+    "description": "标题、作者、技术关键词或 PR 编号"
+  },
+  "site.44ce7ae909bb": {
+    "message": "Search",
+    "description": "搜索"
+  },
+  "site.258ff2a21e38": {
+    "message": "Popular tags",
+    "description": "热门标签"
+  },
+  "site.657d9cbf45ec": {
+    "message": "Clear filters",
+    "description": "清除筛选"
+  },
+  "site.62e223f320e1": {
+    "message": "Articles",
+    "description": "文章列表"
+  },
+  "site.85077554fc8b": {
+    "message": ", page {v0} / {v1}",
+    "description": "，第 {v0} / {v1} 页"
+  },
+  "site.b57487d2b992": {
+    "message": "{v0} articles found{v1}",
+    "description": "找到 {v0} 篇文章{v1}"
+  },
+  "site.88251ea8f5bf": {
+    "message": "No published articles yet",
+    "description": "尚无公开文章"
+  },
+  "site.4e2c695ab835": {
+    "message": "No more articles",
+    "description": "暂无其他文章"
+  },
+  "site.04069b9f5e16": {
+    "message": "No matching results",
+    "description": "未找到匹配内容"
+  },
+  "site.e1cdea003fa1": {
+    "message": "Technical articles and project updates will be published here.",
+    "description": "技术文章与项目动态将在这里发布。"
+  },
+  "site.fef24a7b6d42": {
+    "message": "Start with a featured article above.",
+    "description": "先从上方的推荐文章开始阅读。"
+  },
+  "site.5973f418dd0e": {
+    "message": "Try other keywords or clear the filters to see all articles.",
+    "description": "试试其他关键词，或清除筛选查看全部文章。"
+  },
+  "site.42b483023aa8": {
+    "message": "Follow ModelSphere on GitHub ↗",
+    "description": "关注 ModelSphere 开源项目 ↗"
+  },
+  "site.4b57a755743a": {
+    "message": "Article pagination",
+    "description": "文章分页"
+  },
+  "site.c9b9ae7a6144": {
+    "message": "Previous",
+    "description": "上一页"
+  },
+  "site.8a8542f69648": {
+    "message": "Next",
+    "description": "下一页"
+  },
+  "site.62cab5ebabfe": {
+    "message": "Image unavailable",
+    "description": "图片暂不可用"
+  },
+  "site.3a029a8ec767": {
+    "message": "About ",
+    "description": "阅读约 "
+  },
+  "site.40de54344d22": {
+    "message": " min read",
+    "description": " 分钟"
+  },
+  "site.069f3017fe6c": {
+    "message": "External article ↗",
+    "description": "站外文章 ↗"
+  },
+  "site.1e928fc6c931": {
+    "message": "Read: {v0}",
+    "description": "阅读：{v0}"
+  },
+  "site.fac4c8cf0d71": {
+    "message": "Featured",
+    "description": "推荐阅读"
+  },
+  "site.b7bac1d85c14": {
+    "message": "Read article",
+    "description": "阅读全文"
+  },
+  "site.9ee338478652": {
+    "message": "Community channels",
+    "description": "社区交流渠道"
+  },
+  "site.1bfefe0febb2": {
+    "message": "Zhihu",
+    "description": "知乎"
+  },
+  "site.fa96079c3b2f": {
+    "message": "Visit ",
+    "description": "前往"
+  },
+  "site.4acb91dda8b7": {
+    "message": "No model description available.",
+    "description": "暂无模型说明。"
+  },
+  "site.906efc483453": {
+    "message": "Long-context agent workloads",
+    "description": "Agent 长上下文"
+  },
+  "site.fa9ed6964a12": {
+    "message": "Document Q&A",
+    "description": "文档问答"
+  },
+  "site.756762e293f2": {
+    "message": "Not provided",
+    "description": "未提供"
+  },
+  "site.5f76b2bf82dd": {
+    "message": "Version",
+    "description": "版本"
+  },
+  "site.41e48aedb06d": {
+    "message": "Released {v0}",
+    "description": "发布于 {v0}"
+  },
+  "site.a2d8188544aa": {
+    "message": "Release date not provided",
+    "description": "发布日期未提供"
+  },
+  "site.78a7f252a6cb": {
+    "message": "Engine",
+    "description": "引擎"
+  },
+  "site.a0e5308a1627": {
+    "message": "Hardware",
+    "description": "硬件"
+  },
+  "site.a4ec8620a91e": {
+    "message": "Topology",
+    "description": "拓扑"
+  },
+  "site.176c09844e0f": {
+    "message": "Image",
+    "description": "镜像"
+  },
+  "site.5df7bfb4b708": {
+    "message": "Service name",
+    "description": "服务名称"
+  },
+  "site.9770f40287d5": {
+    "message": "Recipe overview",
+    "description": "配方概览"
+  },
+  "site.bb88a59baf57": {
+    "message": "Default recipe",
+    "description": "默认配方"
+  },
+  "site.c805b06152c6": {
+    "message": "Tuned",
+    "description": "已调优"
+  },
+  "site.a7ac587ab52d": {
+    "message": "Baseline",
+    "description": "基线"
+  },
+  "site.8be3a0d72f4d": {
+    "message": "Deployment recipe",
+    "description": "部署配方"
+  },
+  "site.c40529702643": {
+    "message": " · Current recipe version ",
+    "description": " · 当前配方版本 "
+  },
+  "site.8df99bc0b742": {
+    "message": "All model recipes →",
+    "description": "全部模型配方 →"
+  },
+  "site.56add17b2bb0": {
+    "message": "Recorded gain",
+    "description": "记录提升"
+  },
+  "site.e94a27ab8271": {
+    "message": "Recipe tuning comparison {v0}",
+    "description": "配方调优对照 {v0}"
+  },
+  "site.ed4a64a60515": {
+    "message": "an unspecified baseline",
+    "description": "未提供的基线"
+  },
+  "site.44af1f54feba": {
+    "message": "Full comparison report ↗",
+    "description": "完整对照报告 ↗"
+  },
+  "site.17a62f0d45c5": {
+    "message": "Measured version: ",
+    "description": "测量版本："
+  },
+  "site.e5c17efe9ee8": {
+    "message": "Workload gain not provided",
+    "description": "负载提升未提供"
+  },
+  "site.947d63ff4b7f": {
+    "message": "Public catalog",
+    "description": "公开目录"
+  },
+  "site.351375c306b2": {
+    "message": "Build baseline",
+    "description": "构建基线"
+  },
+  "site.426639544105": {
+    "message": "Cached catalog",
+    "description": "已缓存目录"
+  },
+  "site.2c75b5b35a28": {
+    "message": "Loading current data…",
+    "description": "正在读取当前数据…"
+  },
+  "site.c91cba23284c": {
+    "message": "Baseline retrieved ",
+    "description": "基线读取于 "
+  },
+  "site.819f1ab8603a": {
+    "message": "A copy of the selected version is preserved",
+    "description": "保留所选版本的数据副本"
+  },
+  "site.b8784c8dd563": {
+    "message": "Retry",
+    "description": "重试"
+  },
+  "site.0c26e6085429": {
+    "message": "Total models",
+    "description": "模型总数"
+  },
+  "site.45fc2235aa43": {
+    "message": "Covers {v0}% of models",
+    "description": "覆盖 {v0}% 模型"
+  },
+  "site.de0b7338c7f3": {
+    "message": "No valid gain records",
+    "description": "暂无有效提升记录"
+  },
+  "site.eb26c7e753e3": {
+    "message": "Best workload · Range {v0} to {v1}",
+    "description": "最佳负载 · 范围 {v0} 至 {v1}"
+  },
+  "site.89472821c2cf": {
+    "message": "Catalog statistics",
+    "description": "目录统计"
+  },
+  "site.1905ab95a1b0": {
+    "message": "Copy complete recipe",
+    "description": "复制完整配方"
+  },
+  "site.43312083da55": {
+    "message": "Copying…",
+    "description": "复制中…"
+  },
+  "site.8f6f8d979c98": {
+    "message": "Copied",
+    "description": "已复制"
+  },
+  "site.94e2d00d9ac5": {
+    "message": "Copy failed. Open the details and select the text manually.",
+    "description": "复制失败，请在详情中手动选择"
+  },
+  "site.c98e118e0a43": {
+    "message": "Model",
+    "description": "模型"
+  },
+  "site.6a575618a188": {
+    "message": "Throughput gain",
+    "description": "吞吐量提升"
+  },
+  "site.50123e2643ec": {
+    "message": "View {v0} performance comparison",
+    "description": "查看 {v0} 性能对照"
+  },
+  "site.d0d52ce21400": {
+    "message": "Deprecated",
+    "description": "已弃用"
+  },
+  "site.3a03ba079a53": {
+    "message": "No description available.",
+    "description": "暂无说明。"
+  },
+  "site.26e392942cda": {
+    "message": "Workload not provided",
+    "description": "负载未提供"
+  },
+  "site.54130614ce4a": {
+    "message": " · Measured with v",
+    "description": " · 测于 v"
+  },
+  "site.21218fec97c1": {
+    "message": "Tag not provided",
+    "description": "标签未提供"
+  },
+  "site.19166317a928": {
+    "message": "View comparison report",
+    "description": "查看对照报告"
+  },
+  "site.9c3b6f1004ad": {
+    "message": "View deployment configuration",
+    "description": "查看部署配置"
+  },
+  "site.1b2c717ee8d4": {
+    "message": "Copy deployment configuration",
+    "description": "复制部署配置"
+  },
+  "site.61e67a99c6ff": {
+    "message": "View recipe file ↗",
+    "description": "查看配方文件 ↗"
+  },
+  "site.7c91d0100fd4": {
+    "message": "View performance report ↗",
+    "description": "查看性能报告 ↗"
+  },
+  "site.be5038492a9d": {
+    "message": "Contribute a recipe ↗",
+    "description": "贡献配方 ↗"
+  },
+  "site.4fd2e35fdb77": {
+    "message": "Recipe details",
+    "description": "配方详情"
+  },
+  "site.ed01dc6cea13": {
+    "message": "View performance comparisons in recipe details.",
+    "description": "在配方详情中查看性能对照。"
+  },
+  "site.15dcec90c0c4": {
+    "message": "Opening recipe details…",
+    "description": "正在打开配方详情…"
+  },
+  "site.4e3e8f09c593": {
+    "message": "Comparison reports require JavaScript. Open the Performance comparison tab in recipe details.",
+    "description": "对照报告需要 JavaScript。请在配方详情的“性能对照”标签中阅读。"
+  },
+  "site.441896a2fb30": {
+    "message": "Read the source catalog",
+    "description": "阅读原始目录"
+  },
+  "site.8e1ba57d2cb6": {
+    "message": "Open recipe details",
+    "description": "打开配方详情"
+  },
+  "site.2b89357b9abf": {
+    "message": "Back to model catalog",
+    "description": "返回模型目录"
+  },
+  "site.9d6b32790955": {
+    "message": "Best gain from a tuned recipe",
+    "description": "调优配方最佳提升"
+  },
+  "site.23727d36d91b": {
+    "message": "Tuned recipe",
+    "description": "调优配方"
+  },
+  "site.ea677bf1a4fc": {
+    "message": "No recipes yet",
+    "description": "暂无配方"
+  },
+  "site.c5591decc296": {
+    "message": "Available recipes",
+    "description": "可用配方"
+  },
+  "site.53d096fa52c4": {
+    "message": "View model details",
+    "description": "查看模型详情"
+  },
+  "site.4dfcf4a367d7": {
+    "message": "Version history is temporarily unavailable.",
+    "description": "版本历史暂时不可用。"
+  },
+  "site.29943560b92e": {
+    "message": "Could not load history to verify the requested version.",
+    "description": "历史读取失败，不能确认指定版本。"
+  },
+  "site.92e0aab9b6ec": {
+    "message": "The requested recipe version is not in this catalog's history.",
+    "description": "指定配方版本不在所选目录的历史中。"
+  },
+  "site.e468b74b0da3": {
+    "message": "Failed to load recipe",
+    "description": "配方加载失败"
+  },
+  "site.fc599ecea048": {
+    "message": "{v0} · Recipe details",
+    "description": "{v0} · 配方详情"
+  },
+  "site.f7121092ad68": {
+    "message": "Model and recipe details",
+    "description": "模型与配方详情"
+  },
+  "site.bdddd3c76973": {
+    "message": "Explore recipes, deployment configurations, version history, and benchmarks.",
+    "description": "查阅模型配方、部署配置、版本历史与性能测评。"
+  },
+  "site.e0af03d94875": {
+    "message": "Model details",
+    "description": "模型详情"
+  },
+  "site.469cea37d375": {
+    "message": "Live model and recipe details require JavaScript.",
+    "description": "实时模型和配方详情需要 JavaScript。"
+  },
+  "site.ffa44b075ded": {
+    "message": "Incomplete detail parameters",
+    "description": "详情参数不完整"
+  },
+  "site.84d882ee8275": {
+    "message": "Open a model or recipe from the catalog.",
+    "description": "请从目录中的模型或配方入口访问。"
+  },
+  "site.f77b18ff38e7": {
+    "message": "Loading the requested catalog version…",
+    "description": "正在读取指定目录版本…"
+  },
+  "site.415e549d79fc": {
+    "message": "Catalog version unavailable",
+    "description": "目录版本不可用"
+  },
+  "site.b7e877f61317": {
+    "message": "Open current catalog",
+    "description": "打开当前目录"
+  },
+  "site.a25fa8489ab7": {
+    "message": "Checking records…",
+    "description": "正在确认记录…"
+  },
+  "site.b82f67fe4758": {
+    "message": "Source unavailable; unable to verify this record",
+    "description": "来源不可用，尚无法确认记录"
+  },
+  "site.f4d62b6efdba": {
+    "message": "Model or recipe not found",
+    "description": "未找到模型或配方"
+  },
+  "site.b4c50e4f241c": {
+    "message": "Selected identifier: ",
+    "description": "所选标识："
+  },
+  "site.6fdd43b3efe0": {
+    "message": "Available deployment recipes ·",
+    "description": "可用部署配方 ·"
+  },
+  "site.ccbf90f527b4": {
+    "message": "Deployment configuration",
+    "description": "部署配置"
+  },
+  "site.46d945476414": {
+    "message": "Recipe version",
+    "description": "配方版本"
+  },
+  "site.3fca94b2e016": {
+    "message": "Current version {v0}",
+    "description": "当前版本 {v0}"
+  },
+  "site.34d6246305c8": {
+    "message": "{v0} · Unverified version",
+    "description": "{v0} · 待确认版本"
+  },
+  "site.020ef0cc6f35": {
+    "message": "Date not provided",
+    "description": "日期未提供"
+  },
+  "site.8e0e739d7303": {
+    "message": "Viewing configuration version: ",
+    "description": "当前查看配置版本："
+  },
+  "site.6d9bb8268bbe": {
+    "message": ". The hardware and engine summaries above refer to the current recipe version: ",
+    "description": "。上方硬件和引擎摘要对应当前配方版本："
+  },
+  "site.2a71ba752529": {
+    "message": "Loading and verifying configuration…",
+    "description": "正在加载并校验配置…"
+  },
+  "site.d148e4e0a931": {
+    "message": "Original YAML · SHA-256 verified",
+    "description": "原始 YAML · SHA-256 校验通过"
+  },
+  "site.fcde9d2b09cf": {
+    "message": "Launch parameters",
+    "description": "启动参数"
+  },
+  "site.3a13a6807552": {
+    "message": "extraArgs not provided",
+    "description": "未提供 extraArgs"
+  },
+  "site.326269a0aa1f": {
+    "message": "Context configuration: ",
+    "description": "上下文配置："
+  },
+  "site.2f5f1d6fbfb0": {
+    "message": "Not set",
+    "description": "未设置"
+  },
+  "site.d59062525d2e": {
+    "message": "Selected configuration version: ",
+    "description": "当前选择的配置版本："
+  },
+  "site.e2a710c27f4f": {
+    "message": ". Version measured in the report: ",
+    "description": "。报告对应测量版本："
+  },
+  "site.f64c61d8fac6": {
+    "message": "Performance comparison",
+    "description": "性能对照"
+  },
+  "site.d1e4dea594b6": {
+    "message": "No comparison report is available for this recipe. Explore the deployment configuration and version history.",
+    "description": "该配方暂无可用对照报告，可继续查看部署配置与版本历史。"
+  },
+  "site.bb58d709f19d": {
+    "message": "Version history",
+    "description": "版本历史"
+  },
+  "site.730152325ab2": {
+    "message": "Loading version history…",
+    "description": "正在读取版本历史…"
+  },
+  "site.56b1715ede54": {
+    "message": "View v",
+    "description": "查看 v"
+  },
+  "site.6a0cd8002a08": {
+    "message": " configuration →",
+    "description": " 配置 →"
+  },
+  "site.929ff74a3b68": {
+    "message": "Pinned commit ",
+    "description": "固定提交 "
+  },
+  "site.77afbff41aa8": {
+    "message": "Fullscreen is unavailable. Use View full report.",
+    "description": "暂时无法全屏观看，请使用“查看完整报告”。"
+  },
+  "site.06c78240c62a": {
+    "message": "Could not load report data. Retry or view the full report.",
+    "description": "报告数据加载失败，请重试或查看完整报告。"
+  },
+  "site.97a3583c6b16": {
+    "message": "Baseline vs. tuned configuration",
+    "description": "基线与调优对照"
+  },
+  "site.0f1505b6ad3f": {
+    "message": "Exit fullscreen",
+    "description": "退出全屏"
+  },
+  "site.90cd137f160c": {
+    "message": "Fullscreen",
+    "description": "全屏观看"
+  },
+  "site.c9a9e8905c6b": {
+    "message": "View full report ↗",
+    "description": "查看完整报告 ↗"
+  },
+  "site.ab325d7067a1": {
+    "message": "Loading report data…",
+    "description": "正在读取报告数据…"
+  },
+  "site.0bb54211e373": {
+    "message": "Original performance report",
+    "description": "原始性能对照报告"
+  },
+  "site.d4db040011ae": {
+    "message": "Browse ModelSphere deployment recipes, hardware requirements, version history, and original performance reports.",
+    "description": "浏览 ModelSphere 模型部署配方、硬件要求、版本历史与源性能报告。"
+  },
+  "site.5246cfab3d47": {
+    "message": "Model Catalog",
+    "description": "模型目录（Model Catalog）"
+  },
+  "site.cf8de3c1a445": {
+    "message": "Model deployment recipes and tuning reports",
+    "description": "模型部署配方与调优报告"
+  },
+  "site.50d4088626c4": {
+    "message": "Explore inference engines, container images, launch parameters, GPU requirements, and reports comparing baseline and tuned configurations.",
+    "description": "查阅模型的推理引擎、容器镜像、启动参数、GPU 硬件要求与基线 / 调优报告。"
+  },
+  "site.2cd026674d25": {
+    "message": "Search model catalog",
+    "description": "搜索模型目录"
+  },
+  "site.6e086a60c3f6": {
+    "message": "Search recipes, models, images, hardware…",
+    "description": "搜索部署配方、模型名称、容器镜像、硬件型号…"
+  },
+  "site.ecfbffc6fb77": {
+    "message": "Search ",
+    "description": "搜索 "
+  },
+  "site.372a79bbe944": {
+    "message": "Content view",
+    "description": "内容视图"
+  },
+  "site.bb15403ee7c7": {
+    "message": "Models",
+    "description": "模型视角"
+  },
+  "site.c4d6c65764e8": {
+    "message": "Recipes",
+    "description": "配方视角"
+  },
+  "site.10d4914e1a9b": {
+    "message": "All model families",
+    "description": "全部模型家族"
+  },
+  "site.0ebae330da89": {
+    "message": "All inference engines",
+    "description": "全部推理引擎"
+  },
+  "site.28f5ffb5f56f": {
+    "message": "All technical tags",
+    "description": "全部技术标签"
+  },
+  "site.2428420e407f": {
+    "message": "Total: ",
+    "description": "共 "
+  },
+  "site.7aaf96ad52e0": {
+    "message": " ",
+    "description": " 个"
+  },
+  "site.f25ff1efa238": {
+    "message": "recipes",
+    "description": "配方"
+  },
+  "site.1ce6b1d7c95c": {
+    "message": "Sort by",
+    "description": "排序方式"
+  },
+  "site.f7e6d40ff9f5": {
+    "message": "Best gain from a tuned recipe",
+    "description": "按调优配方最佳提升排序"
+  },
+  "site.26ba23cf9e57": {
+    "message": "Throughput gain",
+    "description": "按吞吐量提升排序"
+  },
+  "site.e273b1d2eca6": {
+    "message": "Model name A–Z",
+    "description": "按模型名称 A–Z"
+  },
+  "site.1322e7738e4a": {
+    "message": "Model name Z–A",
+    "description": "按模型名称 Z–A"
+  },
+  "site.6592019eaa05": {
+    "message": "Recipe release date",
+    "description": "按配方发布日期"
+  },
+  "site.7904ff565aaa": {
+    "message": "Card view",
+    "description": "卡片视图"
+  },
+  "site.a3de52de404b": {
+    "message": "Table view",
+    "description": "表格视图"
+  },
+  "site.a8b9eb42893a": {
+    "message": "All hardware ",
+    "description": "全部硬件 "
+  },
+  "site.13a431e59b65": {
+    "message": "Reset filters",
+    "description": "重置筛选"
+  },
+  "site.6724ef3be3e4": {
+    "message": "View and more filters",
+    "description": "视图与更多筛选"
+  },
+  "site.ace412e9d655": {
+    "message": "Recipe role",
+    "description": "配方角色"
+  },
+  "site.2878fe586472": {
+    "message": "All roles",
+    "description": "全部角色"
+  },
+  "site.0100b669ea31": {
+    "message": "With tuning records",
+    "description": "有调优记录"
+  },
+  "site.ed34d7702f8e": {
+    "message": "Other recipes",
+    "description": "其他部署配方"
+  },
+  "site.527ecfca8fad": {
+    "message": "Deployment topology",
+    "description": "部署拓扑"
+  },
+  "site.40dcb54875ac": {
+    "message": "All topologies",
+    "description": "全部拓扑"
+  },
+  "site.f8c3f7bee9ee": {
+    "message": "Single node",
+    "description": "单节点"
+  },
+  "site.c5807fa6fafa": {
+    "message": "Multi-node LWS",
+    "description": "多节点 LWS"
+  },
+  "site.a0dc79c85d61": {
+    "message": "Prefill / Decode disaggregation",
+    "description": "Prefill / Decode 分离"
+  },
+  "site.4b3bdd5f1c7e": {
+    "message": "Hide deprecated records",
+    "description": "隐藏已弃用记录"
+  },
+  "site.5d82123dfc9f": {
+    "message": "Build-time baseline catalog, version ",
+    "description": "当前为构建时基线目录，版本 "
+  },
+  "site.016d83ff8349": {
+    "message": ". Search, filters, pagination, and live details require JavaScript. Read the original data through source links.",
+    "description": "。搜索、筛选、分页与实时详情需要 JavaScript；可通过来源链接阅读原始资料。"
+  },
+  "site.df3a5ea67d00": {
+    "message": "Your filters have been preserved. Change keywords or reset the filters.",
+    "description": "保留了当前筛选条件，可修改关键词或重置筛选。"
+  },
+  "site.4290314679b4": {
+    "message": "Model / description",
+    "description": "模型 / 介绍"
+  },
+  "site.996fc25f11e3": {
+    "message": "Tuning comparisons",
+    "description": "调优对照"
+  },
+  "site.ae941df6611c": {
+    "message": "Model deployment catalog",
+    "description": "模型部署目录"
+  },
+  "site.4580d14d5c54": {
+    "message": "Recipe / engine",
+    "description": "配方 / 引擎"
+  },
+  "site.d8e84eb82b24": {
+    "message": "Best workload gain",
+    "description": "最佳负载提升"
+  },
+  "site.ad28b6a65be6": {
+    "message": "View recipe details",
+    "description": "查看配方详情"
+  },
+  "site.ea4bf042d1bc": {
+    "message": "Model list",
+    "description": "模型列表"
+  },
+  "site.aa64e4bdf879": {
+    "message": "Catalog pagination",
+    "description": "目录分页"
+  },
+  "site.9552fe3bd366": {
+    "message": "Page ",
+    "description": "第 "
+  },
+  "site.85ca81cf6abd": {
+    "message": " ",
+    "description": " 页"
+  },
+  "site.1ce41e26b4c9": {
+    "message": "Catalog version ",
+    "description": "目录版本 "
+  },
+  "site.420c20dd9fcc": {
+    "message": "Copy code",
+    "description": "复制代码"
+  },
+  "site.35b9d1632e80": {
+    "message": "Copying",
+    "description": "复制中"
+  },
+  "site.bc31718db91d": {
+    "message": "Copy failed. Please select the code manually",
+    "description": "复制失败，请手动选择代码"
+  },
+  "site.ea538e2ae64c": {
+    "message": "Code copied",
+    "description": "代码已复制"
+  },
+  "site.0df458657238": {
+    "message": "Resumable LLM streaming",
+    "description": "大模型推理断流续写"
+  },
+  "site.a52a481c1137": {
+    "message": "Mechanism, configuration, and performance design examples; not runtime status, measured evidence, or service guarantees.",
+    "description": "按设计稿展示的机制、配置与性能示例，不代表运行时状态、实测证明或服务保证。"
+  },
+  "site.47c4307c4726": {
+    "message": "Resumable LLM streaming:",
+    "description": "大模型推理断流续写："
+  },
+  "site.51226c2de14d": {
+    "message": "100% protection against stream interruptions caused by service crashes",
+    "description": "\n100% 隔离服务崩溃断流\n"
+  },
+  "site.5cf8fbac4dd2": {
+    "message": "Hang-Watcher out-of-band health checks within seconds: ",
+    "description": "Hang-Watcher 旁路秒级探活："
+  },
+  "site.0e6ae6afa50a": {
+    "message": "An independent, out-of-band probe monitors the engine’s token emission timestamps. If the wait for a token exceeds a dynamic threshold (for example, 150 ms, above the P99.9 latency), the node is marked as hung and a circuit breaker trips.",
+    "description": "\n独立旁路探针实时监听引擎的 Token Emit 时间戳，若单 Token 生成等待时长超过动态阈值（如 150ms 超出 P99.9），立即将节点判定为 Hang 状态并下发熔断。\n"
+  },
+  "site.9c5774927a7b": {
+    "message": "Token context replay: ",
+    "description": "Token 上下文状态重放："
+  },
+  "site.4fcc2464b707": {
+    "message": "The gateway caches tokens 1–N from the current stream. On node failure, it sends a continuation prefill request with the token history to a healthy node.",
+    "description": "\n网关层实时缓存当前流式对话已吐出的 Token 1~N，并在检测到节点异常时，自动向健康节点发起包含历史 Token 的接续 Prefill 请求。\n"
+  },
+  "site.a42264b66b5c": {
+    "message": "Transparent SSE handoff: ",
+    "description": "客户端 SSE 无感知透明接力："
+  },
+  "site.b644cf4ef045": {
+    "message": "The browser or API client connection stays open. Output resumes at token N+1 without freezing the conversation or requiring a retry.",
+    "description": "\n客户端浏览器或 API Client 的长连接永不中断，直接在 Token N+1 处无缝追加输出，前端对话 UI 毫无卡死与重试刷新感。\n"
+  },
+  "site.00dd4ced7c84": {
+    "message": "Normal streaming inference",
+    "description": "正常流式推理阶段"
+  },
+  "site.f3eb7665088b": {
+    "message": "The client maintains a persistent SSE connection; the gateway routes the request to ",
+    "description": "\n客户端保持 SSE 长连接；网关将请求分流至 "
+  },
+  "site.4b911f91b5ec": {
+    "message": "Model service A",
+    "description": "模型服务 A"
+  },
+  "site.020f416393b4": {
+    "message": ", which emits tokens 1 → 2 → 3 → 4 → 5.",
+    "description": "；服务依次生成并吐出 Token 1 → 2 → 3 → 4 → 5。\n"
+  },
+  "site.0a3f56544d29": {
+    "message": "Failure detected by out-of-band probe",
+    "description": "突发故障 & 旁路探针捕获"
+  },
+  "site.554610a92c94": {
+    "message": " encounters a GPU memory deadlock or CUDA illegal memory access error, interrupting generation. Hang-Watcher detects a token emission timeout within 140 ms and tells the gateway to close its connection to A.",
+    "description": " 遭遇 GPU 显存死锁或 CUDA Illegal Memory Access，生成中断。Hang-Watcher 探针在 140ms 内检测到 Token Emit 超时，通知网关切断与 A 的通道。\n"
+  },
+  "site.995b760b23bd": {
+    "message": "Switch to a healthy node with context",
+    "description": "携带上下文无缝切换健康节点"
+  },
+  "site.ef4c19e88cc2": {
+    "message": "The gateway captures the emitted tokens 1–5 and uses a shared handle to the L3 KV cache to immediately redirect the request to a healthy standby node, ",
+    "description": "\n聚合调度网关截取已吐出的 Token 1~5，结合 L3 KV Cache 共享句柄，瞬间重定向发送至健康备用节点 "
+  },
+  "site.fcd75b2b2a93": {
+    "message": "Model service B",
+    "description": "模型服务 B"
+  },
+  "site.1c174d4246c5": {
+    "message": "Resume generation with seamless streaming",
+    "description": "断点接续与透明推流"
+  },
+  "site.596ae806ae2a": {
+    "message": " quickly resumes generation at tokens 6 → 7 → 8... The gateway appends the output to the original SSE stream, preserving all text without a visible interruption.",
+    "description": " 极速计算并接续生成 Token 6 → 7 → 8... 网关直接追加注入原 SSE 流，客户端用户界面毫无感知，零丢字体验。\n"
+  },
+  "site.f039310ac86e": {
+    "message": "Service quality and autoscaling",
+    "description": "服务质量保障与弹性伸缩"
+  },
+  "site.e12e17ea0cf2": {
+    "message": "Service quality and SLO-driven autoscaling",
+    "description": "\n服务质量保障与 SLO 动态弹性伸缩\n"
+  },
+  "site.77ee6098da09": {
+    "message": "Move beyond static TPM/RPM limits with real-time production feedback based on time to first token (TTFT) and output tokens per second (OTPS).",
+    "description": "\n告别单一粗暴的 TPM/RPM 静态限流，建立基于首字延迟 (TTFT) 与每秒产出 (OTPS) 的生产级实时反馈调控。\n"
+  },
+  "site.0a35a4b7aaa5": {
+    "message": "Dynamic QoS rate limiting (TTFT / OTPS)",
+    "description": "QoS 动态限流 (TTFT / OTPS)"
+  },
+  "site.62dacb9461f9": {
+    "message": "Static rate limits cannot detect the cascading queues caused by saturated prefill capacity. ModelSphere monitors time to first token (TTFT). When it exceeds the threshold, the gateway responds within milliseconds with HTTP 429 and Retry-After: 120ms to prompt client backoff and prevent cluster overload.",
+    "description": "\n静态限流无法感知 Prefill 算力饱和引发的排队雪崩。ModelSphere 动态监测首字延迟。当 TTFT 突破阈值时，网关在毫秒级返回携带 Retry-After: 120ms 的智能 429 退避，避免集群被拖死。\n"
+  },
+  "site.7b85ca14caf0": {
+    "message": "SLO-based autoscaling (K8s HPA/EDA)",
+    "description": "SLO 弹性扩缩容 (K8s HPA/EDA)"
+  },
+  "site.69fb535284fa": {
+    "message": "Adjust inference Pod replicas within milliseconds as concurrency changes. During off-peak hours, high-priority models use idle accelerators, raising overall GPU utilization from the industry average of 45% to over 85% in this design example. In-flight requests finish before replicas are released during scale-down.",
+    "description": "\n随并发需求毫秒级调整推理 Pod 副本；非高峰期高优模型借用闲置芯片，使集群整体 GPU 利用率从行业平均 45% 大幅跃升至 85% 以上，且缩容时保证就绪请求排空再释放。\n"
+  },
+  "site.9656f879000d": {
+    "message": "B300 + Ascend",
+    "description": "B300 + 昇腾"
+  },
+  "site.e9a6e8e7991e": {
+    "message": "Continuous optimization",
+    "description": "性能持续优化"
+  },
+  "site.04c52c423435": {
+    "message": "Tuning-Agent continuous optimization",
+    "description": "Tuning-Agent 性能持续优化"
+  },
+  "site.e4e65d542ec8": {
+    "message": "ModelSphere connects real production traffic, idle off-peak compute, hyperparameter grid search, and zero-downtime canary releases in an automated optimization loop, reducing manual trial-and-error benchmarking.",
+    "description": "\n      告别繁冗的人工基准盲测。ModelSphere 将线上真实请求、低谷空闲算力、网格化超参搜索与零停机灰度上线串联成全自动化演进飞轮。\n    "
+  },
+  "site.6054a2fd5372": {
+    "message": "A new optimization approach",
+    "description": "演进范式跃迁"
+  },
+  "site.ec073b0edf7e": {
+    "message": "From manual experiments to continuous improvement",
+    "description": "从“人工盲测”跨越到“自主演进”"
+  },
+  "site.8baa61b6a1aa": {
+    "message": "Use idle compute to unlock hardware potential and make inference faster over time.",
+    "description": "用空闲算力持续榨干硬件潜能，让 LLM 推理服务越用越快。"
+  },
+  "site.45bc36393c8b": {
+    "message": "Better sampling",
+    "description": "采样更准"
+  },
+  "site.ca1f46545b3a": {
+    "message": "Static test datasets",
+    "description": "静态数据集测试"
+  },
+  "site.51f3302d2b27": {
+    "message": "Real traffic features from a 7-day sliding window",
+    "description": "7 天滑动窗口真实流量特征蓄水"
+  },
+  "site.7017dcf74465": {
+    "message": "Lower cost",
+    "description": "成本更低"
+  },
+  "site.9b5db700cd4b": {
+    "message": "Benchmarks consuming production resources",
+    "description": "占用生产资源压测"
+  },
+  "site.a4c039468112": {
+    "message": "Concurrent grid search on idle off-peak compute",
+    "description": "夜间低峰期闲置算力并发网格搜索"
+  },
+  "site.8768d9a795d5": {
+    "message": "Safer delivery",
+    "description": "交付更稳"
+  },
+  "site.c2f315ee2543": {
+    "message": "Restarting services to update parameters",
+    "description": "停机重启更新参数"
+  },
+  "site.138b5fd6020a": {
+    "message": "Automatically validate the best configuration and hot-load it in production without downtime",
+    "description": "冠军方案自动验证，生产环境零停机热加载"
+  },
+  "site.15f0b92fe41e": {
+    "message": "Production inference",
+    "description": "线上推理服务"
+  },
+  "site.b9b42c232cf6": {
+    "message": "Stable operation",
+    "description": "稳定运行"
+  },
+  "site.0b2b2f8f71a2": {
+    "message": "Reliable, low-latency, highly available service",
+    "description": "稳定运行，持续提供高质量低时延高可用服务"
+  },
+  "site.56d89537b868": {
+    "message": "Automated rollout",
+    "description": "自动化上线"
+  },
+  "site.a762c19d9aca": {
+    "message": "Canary rollout",
+    "description": "生产灰度"
+  },
+  "site.2818b323ef17": {
+    "message": "Deploy the best configuration with seamless hot reload",
+    "description": "最优配置自动部署，零丢流热加载"
+  },
+  "site.6b338826b141": {
+    "message": "Continuous optimization loop",
+    "description": "持续性能优化闭环"
+  },
+  "site.5d303f96e6f3": {
+    "message": "Collect traffic data",
+    "description": "收集流量数据"
+  },
+  "site.003a7e708d44": {
+    "message": "Traffic feature collection",
+    "description": "特征蓄水"
+  },
+  "site.48732aeaef82": {
+    "message": "Build sliding-window datasets and prefix topology",
+    "description": "构建滑动窗口数据集与前缀拓扑"
+  },
+  "site.3a8d95379980": {
+    "message": "Generate and validate configurations",
+    "description": "产出并验证配置"
+  },
+  "site.11f6c0ce2b39": {
+    "message": "Real workloads",
+    "description": "真实负载"
+  },
+  "site.9afaa4f936fa": {
+    "message": "Select the best inference configuration using real workloads",
+    "description": "基于真实负载比选出冠军推理方案"
+  },
+  "site.d767694607d3": {
+    "message": "Tune with idle compute",
+    "description": "利用空闲算力调优"
+  },
+  "site.b6ad2f1e3dca": {
+    "message": "Off-peak search",
+    "description": "低峰搜索"
+  },
+  "site.a149e0e2f633": {
+    "message": "Search inference hyperparameters in parallel during off-peak hours",
+    "description": "夜间低峰期并发搜索更优推理超参"
+  },
+  "site.8b7aba25d266": {
+    "message": "Transparent, reproducible measurements",
+    "description": "透明可复现的真实实测"
+  },
+  "site.d796c2f55900": {
+    "message": "Transparent, reproducible measurements",
+    "description": "\n              透明可复现的真实实测"
+  },
+  "site.c7ad3335dc85": {
+    "message": "Publish benchmark input and output distributions, hardware topology, and trade-offs so every tuning gain can be verified.",
+    "description": "公开完整的基准输入输出分布、硬件拓扑与权衡代价，每一次调优收益皆可复核。\n            "
+  },
+  "site.de57ea95aff6": {
+    "message": "Performance comparison design examples",
+    "description": "设计稿性能实测对照示例"
+  },
+  "site.0fb4c5c150d7": {
+    "message": "Model and architecture",
+    "description": "模型与架构"
+  },
+  "site.3df1589c059d": {
+    "message": "Hardware",
+    "description": "硬件环境"
+  },
+  "site.6f219ec00819": {
+    "message": "Workload (Prompt + Output)",
+    "description": "负载场景 (Prompt+Output)"
+  },
+  "site.192d279d8ca7": {
+    "message": "Throughput (Default vs Tuned)",
+    "description": "吞吐对比 (Default vs Tuned)"
+  },
+  "site.84db1df6e46f": {
+    "message": "Performance gain",
+    "description": "性能飞跃"
+  },
+  "site.616abf2ae0ac": {
+    "message": "Tuning techniques and trade-offs",
+    "description": "调优技术与代价说明"
+  },
+  "site.29891663b1f6": {
+    "message": "50k + 1.5k (long context)",
+    "description": "50k + 1.5k (长上下文)"
+  },
+  "site.37e08ff4ea29": {
+    "message": "Concurrency 4 → 26; TTFT 4.81s → 7.66s (within the SLO of ≤ 8s); GPQA accuracy decreases by 3.03% (an explicit trade-off)",
+    "description": "\n                  并发 4→26; TTFT 4.81s→7.66s (符合 SLO ≤ 8s); GPQA 精度微降 3.03% (显式折中)\n                "
+  },
+  "site.b5e1c7101db6": {
+    "message": "Large long-context gains",
+    "description": "长文大幅跃升"
+  },
+  "site.d138647f7bbb": {
+    "message": " / steady on common workloads",
+    "description": " / 常用平稳\n                "
+  },
+  "site.4f54906de742": {
+    "message": "Gains depend on workload; AutoTune adapts chunk sizes for very long contexts",
+    "description": "\n                  客观体现“负载改变收益改变”，AutoTune 针对超长上下文自适应调整 Chunk 分块\n                "
+  },
+  "site.f8ae6c58fa2d": {
+    "message": "Agentic (c=8, concurrent multi-turn)",
+    "description": "Agentic (c=8 并发多轮)"
+  },
+  "site.0e0c1daadf85": {
+    "message": "SGLang + FlashAttention-3 + FP8 + Chunked Prefill 32768 + extra_buffer",
+    "description": "\n                  SGLang + FlashAttention-3 + FP8 + Chunked Prefill 32768 + extra_buffer 深度融合\n                "
+  },
+  "site.7208c864516c": {
+    "message": "Mixed workload simulating production traffic",
+    "description": "全量生产仿真混合集"
+  },
+  "site.2c837b9b1232": {
+    "message": "Baseline comparison",
+    "description": "基线对比"
+  },
+  "site.f517c4451237": {
+    "message": "Peak gain",
+    "description": "最高峰值"
+  },
+  "site.e459da12b0aa": {
+    "message": "AutoTune selects the optimal single-node TP4 topology and integrates modelopt_fp4 kernels",
+    "description": "\n                  AutoTune 搜索至最优 TP4 单节点拓扑，集成 modelopt_fp4 极致内核\n                "
+  },
+  "site.2209fac93619": {
+    "message": "Get started",
+    "description": "开始部署"
+  },
+  "site.8bc9ff0b2fc6": {
+    "message": "Ready to accelerate your LLM inference cluster?",
+    "description": "\n        准备好让你的大模型推理集群提速了吗？\n      "
+  },
+  "site.69b036360050": {
+    "message": "Explore the open source code and build the next generation of inference infrastructure with AI engineers.",
+    "description": "全套源码完全开源，加入顶尖 AI Infra 工程师共建的下一代推理基础设施。\n      "
+  },
+  "site.432ef28ba8ed": {
+    "message": "Deploy now",
+    "description": "立即部署"
+  },
+  "site.6f0b3350f913": {
+    "message": "Join the developer community",
+    "description": "加入开发者交流群"
+  },
+  "site.aba19a1bf2ae": {
+    "message": "Footer resources",
+    "description": "页脚资源"
+  },
+  "site.7cf2a56a3f5c": {
+    "message": "Footer status, nodes, and SHA are design examples.",
+    "description": "页脚状态、节点及 SHA 按设计稿展示为示例。"
+  },
+  "site.20e8091eb03d": {
+    "message": "Bring LLM inference from the lab into production.",
+    "description": "让大模型推理从实验室能跑，到生产好用。"
+  },
+  "site.3dac0de92967": {
+    "message": "Source code",
+    "description": "开源代码"
+  },
+  "site.720f02a99a32": {
+    "message": "GitHub repository",
+    "description": "GitHub 仓库"
+  },
+  "site.1be2b13bec98": {
+    "message": "Model Catalog",
+    "description": "Model Catalog 模型库"
+  },
+  "site.87e8f72399c9": {
+    "message": "Blog insights",
+    "description": "博客洞察"
+  },
+  "site.1349f51625ad": {
+    "message": "Coming soon",
+    "description": "即将开放"
+  },
+  "site.6bd1de08068e": {
+    "message": "WeChat developer group",
+    "description": "微信开发者群"
+  },
+  "site.c61b1e0bcaa7": {
+    "message": "ModelHubXC",
+    "description": "ModelHubXC 信创模盒"
+  },
+  "site.6bca6751018f": {
+    "message": "Documentation",
+    "description": "技术文档"
+  },
+  "site.7a1ed67b3cce": {
+    "message": "Legal and open source",
+    "description": "法律与开源"
+  },
+  "site.7fb31e61f2a1": {
+    "message": "Roadmap",
+    "description": "Roadmap 演进图"
+  },
+  "site.ba465cbc14a4": {
+    "message": "© 2025 ModelSphere Open Source Project. All rights reserved.",
+    "description": "© 2025 ModelSphere (模域) Open Source Project. All rights reserved."
+  },
+  "site.e445205d07c3": {
+    "message": "light",
+    "description": "浅"
+  },
+  "site.d5f3c536a759": {
+    "message": "dark",
+    "description": "深"
+  },
+  "site.a747886ebcde": {
+    "message": "Switch to {v0} mode",
+    "description": "切换到{v0}色模式"
+  },
+  "site.7a1604323e8b": {
+    "message": "Switch theme",
+    "description": "切换主题"
+  },
+  "site.b79ed765a253": {
+    "message": "Documentation coming soon",
+    "description": "文档准备中"
+  },
+  "site.f70ed63841f9": {
+    "message": "ModelSphere developer documentation is being prepared",
+    "description": "ModelSphere 正式开发者文档正在准备中"
+  },
+  "site.881ea8d109fa": {
+    "message": "Developer documentation has not been published yet. Project introductions, configuration references, and deployment guides will be available here.",
+    "description": "正式的开发者文档尚未发布。内容就绪后，你可以在这里阅读项目介绍、配置说明和部署指南。"
+  },
+  "site.dbe76bb1cd97": {
+    "message": "Back to home →",
+    "description": "返回首页 →"
+  },
+  "site.f392b2e9649a": {
+    "message": "Application ecosystem",
+    "description": "上层应用生态"
+  },
+  "site.16b004ffab58": {
+    "message": "Standard APIs for a wide range of agent frameworks.",
+    "description": "标准化  API 接入，支持各类 Agent 框架。"
+  },
+  "site.39bc64bbc91f": {
+    "message": "ModelSphere core platform",
+    "description": "模域 ModelSphere 核心底座"
+  },
+  "site.dc956c11f710": {
+    "message": "Production routing, SLO autoscaling, seamless stream recovery, and engine orchestration.",
+    "description": "工业级路由调度、SLO 弹缩、零感知断流自愈与推理引擎编排。"
+  },
+  "site.ab33ee65f2ee": {
+    "message": "Heterogeneous compute",
+    "description": "下层多元异构算力"
+  },
+  "site.856f3ee6db16": {
+    "message": "Manage compute and topology across chip ecosystems without vendor lock-in.",
+    "description": "统一拓扑算力纳管，消除芯片生态壁垒与厂商绑定。"
+  },
+  "site.8f575cabd8c0": {
+    "message": "ModelSphere architecture and compute scheduling topology",
+    "description": "ModelSphere 系统分层架构与算力调度拓扑"
+  },
+  "site.0101783bda9e": {
+    "message": "Architecture and compute scheduling topology",
+    "description": "系统分层架构与算力调度拓扑"
+  },
+  "site.317f4acab44f": {
+    "message": "Coordinated scheduling across layers",
+    "description": "全栈分层调度协同流"
+  },
+  "site.0a4af1dd5219": {
+    "message": "ModelSphere connects applications through routing, rate limiting, PD disaggregation, KV caching, autoscaling, stream recovery, and AutoTune to vLLM, SGLang, and heterogeneous compute.",
+    "description": "模域 ModelSphere 系统分层架构与算力调度拓扑：上层应用生态通过 ModelSphere 的路由、限流、PD 分离、KV 缓存、自动扩缩容、断流续写和 AutoTune，连接 vLLM、SGLang 等推理引擎与多元异构算力。"
+  },
+  "site.340bc68d8384": {
+    "message": "QoS request checks and rate limiting",
+    "description": "QoS 请求检查与限流机制示意"
+  },
+  "site.aaa967021a52": {
+    "message": "Request protection path",
+    "description": "请求保护路径"
+  },
+  "site.95da713cb4a5": {
+    "message": "Mechanism overview",
+    "description": "机制示意"
+  },
+  "site.3b5151864eab": {
+    "message": "Inference request",
+    "description": "推理请求"
+  },
+  "site.7f2c9744f20c": {
+    "message": "Service entry point",
+    "description": "进入服务入口"
+  },
+  "site.0a334d6e7c58": {
+    "message": "SLO check",
+    "description": "SLO 检查"
+  },
+  "site.5807ed1817b9": {
+    "message": "Within limits → Route normally",
+    "description": "满足要求 → 正常路由"
+  },
+  "site.83815bddfab7": {
+    "message": "Enter inference service",
+    "description": "进入推理服务"
+  },
+  "site.8e6adde9d95c": {
+    "message": "Limit exceeded → HTTP 429",
+    "description": "超出限制 → HTTP 429"
+  },
+  "site.9c76b16d5ed6": {
+    "message": "Retry-After · Client backs off and retries",
+    "description": "Retry-After · 客户端退避重试"
+  },
+  "site.f49fbb74705e": {
+    "message": "Mechanism: check service quality requirements and return a rate-limit response when limits are exceeded.",
+    "description": "机制示意：检查服务质量要求，超限时返回限流响应。"
+  },
+  "site.09362d2788c7": {
+    "message": "SLO-based autoscaling adjusts replicas as demand changes, respecting limits and cooldown periods",
+    "description": "SLO 弹性伸缩机制示意，需求变化后调整副本，遵守边界和冷却期"
+  },
+  "site.cd52bc125d5f": {
+    "message": "Demand and replica response",
+    "description": "需求与副本响应"
+  },
+  "site.e978b66589bf": {
+    "message": " Request demand",
+    "description": " 请求需求"
+  },
+  "site.944591925157": {
+    "message": " Service replicas",
+    "description": " 服务副本"
+  },
+  "site.d26b480dd563": {
+    "message": "Relative change",
+    "description": "相对变化"
+  },
+  "site.58ea3addd7ef": {
+    "message": "Demand increases",
+    "description": "需求增长"
+  },
+  "site.e28ab28eba82": {
+    "message": "Scale out",
+    "description": "扩容响应"
+  },
+  "site.5341c36ba310": {
+    "message": "Cooldown",
+    "description": "冷却观察"
+  },
+  "site.0541281d4674": {
+    "message": "Scale in",
+    "description": "释放副本"
+  },
+  "site.04d10e7e5587": {
+    "message": "Illustration: adjust replica counts to meet service-level objectives. The curves do not represent measured data.",
+    "description": "机制示意：按服务质量目标调整副本；曲线不代表实测数据。"
+  },
+  "site.ab2c8f045d4f": {
+    "message": "Define tuning goals for the service workload",
+    "description": "以服务场景定义调优目标"
+  },
+  "site.7c9f676819cf": {
+    "message": "Collect traffic features",
+    "description": "收集流量特征"
+  },
+  "site.a7dfb02d383e": {
+    "message": "Prepare representative workloads and inputs",
+    "description": "准备代表性负载与输入"
+  },
+  "site.6242b65a776c": {
+    "message": "Tune on idle compute",
+    "description": "空闲算力调优"
+  },
+  "site.9483f90db1ec": {
+    "message": "Allocate resources and search for candidate configurations",
+    "description": "分配资源，搜索候选配置"
+  },
+  "site.774796fe0151": {
+    "message": "Read reports and check gains and constraints",
+    "description": "阅读报告，核对收益与约束"
+  },
+  "site.a5aef2a2cfc5": {
+    "message": "Controlled deployment",
+    "description": "受控交付部署"
+  },
+  "site.8da9c5ba9708": {
+    "message": "Confirm the configuration before deploying a candidate",
+    "description": "确认配置后部署候选方案"
+  },
+  "site.58283660b4ac": {
+    "message": "AutoTune preview: five steps with operator confirmation before deployment",
+    "description": "AutoTune 预览版五步流程，配置经确认后受控部署"
+  },
+  "site.541df25f2a2b": {
+    "message": "Continuous performance optimization",
+    "description": "持续性能优化"
+  },
+  "site.9d81bf342869": {
+    "message": "Preview workflow",
+    "description": "预览版流程"
+  },
+  "site.3436bda5460b": {
+    "message": "Operator confirmation is required before deployment.",
+    "description": "配置经操作者确认后交付部署。"
+  },
+  "部署配置": {
+    "message": "Deployment configuration"
+  },
+  "性能对照": {
+    "message": "Performance comparison"
+  },
+  "版本历史": {
+    "message": "Version history"
+  },
+  "单节点": {
+    "message": "Single node"
+  },
+  "多节点 LWS": {
+    "message": "Multi-node LWS"
+  },
+  "Prefill / Decode 分离": {
+    "message": "Prefill / Decode disaggregation"
+  },
+  "项目动态": {
+    "message": "Project updates"
+  },
+  "性能调优与测评": {
+    "message": "Performance tuning and benchmarks"
+  },
+  "系统架构解析": {
+    "message": "Architecture"
+  },
+  "推理工程实践": {
+    "message": "Inference engineering"
+  },
+  "断流续写": {
+    "message": "Stream recovery"
+  },
+  "可观测性": {
+    "message": "Observability"
+  },
+  "进入直播": {
+    "message": "Watch live"
+  },
+  "预约提醒": {
+    "message": "Get a reminder"
+  },
+  "观看回放": {
+    "message": "Watch replay"
+  },
+  "下载 Slides": {
+    "message": "Download slides"
+  },
+  "回放待补充": {
+    "message": "Recording coming soon"
+  },
+  "无需 GPU": {
+    "message": "No GPU required"
+  },
+  "GPU 未指定": {
+    "message": "GPU not specified"
+  },
+  "目录计数或模型标识无效": {
+    "message": "Invalid catalog count or model identifier"
+  },
+  "配方标识重复": {
+    "message": "Duplicate recipe identifier"
+  },
+  "配方路径与标识不符": {
+    "message": "Recipe path does not match identifier"
+  },
+  "报告路径无效": {
+    "message": "Invalid report path"
+  },
+  "文件路径无效": {
+    "message": "Invalid file path"
+  },
+  "来源提交无效": {
+    "message": "Invalid source commit"
+  },
+  "当前环境不能校验配方，请通过来源链接阅读": {
+    "message": "This environment cannot verify the recipe. Use the source link to read it."
+  },
+  "配方校验值与目录不一致，请重新加载目录": {
+    "message": "Recipe checksum does not match the catalog. Reload the catalog."
+  },
+  "历史记录不属于当前配方": {
+    "message": "The version history does not match this recipe."
+  },
+  "历史与所选目录版本不一致": {
+    "message": "The version history does not match the selected catalog version."
+  },
+  "指定目录版本不可用。公开来源没有完整快照接口，请返回当前目录。": {
+    "message": "The requested catalog version is unavailable. The source has no full snapshot API. Return to the current catalog."
+  },
+  "指定目录版本不可用，请返回当前目录。": {
+    "message": "The requested catalog version is unavailable. Return to the current catalog."
+  },
+  "公开数据暂时不可达，以下保留已标明版本的目录副本。": {
+    "message": "The public catalog is temporarily unavailable. A saved copy is shown below with its version."
+  },
+  "site.locale": {
+    "message": "en"
+  },
+  "catalog.requestFailed": {
+    "message": "Source request failed ({status})"
+  },
+  "catalog.nodes": {
+    "message": " nodes"
+  },
+  "site.punctuation.period": {
+    "message": "."
+  },
+  "site.punctuation.closeParen": {
+    "message": ")"
+  },
+  "site.punctuation.colon": {
+    "message": ": "
+  },
+  "site.punctuation.huggingFace": {
+    "message": "Hugging Face: "
+  },
+  "catalog.gainRelativeToBaseline": {
+    "message": "Gain over {baseline}",
+    "description": "相对 {baseline} 的提升"
+  },
+  "catalog.modelCountLabel": {
+    "message": "models",
+    "description": "模型（目录数量单位）"
+  }
+}

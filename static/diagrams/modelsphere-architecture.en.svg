@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2675" height="744" viewBox="0 0 2048 570" role="img" aria-labelledby="title desc">
+<title id="title">ModelSphere architecture</title><desc id="desc">Applications connect through ModelSphere capabilities and inference engines to heterogeneous accelerators. Support depends on model and hardware compatibility.</desc>
+<rect width="2048" height="570" fill="#fff"/>
+<g font-family="Arial, sans-serif" fill="#202d3d">
+<path d="M342 91v25M342 425v20" stroke="#62748b" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M651 91v25M651 425v20" stroke="#62748b" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M960 91v25M960 425v20" stroke="#62748b" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M1269 91v25M1269 425v20" stroke="#62748b" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M1578 91v25M1578 425v20" stroke="#62748b" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M1887 91v25M1887 425v20" stroke="#62748b" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="80" y="53" font-size="19" text-anchor="middle" font-weight="600">APPLICATIONS</text>
+<text x="80" y="264" font-size="19" text-anchor="middle" font-weight="600">MODELSPHERE</text>
+<text x="80" y="485" font-size="18" text-anchor="middle" font-weight="600">ACCELERATORS</text>
+<rect x="200" y="28" width="285" height="65" rx="12" fill="#ddf2fb" stroke="#a5ddfa" stroke-width="2"/>
+<text x="342.5" y="69" font-size="22" text-anchor="middle" font-weight="600">Claude</text>
+<rect x="509" y="28" width="285" height="65" rx="12" fill="#ddf2fb" stroke="#a5ddfa" stroke-width="2"/>
+<text x="651.5" y="69" font-size="22" text-anchor="middle" font-weight="600">Codex</text>
+<rect x="818" y="28" width="285" height="65" rx="12" fill="#ddf2fb" stroke="#a5ddfa" stroke-width="2"/>
+<text x="960.5" y="69" font-size="22" text-anchor="middle" font-weight="600">OpenClaw</text>
+<rect x="1127" y="28" width="285" height="65" rx="12" fill="#ddf2fb" stroke="#a5ddfa" stroke-width="2"/>
+<text x="1269.5" y="69" font-size="22" text-anchor="middle" font-weight="600">Coding assistants</text>
+<rect x="1436" y="28" width="285" height="65" rx="12" fill="#ddf2fb" stroke="#a5ddfa" stroke-width="2"/>
+<text x="1578.5" y="69" font-size="22" text-anchor="middle" font-weight="600">Knowledge applications</text>
+<rect x="1745" y="28" width="285" height="65" rx="12" fill="#ddf2fb" stroke="#a5ddfa" stroke-width="2"/>
+<text x="1887.5" y="69" font-size="22" text-anchor="middle" font-weight="600">Business agents</text>
+<rect x="200" y="115" width="1828" height="310" rx="20" fill="#fff" stroke="#68319a" stroke-width="2"/>
+<rect x="236" y="130" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
+<text x="447.5" y="170" font-size="22" text-anchor="middle" font-weight="600">Day-one tuning &amp; onboarding</text>
+<rect x="681" y="130" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
+<text x="892.5" y="170" font-size="22" text-anchor="middle" font-weight="600">Cache-aware routing</text>
+<rect x="1126" y="130" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
+<text x="1337.5" y="170" font-size="22" text-anchor="middle" font-weight="600">QoS-aware rate limiting</text>
+<rect x="1571" y="130" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
+<text x="1782.5" y="170" font-size="22" text-anchor="middle" font-weight="600">PD disaggregation</text>
+<rect x="236" y="215" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
+<text x="447.5" y="255" font-size="22" text-anchor="middle" font-weight="600">Three-tier KV cache</text>
+<rect x="681" y="215" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
+<text x="892.5" y="255" font-size="22" text-anchor="middle" font-weight="600">SLO-based autoscaling</text>
+<rect x="1126" y="215" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
+<text x="1337.5" y="255" font-size="22" text-anchor="middle" font-weight="600">Automatic stream recovery</text>
+<rect x="1571" y="215" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
+<text x="1782.5" y="255" font-size="22" text-anchor="middle" font-weight="600">Continuous AutoTune</text>
+<path d="M236 305H1993" stroke="#e6edf5" stroke-width="2"/>
+<text x="283" y="358" font-size="21" text-anchor="middle" font-weight="600">Inference</text>
+<text x="283" y="383" font-size="21" text-anchor="middle" font-weight="600">engines</text>
+<rect x="359" y="326" width="1634" height="75" rx="14" fill="#fff0d7" stroke="#df941f" stroke-width="2"/>
+<rect x="377" y="340" width="562" height="48" rx="10" fill="#eba02a" stroke="#eba02a" stroke-width="2"/>
+<text x="658" y="373" font-size="26" text-anchor="middle" font-weight="600">vLLM</text>
+<rect x="957" y="340" width="562" height="48" rx="10" fill="#eba02a" stroke="#eba02a" stroke-width="2"/>
+<text x="1238" y="373" font-size="26" text-anchor="middle" font-weight="600">SGLang</text>
+<rect x="1537" y="340" width="436" height="48" rx="10" fill="#fff9ef" stroke="#415168" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="1755" y="372" font-size="23" text-anchor="middle" font-weight="600">More inference engines…</text>
+<rect x="200" y="445" width="285" height="73" rx="12" fill="#424e60" stroke="#424e60" stroke-width="2"/>
+<text x="342.5" y="488" font-size="23" text-anchor="middle" font-weight="600" fill="#fff">Ascend</text>
+<rect x="509" y="445" width="285" height="73" rx="12" fill="#424e60" stroke="#424e60" stroke-width="2"/>
+<text x="651.5" y="488" font-size="23" text-anchor="middle" font-weight="600" fill="#fff">Iluvatar CoreX</text>
+<rect x="818" y="445" width="285" height="73" rx="12" fill="#424e60" stroke="#424e60" stroke-width="2"/>
+<text x="960.5" y="488" font-size="23" text-anchor="middle" font-weight="600" fill="#fff">Moore Threads</text>
+<rect x="1127" y="445" width="285" height="73" rx="12" fill="#424e60" stroke="#424e60" stroke-width="2"/>
+<text x="1269.5" y="488" font-size="23" text-anchor="middle" font-weight="600" fill="#fff">Hygon</text>
+<rect x="1436" y="445" width="285" height="73" rx="12" fill="#424e60" stroke="#424e60" stroke-width="2"/>
+<text x="1578.5" y="488" font-size="23" text-anchor="middle" font-weight="600" fill="#fff">NVIDIA GPU</text>
+<rect x="1745" y="445" width="285" height="73" rx="12" fill="#fff" stroke="#424e60" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="1887.5" y="488" font-size="23" text-anchor="middle" font-weight="600" fill="#202d3d">More accelerators…</text>
+<text x="200" y="550" font-size="18" text-anchor="start" font-weight="600" fill="#506078">* Support depends on model and hardware compatibility.</text>
+</g></svg>

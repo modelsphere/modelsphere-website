@@ -1,3 +1,5 @@
+import { translateCopy } from '@site/src/lib/translate-copy';
+import { translate } from '@docusaurus/Translate';
 import React, { useId, useState } from 'react';
 import Link from '@docusaurus/Link';
 import {
@@ -120,24 +122,34 @@ export function SourceState({
       <span className={styles.sourceBadge}>
         <span aria-hidden="true">●</span>{' '}
         {status === 'live'
-          ? '公开目录'
+          ? translate({ id: 'site.947d63ff4b7f', message: '公开目录' })
           : catalog.commit === baselineInfo.dataCommit
-            ? '构建基线'
-            : '已缓存目录'}{' '}
+            ? translate({ id: 'site.351375c306b2', message: '构建基线' })
+            : translate({
+                id: 'site.426639544105',
+                message: '已缓存目录',
+              })}{' '}
         · {catalog.commit.slice(0, 7)}
       </span>
       <span>
         {status === 'loading'
-          ? '正在读取当前数据…'
+          ? translate({ id: 'site.2c75b5b35a28', message: '正在读取当前数据…' })
           : status === 'live'
             ? 'Model Catalog'
             : catalog.commit === baselineInfo.dataCommit
-              ? '基线读取于 ' + baselineInfo.retrievedAt.slice(0, 10)
-              : '保留所选版本的数据副本'}
+              ? translate({ id: 'site.c91cba23284c', message: '基线读取于 ' }) +
+                baselineInfo.retrievedAt.slice(0, 10)
+              : translate({
+                  id: 'site.819f1ab8603a',
+                  message: '保留所选版本的数据副本',
+                })}
       </span>
       {error && (
         <span className={styles.error} role="status">
-          {error} <button onClick={reload}>重试</button>
+          {translateCopy(error)}{' '}
+          <button onClick={reload}>
+            {translate({ id: 'site.b8784c8dd563', message: '重试' })}
+          </button>
         </span>
       )}
     </div>
@@ -146,22 +158,38 @@ export function SourceState({
 export function Stats({ catalog }: { catalog: Catalog }) {
   const s = stats(catalog);
   const percent = (value: number | null) =>
-    value == null ? '未提供' : `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
+    value == null
+      ? translate({ id: 'site.756762e293f2', message: '未提供' })
+      : `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
   const items = [
-    ['MODELS', s.models, '模型总数', 'box'],
+    [
+      'MODELS',
+      s.models,
+      translate({ id: 'site.0c26e6085429', message: '模型总数' }),
+      'box',
+    ],
     ['RECIPES', s.recipes, s.engines, 'code'],
     [
       'OPTIMIZED PAIRS',
       s.optimizedPairs,
-      `覆盖 ${s.optimizedCoverage}% 模型`,
+      translate(
+        { id: 'site.45fc2235aa43', message: '覆盖 {v0}% 模型' },
+        { v0: s.optimizedCoverage },
+      ),
       'compare',
     ],
     [
       'MEDIAN IMPROVEMENT',
       percent(s.medianImprovement),
       s.minImprovement == null
-        ? '暂无有效提升记录'
-        : `最佳负载 · 范围 ${percent(s.minImprovement)} 至 ${percent(s.bestImprovement)}`,
+        ? translate({ id: 'site.de0b7338c7f3', message: '暂无有效提升记录' })
+        : translate(
+            {
+              id: 'site.eb26c7e753e3',
+              message: '最佳负载 · 范围 {v0} 至 {v1}',
+            },
+            { v0: percent(s.minImprovement), v1: percent(s.bestImprovement) },
+          ),
       'speed',
     ],
     [
@@ -172,13 +200,16 @@ export function Stats({ catalog }: { catalog: Catalog }) {
           {s.bestRecipe.model.name} · {s.bestRecipe.variant.id}
         </Link>
       ) : (
-        '暂无有效提升记录'
+        translate({ id: 'site.de0b7338c7f3', message: '暂无有效提升记录' })
       ),
       'rocket',
     ],
   ] as const;
   return (
-    <section className={styles.stats} aria-label="目录统计">
+    <section
+      className={styles.stats}
+      aria-label={translate({ id: 'site.89472821c2cf', message: '目录统计' })}
+    >
       {items.map(([name, value, sub, icon]) => (
         <div className={styles.stat} key={name}>
           <div>
@@ -194,7 +225,7 @@ export function Stats({ catalog }: { catalog: Catalog }) {
 }
 export function CopyButton({
   getText,
-  label = '复制完整配方',
+  label = translate({ id: 'site.1905ab95a1b0', message: '复制完整配方' }),
 }: {
   getText: () => Promise<string>;
   label?: string;
@@ -208,22 +239,29 @@ export function CopyButton({
         className={styles.copy}
         aria-label={label}
         aria-describedby={tooltipId}
-        disabled={state === '复制中…'}
+        disabled={
+          state === translate({ id: 'site.43312083da55', message: '复制中…' })
+        }
         onMouseEnter={() => setTooltipDismissed(false)}
         onFocus={() => setTooltipDismissed(false)}
         onKeyDown={(event) => {
           if (event.key === 'Escape') setTooltipDismissed(true);
         }}
         onClick={async () => {
-          setState('复制中…');
+          setState(translate({ id: 'site.43312083da55', message: '复制中…' }));
           try {
             const text = await getText();
             if (!navigator.clipboard) throw new Error();
             await navigator.clipboard.writeText(text);
-            setState('已复制');
+            setState(translate({ id: 'site.8f6f8d979c98', message: '已复制' }));
             setTimeout(() => setState(''), 2000);
           } catch {
-            setState('复制失败，请在详情中手动选择');
+            setState(
+              translate({
+                id: 'site.94e2d00d9ac5',
+                message: '复制失败，请在详情中手动选择',
+              }),
+            );
           }
         }}
       >
@@ -267,8 +305,9 @@ export function RecipeCard({
         <div className={styles.cardHeading}>
           <div>
             <p className={styles.kicker}>
-              {r.model.family ?? '模型'}{' '}
-              <span>· {topologyLabel(r.variant)}</span>
+              {r.model.family ??
+                translate({ id: 'site.c98e118e0a43', message: '模型' })}{' '}
+              <span>· {translate({ message: topologyLabel(r.variant) })}</span>
             </p>
             <Heading>
               <Link
@@ -283,15 +322,15 @@ export function RecipeCard({
             className={badge === 'optimized' ? styles.optimized : styles.badge}
           >
             {badge === 'optimized'
-              ? '已调优'
+              ? translate({ id: 'site.c805b06152c6', message: '已调优' })
               : badge === 'baseline'
-                ? '基线'
-                : '部署配方'}
+                ? translate({ id: 'site.a7ac587ab52d', message: '基线' })
+                : translate({ id: 'site.8be3a0d72f4d', message: '部署配方' })}
           </span>
         </div>
         <dl className={styles.recipeModel}>
           <div>
-            <dt>模型</dt>
+            <dt>{translate({ id: 'site.c98e118e0a43', message: '模型' })}</dt>
             <dd>
               <Link to={modelHref(r.model, version, returnTo)}>
                 {r.model.displayName || r.model.name}
@@ -302,27 +341,46 @@ export function RecipeCard({
         <div className={styles.gain}>
           <GainMeter
             value={r.quotedGain}
-            label="吞吐量提升"
+            label={translate({
+              id: 'site.6a575618a188',
+              message: '吞吐量提升',
+            })}
             valueHref={
               reportUrl(r) ? reportHref(r, version, returnTo) : undefined
             }
-            valueLabel={`查看 ${r.variant.id} 性能对照`}
+            valueLabel={translate(
+              { id: 'site.50123e2643ec', message: '查看 {v0} 性能对照' },
+              { v0: r.variant.id },
+            )}
           />
         </div>
         <div className={styles.chips}>
-          <span>{hardwareText(r.variant)}</span>
+          <span>{translateCopy(hardwareText(r.variant))}</span>
           <span>{r.variant.engine}</span>
-          {isDefault(r) && <span>默认配方</span>}
-          {(r.model.deprecated || r.variant.deprecated) && <span>已弃用</span>}
+          {isDefault(r) && (
+            <span>
+              {translate({ id: 'site.bb88a59baf57', message: '默认配方' })}
+            </span>
+          )}
+          {(r.model.deprecated || r.variant.deprecated) && (
+            <span>
+              {translate({ id: 'site.d0d52ce21400', message: '已弃用' })}
+            </span>
+          )}
         </div>
         <p className={styles.description}>
-          {r.variant.description ?? r.model.description ?? '暂无说明。'}
+          {r.variant.description ??
+            r.model.description ??
+            translate({ id: 'site.3a03ba079a53', message: '暂无说明。' })}
         </p>
         {r.quotedGain != null && (
           <p className={styles.measurement}>
-            {r.workload ?? '负载未提供'}
-            {r.workload ? ' tokens' : ''} · 测于 v
-            {r.tuning[0]?.optimized.split('@')[1] ?? '未提供'}
+            {r.workload ??
+              translate({ id: 'site.26e392942cda', message: '负载未提供' })}
+            {r.workload ? ' tokens' : ''}{' '}
+            {translate({ id: 'site.54130614ce4a', message: ' · 测于 v' })}
+            {r.tuning[0]?.optimized.split('@')[1] ??
+              translate({ id: 'site.756762e293f2', message: '未提供' })}
           </p>
         )}
       </div>
@@ -335,15 +393,17 @@ export function RecipeCard({
           <div>
             <dt>Chart</dt>
             <dd>
-              {r.variant.chart.name} {r.variant.chart.version ?? '未提供'}
+              {r.variant.chart.name}{' '}
+              {r.variant.chart.version ??
+                translate({ id: 'site.756762e293f2', message: '未提供' })}
             </dd>
           </div>
           <div>
             <dt>Image</dt>
             <dd>
               {r.variant.image
-                ? `${r.variant.image.repository}:${r.variant.image.tag ?? '标签未提供'}`
-                : '未提供'}
+                ? `${r.variant.image.repository}:${r.variant.image.tag ?? translate({ id: 'site.21218fec97c1', message: '标签未提供' })}`
+                : translate({ id: 'site.756762e293f2', message: '未提供' })}
             </dd>
           </div>
         </dl>
@@ -356,9 +416,17 @@ export function RecipeCard({
                 : detailHref(r, version, undefined, returnTo)
             }
           >
-            {badge === 'optimized' ? '查看对照报告' : '查看部署配置'}
+            {badge === 'optimized'
+              ? translate({ id: 'site.19166317a928', message: '查看对照报告' })
+              : translate({ id: 'site.9c3b6f1004ad', message: '查看部署配置' })}
           </Link>
-          <CopyButton getText={copy} label="复制部署配置" />
+          <CopyButton
+            getText={copy}
+            label={translate({
+              id: 'site.1b2c717ee8d4',
+              message: '复制部署配置',
+            })}
+          />
         </div>
       </div>
     </article>
@@ -374,15 +442,15 @@ export function SourceLinks({
   return (
     <div className={styles.actions}>
       <a href={sourceUrl(r.variant)} target="_blank" rel="noreferrer">
-        查看配方文件 ↗
+        {translate({ id: 'site.61e67a99c6ff', message: '查看配方文件 ↗' })}
       </a>
       {includeReport && reportUrl(r) && (
         <a href={reportUrl(r)!} target="_blank" rel="noreferrer">
-          查看性能报告 ↗
+          {translate({ id: 'site.7c91d0100fd4', message: '查看性能报告 ↗' })}
         </a>
       )}
       <a href={config.repository} target="_blank" rel="noreferrer">
-        贡献配方 ↗
+        {translate({ id: 'site.be5038492a9d', message: '贡献配方 ↗' })}
       </a>
     </div>
   );

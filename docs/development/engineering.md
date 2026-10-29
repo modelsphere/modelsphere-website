@@ -27,7 +27,7 @@
 | G06 | Catalog 数据独立更新 | 自定义界面覆盖源功能；不嵌入 `<model-catalog>` 或 iframe |
 | G07 | 字体、脚本和搜索自托管；Catalog 首期例外 | Catalog 直接使用公开 GitHub Pages/raw GitHub，后续再接自有服务 |
 | G08 | 静态站点明确能力边界 | 无逐请求服务端渲染；Catalog 最新详情依赖 JavaScript；博客和文档正文无脚本可读 |
-| G09 | 首期仅中文，不生成空版本或翻译 | 当前没有真实开发者文档，公开仅展示准备状态 |
+| G09 | 中文与英文统一构建 | 中文为默认语言，英文位于 `/en/`；界面、文档和博客翻译随 Git 维护 |
 
 Docusaurus 支持自定义 React 页面、文档和博客内容插件，生产构建输出静态文件。职责依据：[页面](https://docusaurus.io/docs/creating-pages)、[路由](https://docusaurus.io/docs/advanced/routing)、[部署](https://docusaurus.io/docs/deployment)。选择静态部署不代表 Catalog 只能使用构建时数据。
 

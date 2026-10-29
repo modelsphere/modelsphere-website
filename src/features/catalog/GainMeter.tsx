@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React from 'react';
 import Link from '@docusaurus/Link';
 import styles from './GainMeter.module.css';
@@ -20,7 +21,9 @@ export default function GainMeter({
   const bounded = (number: number) => Math.max(0, Math.min(100, number));
   const progress = bounded(((value ?? 0) / (max > 0 ? max : 100)) * 100);
   const text =
-    value == null ? '未提供' : `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
+    value == null
+      ? translate({ id: 'site.756762e293f2', message: '未提供' })
+      : `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
   return (
     <div
       className={`${styles.meter}${layout === 'inline' ? ` ${styles.inline}` : ''}`}

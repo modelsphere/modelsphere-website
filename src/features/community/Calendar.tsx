@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { useEffect, useState, type ReactNode } from 'react';
 import { usePluginData } from '@docusaurus/useGlobalData';
 import type { CommunityEvent, CommunityIndex, CommunityMeeting } from './types';
@@ -27,17 +28,33 @@ export function CommunityAction({
       type="button"
       disabled
       aria-disabled="true"
-      title="尚未提供可用入口"
+      title={translate({
+        id: 'site.4e3781d9fe4f',
+        message: '尚未提供可用入口',
+      })}
     >
       {children}
     </button>
   );
 }
 function nextMeetingLabel(meeting: CommunityMeeting, now: number) {
-  if (meeting.example) return meeting.nextLabel ?? '下期例会时间待公布';
+  if (meeting.example)
+    return (
+      meeting.nextLabel ??
+      translate({ id: 'site.954d3f2da7c7', message: '下期例会时间待公布' })
+    );
   return meeting.nextStartsAt && Date.parse(meeting.nextStartsAt) > now
-    ? `下一期例会：${eventDate(meeting.nextStartsAt, meeting.timeZone)}`
-    : '下期例会时间待公布';
+    ? translate(
+        { id: 'site.bea3c79e398f', message: '下一期例会：{v0}' },
+        {
+          v0: eventDate(
+            meeting.nextStartsAt,
+            meeting.timeZone,
+            translate({ id: 'site.locale', message: 'zh-CN' }),
+          ),
+        },
+      )
+    : translate({ id: 'site.954d3f2da7c7', message: '下期例会时间待公布' });
 }
 const badgeClasses = {
   live: 'bg-rose-50 border-rose-200 text-rose-600',
@@ -50,10 +67,19 @@ function EventCard({ event, now }: { event: CommunityEvent; now: number }) {
   const badge = event.example
     ? event.preview.badge
     : {
-        live: 'LIVE · 直播中',
-        upcoming: 'UPCOMING · 预告',
-        recorded: 'RECORDED · 往期回放',
-        ended: 'ENDED · 已结束',
+        live: translate({ id: 'site.9049fe96eb90', message: 'LIVE · 直播中' }),
+        upcoming: translate({
+          id: 'site.1a361d767b4e',
+          message: 'UPCOMING · 预告',
+        }),
+        recorded: translate({
+          id: 'site.a56664baeece',
+          message: 'RECORDED · 往期回放',
+        }),
+        ended: translate({
+          id: 'site.8e4e27c58386',
+          message: 'ENDED · 已结束',
+        }),
       }[status];
   const actionClass =
     status === 'live'
@@ -67,7 +93,14 @@ function EventCard({ event, now }: { event: CommunityEvent; now: number }) {
       data-event-id={event.id}
       data-event-status={status}
       data-example={event.example || undefined}
-      title={event.example ? '设计示例，仅在预览显示' : undefined}
+      title={
+        event.example
+          ? translate({
+              id: 'site.a6aa7a7a8149',
+              message: '设计示例，仅在预览显示',
+            })
+          : undefined
+      }
     >
       <div className="flex flex-col gap-1.5 community-event-copy">
         <div className="flex items-center gap-2 community-event-meta">
@@ -82,18 +115,27 @@ function EventCard({ event, now }: { event: CommunityEvent; now: number }) {
           <span className="font-code-sm text-xs text-slate-500">
             {event.example
               ? event.preview.dateLabel
-              : eventDate(event.startsAt, event.timeZone)}
+              : eventDate(
+                  event.startsAt,
+                  event.timeZone,
+                  translate({ id: 'site.locale', message: 'zh-CN' }),
+                )}
           </span>
         </div>
         <h4 className="font-headline-sm text-base font-bold text-slate-900">
           {event.title}
         </h4>
-        <p className="font-body-sm text-xs text-slate-600">{`主讲人: ${event.speaker} ｜ ${event.summary}`}</p>
+        <p className="font-body-sm text-xs text-slate-600">
+          {translate(
+            { id: 'site.cdfb4de102ae', message: '主讲人: {v0} ｜ {v1}' },
+            { v0: event.speaker, v1: event.summary },
+          )}
+        </p>
       </div>
       <div className="community-event-actions">
         {eventActions(event, now).map((action) => (
           <CommunityAction
-            key={action.label}
+            key={translate({ message: action.label })}
             className={actionClass}
             href={action.href}
           >
@@ -105,7 +147,7 @@ function EventCard({ event, now }: { event: CommunityEvent; now: number }) {
                 play_circle
               </span>
             )}
-            <span>{action.label}</span>
+            <span>{translate({ message: action.label })}</span>
           </CommunityAction>
         ))}
       </div>
@@ -138,17 +180,20 @@ function NoEvents() {
       </div>
       <div className="flex flex-col gap-2">
         <h3 className="font-headline-sm text-xl font-bold text-slate-900">
-          暂无活动
+          {translate({ id: 'site.36d0dfdd19e4', message: '暂无活动' })}
         </h3>
         <p className="font-body-md text-sm text-slate-600">
-          新的社区活动将在这里公布，欢迎加入技术交流群参与交流。
+          {translate({
+            id: 'site.d7e283c7e482',
+            message: '新的社区活动将在这里公布，欢迎加入技术交流群参与交流。',
+          })}
         </p>
       </div>
       <a
         className="inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl bg-sky-600 text-white hover:bg-sky-700 transition-all font-body-sm text-xs font-semibold"
         href="#community-channels"
       >
-        加入技术交流群
+        {translate({ id: 'site.63cf5ec0d286', message: '加入技术交流群' })}
         <span
           className="material-symbols-outlined text-[16px]"
           aria-hidden="true"
@@ -186,7 +231,10 @@ export function CommunityCalendar() {
               </span>
               <span className="flex items-center gap-1 font-code-sm text-xs text-emerald-700">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                {' 周期固定\n            '}
+                {translate({
+                  id: 'site.90200bca3781',
+                  message: ' 周期固定\n            ',
+                })}
               </span>
             </div>
             <h3 className="font-headline-sm text-xl font-bold text-slate-900 mb-2">
@@ -221,7 +269,10 @@ export function CommunityCalendar() {
                     {meeting.platform}
                   </div>
                   <div className="font-code-sm text-xs text-slate-600 mt-0.5">
-                    {'会议号: '}
+                    {translate({
+                      id: 'site.a5dae2ffab33',
+                      message: '会议号: ',
+                    })}
                     <strong className="text-sky-700">
                       {meeting.meetingUrl && !meeting.example ? (
                         <a
@@ -229,10 +280,18 @@ export function CommunityCalendar() {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          {meeting.meetingNumber ?? '进入会议'}
+                          {meeting.meetingNumber ??
+                            translate({
+                              id: 'site.0764b01cd0d6',
+                              message: '进入会议',
+                            })}
                         </a>
                       ) : (
-                        (meeting.meetingNumber ?? '待公布')
+                        (meeting.meetingNumber ??
+                        translate({
+                          id: 'site.32c728ffed5b',
+                          message: '待公布',
+                        }))
                       )}
                     </strong>
                     {meeting.joinNote ? ` (${meeting.joinNote})` : ''}
@@ -242,7 +301,10 @@ export function CommunityCalendar() {
             </div>
             <div className="mb-6">
               <div className="font-label-caps text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">
-                {'公开讨论标准议程：'}
+                {translate({
+                  id: 'site.44e6af891009',
+                  message: '公开讨论标准议程：',
+                })}
               </div>
               <ul className="space-y-2 font-body-sm text-xs text-slate-600">
                 {meeting.agenda.map((item) => (
@@ -265,7 +327,12 @@ export function CommunityCalendar() {
               >
                 {'calendar_add_on'}
               </span>
-              <span className="">{'订阅例会日历 (iCal)'}</span>
+              <span className="">
+                {translate({
+                  id: 'site.94a8621d625f',
+                  message: '订阅例会日历 (iCal)',
+                })}
+              </span>
             </CommunityAction>
             <CommunityAction
               href={meeting.minutesUrl}
@@ -277,23 +344,34 @@ export function CommunityCalendar() {
               >
                 {'description'}
               </span>
-              <span className="">{'纪要 & 议题提交'}</span>
+              <span className="">
+                {translate({
+                  id: 'site.a4baa7d79235',
+                  message: '纪要 & 议题提交',
+                })}
+              </span>
             </CommunityAction>
           </div>
         </div>
       ) : (
         <div className="lg:col-span-5 bg-white p-6 rounded-2xl border-2 border-sky-300/80 shadow-sm flex flex-col gap-4">
           <h3 className="font-headline-sm text-xl font-bold text-slate-900">
-            社区技术例会
+            {translate({ id: 'site.8f417ce17785', message: '社区技术例会' })}
           </h3>
           <p className="font-body-md text-sm text-slate-600">
-            例会安排待公布。
+            {translate({
+              id: 'site.4a67073b6a8e',
+              message: '例会安排待公布。',
+            })}
           </p>
         </div>
       )}
       <div
         className="lg:col-span-7 flex flex-col gap-4"
-        aria-label="社区活动列表"
+        aria-label={translate({
+          id: 'site.2afccffad3ec',
+          message: '社区活动列表',
+        })}
         data-community-preview={index.preview}
       >
         {featured.map((event) => (
@@ -303,7 +381,12 @@ export function CommunityCalendar() {
         {!!archive.length && (
           <details className="bg-white p-5 rounded-2xl border border-slate-200 community-event-archive">
             <summary className="font-body-md text-sm text-sky-700">
-              更多活动与往期记录（{archive.length}）
+              {translate({
+                id: 'site.60ee2a8db7df',
+                message: '更多活动与往期记录（',
+              })}
+              {archive.length}
+              {translate({ id: 'site.punctuation.closeParen', message: '）' })}
             </summary>
             <div className="flex flex-col gap-4">
               {archive.map((event) => (
