@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
-  await page.goto('/docs');
+  await page.goto('docs');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     process.env.TEST_DOCS_MODE === 'none' ? '文档准备中' : '认识 ModelSphere',
   );
@@ -11,7 +11,7 @@ test('first visit follows system; icon toggle persists a manual choice', async (
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.emulateMedia({ colorScheme: 'dark' });
-  await page.goto('/docs');
+  await page.goto('docs');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(page.locator('.theme-icon-sun')).toBeVisible();
   await expect(page.locator('.theme-icon-moon')).toBeHidden();
@@ -40,7 +40,7 @@ test('system changes apply until an explicit icon toggle', async ({ page }) => {
 test('theme persists across client navigation without moving reading position', async ({
   page,
 }) => {
-  await page.goto('/docs');
+  await page.goto('docs');
   await page.evaluate(() => window.scrollTo(0, 400));
   const before = await page.evaluate(() => scrollY);
   await page.locator('.theme-toggle').evaluate((button) => {
@@ -64,14 +64,20 @@ test('storage denied still permits a session theme choice', async ({
       },
     });
   });
-  await page.goto('/docs');
+  await page.goto('docs');
   await page.getByRole('button', { name: '切换到深色模式' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 });
 test('header keeps full navigation and a compact theme control across layouts', async ({
   page,
 }, testInfo) => {
-  await expect(page.getByRole('combobox')).toHaveCount(0);
+  await expect(page.getByRole('combobox')).toHaveCount(1);
+  await expect(
+    page.getByRole('combobox', { name: '切换语言', exact: true }),
+  ).toBeEnabled();
+  await expect(
+    page.getByRole('button', { name: /^切换到[浅深]色模式$/ }),
+  ).toHaveClass(/theme-toggle/);
   const nav = page.getByRole('navigation', { name: '主导航', exact: true });
   await expect(nav.locator('.site-nav-link')).toHaveText([
     '首页',
@@ -128,7 +134,7 @@ test('light and dark desktop/mobile reading screenshots', async ({
     for (const colorScheme of ['light', 'dark'] as const) {
       await page.setViewportSize({ width, height: 1000 });
       await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
-      await page.goto('/docs');
+      await page.goto('docs');
       await page.waitForLoadState('networkidle');
       await page.screenshot({
         path: testInfo.outputPath(`docs-${width}-${colorScheme}.png`),

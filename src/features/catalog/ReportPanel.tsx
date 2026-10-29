@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { useEffect, useRef, useState } from 'react';
 import { reportUrl, type Recipe } from './data';
 import { loadReportDocument } from './report';
@@ -54,7 +55,12 @@ export default function ReportPanel({
         await reportFrame.current.requestFullscreen();
       else throw new Error('Fullscreen unavailable');
     } catch {
-      setFullscreenError('暂时无法全屏观看，请使用“查看完整报告”。');
+      setFullscreenError(
+        translate({
+          id: 'site.77afbff41aa8',
+          message: '暂时无法全屏观看，请使用“查看完整报告”。',
+        }),
+      );
     }
   }
 
@@ -68,7 +74,12 @@ export default function ReportPanel({
       })
       .catch(() => {
         if (!c.signal.aborted)
-          setError('报告数据加载失败，请重试或查看完整报告。');
+          setError(
+            translate({
+              id: 'site.06c78240c62a',
+              message: '报告数据加载失败，请重试或查看完整报告。',
+            }),
+          );
       });
     return () => c.abort();
   }, [r.key, commit, retry]);
@@ -81,7 +92,9 @@ export default function ReportPanel({
       <div className={styles.reportHeader}>
         <div>
           <span className={styles.kicker}>PERFORMANCE REPORT</span>
-          <h2 id="benchmark-title">基线与调优对照</h2>
+          <h2 id="benchmark-title">
+            {translate({ id: 'site.97a3583c6b16', message: '基线与调优对照' })}
+          </h2>
           <p>
             {r.tuning[0]?.baseline} → {r.tuning[0]?.optimized}
           </p>
@@ -113,7 +126,9 @@ export default function ReportPanel({
                 }
               />
             </svg>
-            {fullscreen ? '退出全屏' : '全屏观看'}
+            {fullscreen
+              ? translate({ id: 'site.0f1505b6ad3f', message: '退出全屏' })
+              : translate({ id: 'site.90cd137f160c', message: '全屏观看' })}
           </button>
           <a
             className={styles.primary}
@@ -121,23 +136,31 @@ export default function ReportPanel({
             target="_blank"
             rel="noreferrer"
           >
-            查看完整报告 ↗
+            {translate({ id: 'site.c9a9e8905c6b', message: '查看完整报告 ↗' })}
           </a>
         </div>
       </div>
       {fullscreenError && <p role="status">{fullscreenError}</p>}
       {error ? (
         <p role="status">
-          {error} <button onClick={() => setRetry((n) => n + 1)}>重试</button>
+          {error}{' '}
+          <button onClick={() => setRetry((n) => n + 1)}>
+            {translate({ id: 'site.b8784c8dd563', message: '重试' })}
+          </button>
         </p>
       ) : !data ? (
-        <p role="status">正在读取报告数据…</p>
+        <p role="status">
+          {translate({ id: 'site.ab325d7067a1', message: '正在读取报告数据…' })}
+        </p>
       ) : (
         <iframe
           ref={reportFrame}
           id="benchmark-report"
           className={styles.reportFrame}
-          title="原始性能对照报告"
+          title={translate({
+            id: 'site.0bb54211e373',
+            message: '原始性能对照报告',
+          })}
           srcDoc={data}
           sandbox="allow-scripts"
           referrerPolicy="no-referrer"

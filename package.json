@@ -25,7 +25,8 @@
     "test:e2e": "playwright test",
     "serve": "node --import tsx scripts/serve-static.ts",
     "test:pages": "playwright test --config playwright.pages.config.ts",
-    "community:check": "node --import tsx scripts/check-community.ts"
+    "community:check": "node --import tsx scripts/check-community.ts",
+    "dev:en": "SITE_LOCALE=en node --import tsx scripts/build-site.ts dev"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

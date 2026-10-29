@@ -1,3 +1,5 @@
+import { translateCopy } from '@site/src/lib/translate-copy';
+import { translate } from '@docusaurus/Translate';
 import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect, useMemo, useState } from 'react';
 import Layout from '@theme/Layout';
@@ -87,7 +89,13 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
         if (!abort.signal.aborted) setRevisions(h);
       })
       .catch(() => {
-        if (!abort.signal.aborted) setHistoryError('版本历史暂时不可用。');
+        if (!abort.signal.aborted)
+          setHistoryError(
+            translate({
+              id: 'site.4dfcf4a367d7',
+              message: '版本历史暂时不可用。',
+            }),
+          );
       });
     return () => abort.abort();
   }, [recipe?.key, c.commit, state.unavailable, retry]);
@@ -111,11 +119,21 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
     if (!recipe || state.unavailable) return;
     if (versionState === 'loading' || versionState === 'history-error') {
       if (versionState === 'history-error')
-        setError('历史读取失败，不能确认指定版本。');
+        setError(
+          translate({
+            id: 'site.29943560b92e',
+            message: '历史读取失败，不能确认指定版本。',
+          }),
+        );
       return;
     }
     if (versionState === 'missing') {
-      setError('指定配方版本不在所选目录的历史中。');
+      setError(
+        translate({
+          id: 'site.92e0aab9b6ec',
+          message: '指定配方版本不在所选目录的历史中。',
+        }),
+      );
       return;
     }
     const abort = new AbortController();
@@ -130,7 +148,11 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
       })
       .catch((e) => {
         if (!abort.signal.aborted)
-          setError(e instanceof Error ? e.message : '配方加载失败');
+          setError(
+            e instanceof Error
+              ? e.message
+              : translate({ id: 'site.e468b74b0da3', message: '配方加载失败' }),
+          );
       });
     return () => abort.abort();
   }, [
@@ -187,10 +209,17 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
     <Layout
       title={
         kind === 'recipe' && recipe
-          ? `${recipe.variant.id} · 配方详情`
-          : (model?.displayName ?? '模型与配方详情')
+          ? translate(
+              { id: 'site.fc599ecea048', message: '{v0} · 配方详情' },
+              { v0: recipe.variant.id },
+            )
+          : (model?.displayName ??
+            translate({ id: 'site.f7121092ad68', message: '模型与配方详情' }))
       }
-      description="查阅模型配方、部署配置、版本历史与性能测评。"
+      description={translate({
+        id: 'site.bdddd3c76973',
+        message: '查阅模型配方、部署配置、版本历史与性能测评。',
+      })}
     >
       <Head>
         <meta name="robots" content="noindex,follow" />
@@ -198,8 +227,15 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
       <main id="main-content" className={`${styles.page} ${styles.detailPage}`}>
         <div className={styles.container}>
           <div className={styles.topbar}>
-            <nav aria-label="面包屑">
-              <Link to={returnTo}>模型目录</Link>
+            <nav
+              aria-label={translate({
+                id: 'site.6770d01e7d15',
+                message: '面包屑',
+              })}
+            >
+              <Link to={returnTo}>
+                {translate({ id: 'site.34b3cac2a496', message: '模型目录' })}
+              </Link>
               <span>/</span>
               {kind === 'recipe' && model && !state.unavailable && (
                 <>
@@ -209,48 +245,106 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                   <span>/</span>
                 </>
               )}
-              <span>{kind === 'model' ? '模型详情' : '配方详情'}</span>
+              <span>
+                {kind === 'model'
+                  ? translate({ id: 'site.e0af03d94875', message: '模型详情' })
+                  : translate({ id: 'site.4fd2e35fdb77', message: '配方详情' })}
+              </span>
             </nav>
             <SourceState {...state} />
           </div>
           {!browser ? (
             <section>
-              <h1>模型与配方详情</h1>
+              <h1>
+                {translate({
+                  id: 'site.f7121092ad68',
+                  message: '模型与配方详情',
+                })}
+              </h1>
               <p className={styles.notice}>
-                实时模型和配方详情需要 JavaScript。
-                <a href={config.baseUrl}>阅读原始目录</a>
+                {translate({
+                  id: 'site.469cea37d375',
+                  message: '实时模型和配方详情需要 JavaScript。',
+                })}
+                <a href={config.baseUrl}>
+                  {translate({
+                    id: 'site.441896a2fb30',
+                    message: '阅读原始目录',
+                  })}
+                </a>
               </p>
             </section>
           ) : invalid ? (
             <div className={styles.empty}>
-              <h1>详情参数不完整</h1>
-              <p>请从目录中的模型或配方入口访问。</p>
-              <Link to={returnTo}>返回模型目录</Link>
+              <h1>
+                {translate({
+                  id: 'site.ffa44b075ded',
+                  message: '详情参数不完整',
+                })}
+              </h1>
+              <p>
+                {translate({
+                  id: 'site.84d882ee8275',
+                  message: '请从目录中的模型或配方入口访问。',
+                })}
+              </p>
+              <Link to={returnTo}>
+                {translate({
+                  id: 'site.2b89357b9abf',
+                  message: '返回模型目录',
+                })}
+              </Link>
             </div>
           ) : state.unavailable ? (
             <div className={styles.empty}>
               <h1>
                 {state.status === 'loading'
-                  ? '正在读取指定目录版本…'
-                  : '目录版本不可用'}
+                  ? translate({
+                      id: 'site.f77b18ff38e7',
+                      message: '正在读取指定目录版本…',
+                    })
+                  : translate({
+                      id: 'site.415e549d79fc',
+                      message: '目录版本不可用',
+                    })}
               </h1>
-              <p>{state.error}</p>
-              <Link to="/models">打开当前目录</Link>
+              <p>{translateCopy(state.error)}</p>
+              <Link to="/models">
+                {translate({
+                  id: 'site.b7e877f61317',
+                  message: '打开当前目录',
+                })}
+              </Link>
             </div>
           ) : missing ? (
             <div className={styles.empty}>
               <h1>
                 {state.status === 'loading'
-                  ? '正在确认记录…'
+                  ? translate({
+                      id: 'site.a25fa8489ab7',
+                      message: '正在确认记录…',
+                    })
                   : state.status === 'error'
-                    ? '来源不可用，尚无法确认记录'
-                    : '未找到模型或配方'}
+                    ? translate({
+                        id: 'site.b82f67fe4758',
+                        message: '来源不可用，尚无法确认记录',
+                      })
+                    : translate({
+                        id: 'site.f4d62b6efdba',
+                        message: '未找到模型或配方',
+                      })}
               </h1>
               <p>
-                所选标识：{modelId}
+                {translate({ id: 'site.b4c50e4f241c', message: '所选标识：' })}
+                {modelId}
                 {recipeId && ` / ${recipeId}`}
               </p>
-              <Link to={returnTo}>返回模型目录</Link>
+              <Link to={returnTo}>
+                {translate({
+                  id: 'site.2b89357b9abf',
+                  message: '返回模型目录',
+                })}
+              </Link>
             </div>
           ) : (
             model && (
@@ -264,7 +358,10 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                     >
                       <div className={styles.sectionHeading}>
                         <h2 id="model-recipes-title">
-                          可用部署配方 ·{' '}
+                          {translate({
+                            id: 'site.6fdd43b3efe0',
+                            message: '可用部署配方 ·',
+                          })}{' '}
                           <span className={styles.sectionCount}>
                             {recipes.length}
                           </span>
@@ -296,7 +393,10 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                       <div
                         className={styles.recipeTabs}
                         role="tablist"
-                        aria-label="配方详情"
+                        aria-label={translate({
+                          id: 'site.4fd2e35fdb77',
+                          message: '配方详情',
+                        })}
                       >
                         {recipeTabs.map((tab) => (
                           <button
@@ -311,7 +411,7 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                             onClick={() => chooseTab(tab.id)}
                             onKeyDown={moveTabFocus}
                           >
-                            {tab.label}
+                            {translate({ message: tab.label })}
                           </button>
                         ))}
                       </div>
@@ -324,29 +424,54 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                         className={`${styles.detailBox} ${styles.tabPanel}`}
                       >
                         <div className={styles.detailTop}>
-                          <h2>部署配置</h2>
+                          <h2>
+                            {translate({
+                              id: 'site.ccbf90f527b4',
+                              message: '部署配置',
+                            })}
+                          </h2>
                           <label className={styles.recipeVersion}>
-                            <span>配方版本</span>
+                            <span>
+                              {translate({
+                                id: 'site.46d945476414',
+                                message: '配方版本',
+                              })}
+                            </span>
                             <CatalogSelect
-                              label="配方版本"
+                              label={translate({
+                                id: 'site.46d945476414',
+                                message: '配方版本',
+                              })}
                               value={requestedVersion}
                               onValueChange={chooseVersion}
                               options={[
                                 {
                                   value: '',
-                                  label: `当前版本 ${recipe.variant.version}`,
+                                  label: translate(
+                                    {
+                                      id: 'site.3fca94b2e016',
+                                      message: '当前版本 {v0}',
+                                    },
+                                    { v0: recipe.variant.version },
+                                  ),
                                 },
                                 ...(requestedVersion && !revision
                                   ? [
                                       {
                                         value: requestedVersion,
-                                        label: `${requestedVersion} · 待确认版本`,
+                                        label: translate(
+                                          {
+                                            id: 'site.34d6246305c8',
+                                            message: '{v0} · 待确认版本',
+                                          },
+                                          { v0: requestedVersion },
+                                        ),
                                       },
                                     ]
                                   : []),
                                 ...(revisions?.revisions.map((r) => ({
                                   value: r.version,
-                                  label: `${r.version} · ${r.releaseDate ?? '日期未提供'}`,
+                                  label: `${r.version} · ${r.releaseDate ?? translate({ id: 'site.020ef0cc6f35', message: '日期未提供' })}`,
                                 })) ?? []),
                               ]}
                             />
@@ -355,32 +480,60 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                         {requestedVersion &&
                           requestedVersion !== recipe.variant.version && (
                             <p className={styles.notice}>
-                              当前查看配置版本：{requestedVersion}
-                              。上方硬件和引擎摘要对应当前配方版本：
-                              {recipe.variant.version}。
+                              {translate({
+                                id: 'site.8e0e739d7303',
+                                message: '当前查看配置版本：',
+                              })}
+                              {requestedVersion}
+                              {translate({
+                                id: 'site.6d9bb8268bbe',
+                                message:
+                                  '。上方硬件和引擎摘要对应当前配方版本：',
+                              })}
+                              {recipe.variant.version}
+                              {translate({
+                                id: 'site.punctuation.period',
+                                message: '。',
+                              })}
                             </p>
                           )}
                         {historyError && (
                           <p role="status">
                             {historyError}{' '}
                             <button onClick={() => setRetry((n) => n + 1)}>
-                              重试
+                              {translate({
+                                id: 'site.b8784c8dd563',
+                                message: '重试',
+                              })}
                             </button>
                           </p>
                         )}
                         {error ? (
                           <p role="alert">
-                            {error}{' '}
+                            {translateCopy(error)}{' '}
                             <button onClick={() => setRetry((n) => n + 1)}>
-                              重试
+                              {translate({
+                                id: 'site.b8784c8dd563',
+                                message: '重试',
+                              })}
                             </button>
                           </p>
                         ) : !text ? (
-                          <p role="status">正在加载并校验配置…</p>
+                          <p role="status">
+                            {translate({
+                              id: 'site.2a71ba752529',
+                              message: '正在加载并校验配置…',
+                            })}
+                          </p>
                         ) : (
                           <>
                             <div className={styles.detailTop}>
-                              <p>原始 YAML · SHA-256 校验通过</p>
+                              <p>
+                                {translate({
+                                  id: 'site.d148e4e0a931',
+                                  message: '原始 YAML · SHA-256 校验通过',
+                                })}
+                              </p>
                               <CopyButton
                                 getText={() => Promise.resolve(text)}
                               />
@@ -390,18 +543,33 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                             </pre>
                             {facts && (
                               <details className={styles.more}>
-                                <summary>启动参数</summary>
+                                <summary>
+                                  {translate({
+                                    id: 'site.fcde9d2b09cf',
+                                    message: '启动参数',
+                                  })}
+                                </summary>
                                 <pre className={styles.code}>
                                   <code>
                                     {facts.args.length
                                       ? facts.args.join('\n')
-                                      : '未提供 extraArgs'}
+                                      : translate({
+                                          id: 'site.3a13a6807552',
+                                          message: '未提供 extraArgs',
+                                        })}
                                   </code>
                                 </pre>
                                 {facts.context != null && (
                                   <p>
-                                    上下文配置：
-                                    {String(facts.context) || '未设置'}
+                                    {translate({
+                                      id: 'site.326269a0aa1f',
+                                      message: '上下文配置：',
+                                    })}
+                                    {String(facts.context) ||
+                                      translate({
+                                        id: 'site.2f5f1d6fbfb0',
+                                        message: '未设置',
+                                      })}
                                   </p>
                                 )}
                               </details>
@@ -421,8 +589,15 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                           <>
                             {requestedVersion && (
                               <p className={styles.notice}>
-                                当前选择的配置版本：{requestedVersion}
-                                。报告对应测量版本：
+                                {translate({
+                                  id: 'site.d59062525d2e',
+                                  message: '当前选择的配置版本：',
+                                })}
+                                {requestedVersion}
+                                {translate({
+                                  id: 'site.e2a710c27f4f',
+                                  message: '。报告对应测量版本：',
+                                })}
                                 {recipe.tuning[0]?.optimized}
                               </p>
                             )}
@@ -437,9 +612,18 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                           </>
                         ) : (
                           <div className={styles.detailBox}>
-                            <h2>性能对照</h2>
+                            <h2>
+                              {translate({
+                                id: 'site.f64c61d8fac6',
+                                message: '性能对照',
+                              })}
+                            </h2>
                             <p className={styles.notice} role="status">
-                              该配方暂无可用对照报告，可继续查看部署配置与版本历史。
+                              {translate({
+                                id: 'site.d1e4dea594b6',
+                                message:
+                                  '该配方暂无可用对照报告，可继续查看部署配置与版本历史。',
+                              })}
                             </p>
                           </div>
                         )}
@@ -452,22 +636,41 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                         hidden={activeTab !== 'history'}
                         className={`${styles.detailBox} ${styles.tabPanel}`}
                       >
-                        <h2>版本历史</h2>
+                        <h2>
+                          {translate({
+                            id: 'site.bb58d709f19d',
+                            message: '版本历史',
+                          })}
+                        </h2>
                         {historyError ? (
                           <p role="status">
                             {historyError}{' '}
                             <button onClick={() => setRetry((n) => n + 1)}>
-                              重试
+                              {translate({
+                                id: 'site.b8784c8dd563',
+                                message: '重试',
+                              })}
                             </button>
                           </p>
                         ) : !revisions ? (
-                          <p role="status">正在读取版本历史…</p>
+                          <p role="status">
+                            {translate({
+                              id: 'site.730152325ab2',
+                              message: '正在读取版本历史…',
+                            })}
+                          </p>
                         ) : (
                           <ol className={styles.history}>
                             {revisions?.revisions.map((r) => (
                               <li key={r.digest}>
                                 <strong>v{r.version}</strong>
-                                <span>{r.releaseDate ?? '日期未提供'}</span>
+                                <span>
+                                  {r.releaseDate ??
+                                    translate({
+                                      id: 'site.020ef0cc6f35',
+                                      message: '日期未提供',
+                                    })}
+                                </span>
                                 <p>{r.subject}</p>
                                 <Link
                                   to={detailHref(
@@ -477,7 +680,15 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                                     returnTo,
                                   )}
                                 >
-                                  查看 v{r.version} 配置 →
+                                  {translate({
+                                    id: 'site.56b1715ede54',
+                                    message: '查看 v',
+                                  })}
+                                  {r.version}{' '}
+                                  {translate({
+                                    id: 'site.6a0cd8002a08',
+                                    message: ' 配置 →',
+                                  })}
                                 </Link>{' '}
                                 {r.commit && (
                                   <a
@@ -485,7 +696,11 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                                     target="_blank"
                                     rel="noreferrer"
                                   >
-                                    固定提交 {r.commit.slice(0, 7)} ↗
+                                    {translate({
+                                      id: 'site.929ff74a3b68',
+                                      message: '固定提交 ',
+                                    })}
+                                    {r.commit.slice(0, 7)} ↗
                                   </a>
                                 )}
                               </li>
@@ -494,7 +709,12 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                         )}
                       </section>
                       <div className={styles.actions}>
-                        <Link to={returnTo}>返回模型目录</Link>
+                        <Link to={returnTo}>
+                          {translate({
+                            id: 'site.2b89357b9abf',
+                            message: '返回模型目录',
+                          })}
+                        </Link>
                       </div>
                     </>
                   )

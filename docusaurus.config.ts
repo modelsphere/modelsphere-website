@@ -27,13 +27,14 @@ const prismTheme = {
 };
 export default async function config(): Promise<Config> {
   const mode = resolveBuildMode(process.env);
+  const english = process.env.DOCUSAURUS_CURRENT_LOCALE === 'en';
   await assertPrepared(process.cwd(), mode);
   await assertPreparedBlog(process.cwd(), mode);
   const docs = await readDocumentation(process.cwd(), mode.source);
   await mkdir('.generated/search-public', { recursive: true });
   return {
-    title: '模域 ModelSphere',
-    tagline: '大模型推理基础设施',
+    title: english ? 'ModelSphere' : '模域 ModelSphere',
+    tagline: english ? 'LLM inference infrastructure' : '大模型推理基础设施',
     favicon: 'brand/modelsphere-symbol.png',
     url: mode.origin,
     baseUrl: mode.baseUrl ?? '/',
@@ -44,7 +45,19 @@ export default async function config(): Promise<Config> {
       '.generated/search-public',
     ],
     onBrokenLinks: 'throw',
-    i18n: { defaultLocale: 'zh-CN', locales: ['zh-CN'] },
+    i18n: {
+      defaultLocale: 'zh-CN',
+      locales: ['zh-CN', 'en'],
+      localeConfigs: {
+        'zh-CN': { label: '简体中文', htmlLang: 'zh-CN' },
+        en: {
+          path: `${process.cwd()}/.generated/locales/en`,
+          label: 'English',
+          htmlLang: 'en',
+          baseUrl: `${mode.baseUrl ?? '/'}en/`,
+        },
+      },
+    },
     markdown: { format: 'md', hooks: { onBrokenMarkdownLinks: 'throw' } },
     customFields: {
       docsMock: mode.source === 'mock',
@@ -83,8 +96,10 @@ export default async function config(): Promise<Config> {
         {
           path: '.generated/blog',
           routeBasePath: 'blog',
-          blogTitle: '博客洞见',
-          blogDescription: 'ModelSphere 技术文章、版本动态与工程实践。',
+          blogTitle: english ? 'Blog insights' : '博客洞见',
+          blogDescription: english
+            ? 'ModelSphere technical articles, releases, and engineering practices.'
+            : 'ModelSphere 技术文章、版本动态与工程实践。',
           blogListComponent: '@site/src/features/blog/BlogList.tsx',
           blogPostComponent: '@site/src/features/blog/BlogPostPage.tsx',
           postsPerPage: 'ALL',
@@ -114,7 +129,7 @@ export default async function config(): Promise<Config> {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: '模域 ModelSphere',
+        title: english ? 'ModelSphere' : '模域 ModelSphere',
         items: [{ to: '/docs', label: '文档指南', position: 'left' }],
       },
       footer: {

@@ -43,6 +43,15 @@ test('community preserves source layout and local navigation under the Pages pre
   expect(localLinks.length).toBeGreaterThan(10);
   for (const href of localLinks)
     expect(href).toMatch(/^\/modelsphere-website\//);
+  const loadedFonts = await page.evaluate(
+    async () =>
+      (
+        await document.fonts.load(
+          '700 44px "ModelSphere Community Space Grotesk"',
+        )
+      ).length,
+  );
+  expect(loadedFonts).toBeGreaterThan(0);
   expect(
     await page.evaluate(() =>
       document.fonts.check('700 44px "ModelSphere Community Space Grotesk"'),

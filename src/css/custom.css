@@ -533,7 +533,16 @@ footer.docs-footer {
   flex-wrap: wrap;
   gap: 16px;
 }
+@media (min-width: 1280px) and (max-width: 1919px) {
+  html[lang='en'] .header-badge {
+    display: none;
+  }
+}
 @media (max-width: 1279px) {
+  .header-brand-group .site-brand,
+  .site-brand-art {
+    max-width: 100%;
+  }
   :root {
     --page-gutter: 32px;
   }

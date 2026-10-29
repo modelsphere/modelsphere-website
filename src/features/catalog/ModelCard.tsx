@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React from 'react';
 import Link from '@docusaurus/Link';
 import {
@@ -29,26 +30,41 @@ export function ModelTuning({ summary, version, returnTo }: Props) {
       <div className={styles.gain}>
         <GainMeter
           value={best?.gain ?? null}
-          label="调优配方最佳提升"
+          label={translate({
+            id: 'site.9d6b32790955',
+            message: '调优配方最佳提升',
+          })}
           valueHref={
             best && reportUrl(best.recipe)
               ? reportHref(best.recipe, version, returnTo)
               : undefined
           }
           valueLabel={
-            best ? `查看 ${best.recipe.variant.id} 性能对照` : undefined
+            best
+              ? translate(
+                  { id: 'site.50123e2643ec', message: '查看 {v0} 性能对照' },
+                  { v0: best.recipe.variant.id },
+                )
+              : undefined
           }
         />
         {best && (
           <p className={styles.measurement}>
-            {best.workload ? `${best.workload} tokens` : '负载未提供'} · 测于 v
-            {best.tuning.optimized.split('@')[1] || '未提供'}
+            {best.workload
+              ? `${best.workload} tokens`
+              : translate({
+                  id: 'site.26e392942cda',
+                  message: '负载未提供',
+                })}{' '}
+            {translate({ id: 'site.54130614ce4a', message: ' · 测于 v' })}
+            {best.tuning.optimized.split('@')[1] ||
+              translate({ id: 'site.756762e293f2', message: '未提供' })}
           </p>
         )}
       </div>
       <dl className={styles.modelTuningFacts}>
         <div>
-          <dt>调优配方</dt>
+          <dt>{translate({ id: 'site.23727d36d91b', message: '调优配方' })}</dt>
           <dd>
             {best ? (
               <Link
@@ -62,7 +78,7 @@ export function ModelTuning({ summary, version, returnTo }: Props) {
                 {best.tuning.optimized}
               </Link>
             ) : (
-              '未提供'
+              translate({ id: 'site.756762e293f2', message: '未提供' })
             )}
           </dd>
         </div>
@@ -78,10 +94,12 @@ export function ModelTuning({ summary, version, returnTo }: Props) {
                   returnTo,
                 )}
               >
-                {best.tuning.baseline || '未提供'}
+                {best.tuning.baseline ||
+                  translate({ id: 'site.756762e293f2', message: '未提供' })}
               </Link>
             ) : (
-              best?.tuning.baseline || '未提供'
+              best?.tuning.baseline ||
+              translate({ id: 'site.756762e293f2', message: '未提供' })
             )}
           </dd>
         </div>
@@ -100,16 +118,18 @@ export function ModelRecipeList({ summary, version, returnTo }: Props) {
           </Link>
           <span>
             {role(r) === 'optimized'
-              ? '已调优'
+              ? translate({ id: 'site.c805b06152c6', message: '已调优' })
               : role(r) === 'baseline'
-                ? '基线'
-                : '部署配方'}
+                ? translate({ id: 'site.a7ac587ab52d', message: '基线' })
+                : translate({ id: 'site.8be3a0d72f4d', message: '部署配方' })}
           </span>
         </li>
       ))}
     </ul>
   ) : (
-    <p className={styles.measurement}>暂无配方</p>
+    <p className={styles.measurement}>
+      {translate({ id: 'site.ea677bf1a4fc', message: '暂无配方' })}
+    </p>
   );
 }
 
@@ -124,7 +144,10 @@ export default function ModelCard(props: Props) {
       <div className={styles.cardBody}>
         <div className={styles.cardHeading}>
           <div>
-            <p className={styles.kicker}>{model.family || '模型'}</p>
+            <p className={styles.kicker}>
+              {model.family ||
+                translate({ id: 'site.c98e118e0a43', message: '模型' })}
+            </p>
             <h2>
               <Link
                 to={modelHref(model, version, returnTo)}
@@ -135,11 +158,15 @@ export default function ModelCard(props: Props) {
             </h2>
           </div>
           <span className={styles.recipeCount}>
-            <span>可用配方</span> <strong>{summary.recipes.length}</strong>
+            <span>
+              {translate({ id: 'site.c5591decc296', message: '可用配方' })}
+            </span>{' '}
+            <strong>{summary.recipes.length}</strong>
           </span>
         </div>
         <p className={styles.description}>
-          {model.description || '暂无模型说明。'}
+          {model.description ||
+            translate({ id: 'site.4acb91dda8b7', message: '暂无模型说明。' })}
         </p>
         <ModelTuning {...props} />
       </div>
@@ -148,7 +175,7 @@ export default function ModelCard(props: Props) {
           className={styles.secondary}
           to={modelHref(model, version, returnTo)}
         >
-          查看模型详情
+          {translate({ id: 'site.53d096fa52c4', message: '查看模型详情' })}
         </Link>
       </div>
     </article>

@@ -22,7 +22,12 @@ export default async function blog(
     ) {
       const index: BlogIndex = JSON.parse(
         await readFile(
-          path.join(context.siteDir, '.generated/blog-index.json'),
+          path.join(
+            context.siteDir,
+            context.i18n.currentLocale === 'en'
+              ? '.generated/blog-index.en.json'
+              : '.generated/blog-index.json',
+          ),
           'utf8',
         ),
       );

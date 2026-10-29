@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { useRef } from 'react';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
@@ -43,7 +44,7 @@ export function CommunityHeader() {
             />
             <div className="flex items-center gap-1.5">
               <span className="font-headline-sm text-lg font-bold text-slate-900 tracking-tight">
-                {'模域'}
+                {translate({ id: 'site.ffbb1a447f85', message: '模域' })}
               </span>
               <span className="font-code-lg text-sm text-sky-600 font-semibold tracking-tight">
                 {'ModelSphere'}
@@ -53,38 +54,38 @@ export function CommunityHeader() {
         </div>
         <nav
           className="hidden xl:flex items-center gap-1 community-desktop-nav"
-          aria-label="主导航"
+          aria-label={translate({ id: 'site.9bae68040509', message: '主导航' })}
         >
           <Link
             className="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-body-md text-sm transition-all"
             to="/"
           >
-            {'首页'}
+            {translate({ id: 'site.203c08e0d44a', message: '首页' })}
           </Link>
           <Link
             className="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-body-md text-sm transition-all"
             to="/models"
           >
-            {'模型目录'}
+            {translate({ id: 'site.34b3cac2a496', message: '模型目录' })}
           </Link>
           <Link
             className="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-body-md text-sm transition-all"
             to="/docs"
           >
-            {'文档指南'}
+            {translate({ id: 'site.fda4566fda7d', message: '文档指南' })}
           </Link>
           <Link
             className="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-body-md text-sm transition-all"
             to="/blog"
           >
-            {'博客洞见'}
+            {translate({ id: 'site.7131e5de923b', message: '博客洞见' })}
           </Link>
           <Link
             aria-current="page"
             className="px-3 py-1.5 transition-all bg-sky-50 text-sky-700 border border-sky-100 font-semibold rounded-lg text-sm"
             to="/community"
           >
-            {'社区生态'}
+            {translate({ id: 'site.01cca2c2836f', message: '社区生态' })}
           </Link>
         </nav>
         <div className="flex items-center gap-3">
@@ -106,7 +107,7 @@ export function CommunityHeader() {
             className="inline-flex items-center justify-center px-4 py-1.5 rounded-lg bg-sky-600 text-white font-body-sm text-sm font-semibold hover:bg-sky-700 shadow-sm transition-all shadow-sky-600/20"
             to="/docs"
           >
-            {'快速开始'}
+            {translate({ id: 'site.334c20e1a480', message: '快速开始' })}
           </Link>
           <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 shadow-sm">
             <span
@@ -126,7 +127,12 @@ export function CommunityHeader() {
             }
           }}
         >
-          <summary aria-label="导航菜单">
+          <summary
+            aria-label={translate({
+              id: 'site.e35a36e26d52',
+              message: '导航菜单',
+            })}
+          >
             <svg
               viewBox="0 0 24 24"
               aria-hidden="true"
@@ -139,7 +145,10 @@ export function CommunityHeader() {
           </summary>
           <nav
             className="community-mobile-links"
-            aria-label="移动主导航"
+            aria-label={translate({
+              id: 'site.a1d579490367',
+              message: '移动主导航',
+            })}
             onClick={(event) => {
               if ((event.target as Element).closest('a'))
                 event.currentTarget.closest('details')?.removeAttribute('open');
@@ -149,32 +158,32 @@ export function CommunityHeader() {
               className="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-body-md text-sm transition-all"
               to="/"
             >
-              {'首页'}
+              {translate({ id: 'site.203c08e0d44a', message: '首页' })}
             </Link>
             <Link
               className="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-body-md text-sm transition-all"
               to="/models"
             >
-              {'模型目录'}
+              {translate({ id: 'site.34b3cac2a496', message: '模型目录' })}
             </Link>
             <Link
               className="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-body-md text-sm transition-all"
               to="/docs"
             >
-              {'文档指南'}
+              {translate({ id: 'site.fda4566fda7d', message: '文档指南' })}
             </Link>
             <Link
               className="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-body-md text-sm transition-all"
               to="/blog"
             >
-              {'博客洞见'}
+              {translate({ id: 'site.7131e5de923b', message: '博客洞见' })}
             </Link>
             <Link
               aria-current="page"
               className="px-3 py-1.5 transition-all bg-sky-50 text-sky-700 border border-sky-100 font-semibold rounded-lg text-sm"
               to="/community"
             >
-              {'社区生态'}
+              {translate({ id: 'site.01cca2c2836f', message: '社区生态' })}
             </Link>
           </nav>
         </details>
@@ -206,10 +215,12 @@ export function CommunityContent() {
               className="flex items-center gap-1.5 font-code-sm text-xs text-slate-500 mb-4"
             >
               <Link className="hover:text-sky-600 transition-colors" to="/">
-                {'首页'}
+                {translate({ id: 'site.203c08e0d44a', message: '首页' })}
               </Link>
               <span className="text-slate-400">{'/'}</span>
-              <span className="text-sky-700 font-medium">{'社区与生态'}</span>
+              <span className="text-sky-700 font-medium">
+                {translate({ id: 'site.8c59843609d4', message: '社区与生态' })}
+              </span>
             </nav>
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-slate-200 text-slate-600 font-label-caps text-xs shadow-sm mb-6">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -223,16 +234,22 @@ export function CommunityContent() {
               id="community-hero-title"
               data-home-hero="title"
             >
-              {'\n      让 AI 基础设施优化成为全社会的'}
+              {translate({
+                id: 'site.0893c0424f2e',
+                message: '\n      让 AI 基础设施优化成为全社会的',
+              })}
               <span className="text-sky-600 drop-shadow-[0_2px_12px_rgba(2,132,199,0.18)]">
-                {'“公共资产”'}
+                {translate({ id: 'site.028a5f6e2be9', message: '“公共资产”' })}
               </span>
             </h1>
             <p
               className="font-body-md text-base md:text-lg text-slate-600 max-w-2xl mx-auto text-center mt-2 mb-6 leading-relaxed"
               data-home-hero="lead"
             >
-              {'参与ModelSphere开源社区，共同推动AI基础设施发展。'}
+              {translate({
+                id: 'site.cbb8c5a8bdb7',
+                message: '参与ModelSphere开源社区，共同推动AI基础设施发展。',
+              })}
             </p>
 
             <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 relative items-stretch text-left"></div>
@@ -259,12 +276,14 @@ export function CommunityContent() {
                 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 tracking-tight"
                 id="community-maintainers-title"
               >
-                {'社区维护者'}
+                {translate({ id: 'site.9165f482a905', message: '社区维护者' })}
               </h2>
               <p className="font-body-md text-sm md:text-base text-slate-600 leading-relaxed">
-                {
-                  '\nModelSphere 由以下维护者共同推进，负责项目架构方向、PR 严格评审与生产稳定版本发布。\n'
-                }
+                {translate({
+                  id: 'site.31579bd3b6f1',
+                  message:
+                    '\nModelSphere 由以下维护者共同推进，负责项目架构方向、PR 严格评审与生产稳定版本发布。\n',
+                })}
               </p>
             </div>
 
@@ -284,7 +303,10 @@ export function CommunityContent() {
                   <MaintainerName login="lumianph" />
                   <div className="flex items-center gap-2 font-code-sm text-xs truncate">
                     <span className="text-emerald-700 font-semibold">
-                      {'范式智能（Phancy）'}
+                      {translate({
+                        id: 'site.cbe1e8aa200d',
+                        message: '范式智能（Phancy）',
+                      })}
                     </span>
                     <span className="text-slate-300">{'•'}</span>
                     <a
@@ -315,7 +337,10 @@ export function CommunityContent() {
                   <MaintainerName login="zhanghaohit" />
                   <div className="flex items-center gap-2 font-code-sm text-xs truncate">
                     <span className="text-emerald-700 font-semibold">
-                      {'范式智能（Phancy）'}
+                      {translate({
+                        id: 'site.cbe1e8aa200d',
+                        message: '范式智能（Phancy）',
+                      })}
                     </span>
                     <span className="text-slate-300">{'•'}</span>
                     <a
@@ -346,7 +371,10 @@ export function CommunityContent() {
                   <MaintainerName login="aceforeverd" />
                   <div className="flex items-center gap-2 font-code-sm text-xs truncate">
                     <span className="text-emerald-700 font-semibold">
-                      {'范式智能（Phancy）'}
+                      {translate({
+                        id: 'site.cbe1e8aa200d',
+                        message: '范式智能（Phancy）',
+                      })}
                     </span>
                     <span className="text-slate-300">{'•'}</span>
                     <a
@@ -377,7 +405,10 @@ export function CommunityContent() {
                   <MaintainerName login="remotego" />
                   <div className="flex items-center gap-2 font-code-sm text-xs truncate">
                     <span className="text-emerald-700 font-semibold">
-                      {'范式智能（Phancy）'}
+                      {translate({
+                        id: 'site.cbe1e8aa200d',
+                        message: '范式智能（Phancy）',
+                      })}
                     </span>
                     <span className="text-slate-300">{'•'}</span>
                     <a
@@ -411,7 +442,10 @@ export function CommunityContent() {
                   <MaintainerName login="imneov" />
                   <div className="flex items-center gap-2 font-code-sm text-xs truncate">
                     <span className="text-emerald-700 font-semibold">
-                      {'睿思智联 (RiseUnion)'}
+                      {translate({
+                        id: 'site.3986f9785b06',
+                        message: '睿思智联 (RiseUnion)',
+                      })}
                     </span>
                     <span className="text-slate-300">{'•'}</span>
                     <a
@@ -452,10 +486,16 @@ export function CommunityContent() {
                 className="font-headline-lg text-2xl md:text-3xl font-bold text-slate-900 tracking-tight"
                 id="community-calendar-title"
               >
-                {'线上技术分享与社区例会日历'}
+                {translate({
+                  id: 'site.98fcedca6dd0',
+                  message: '线上技术分享与社区例会日历',
+                })}
               </h2>
               <p className="font-body-md text-sm text-slate-600">
-                {'社区技术分享与例会安排将在这里公布'}
+                {translate({
+                  id: 'site.721f5a8ebb14',
+                  message: '社区技术分享与例会安排将在这里公布',
+                })}
               </p>
             </div>
 
@@ -486,14 +526,27 @@ export function CommunityContent() {
                 className="font-headline-lg text-2xl md:text-3xl font-bold text-slate-900 tracking-tight"
                 id="community-partners-title"
               >
-                {'社区发起单位与生态合作伙伴'}
+                {translate({
+                  id: 'site.f330ad54f07f',
+                  message: '社区发起单位与生态合作伙伴',
+                })}
               </h2>
               <p className="font-body-md text-sm md:text-base text-slate-600">
-                {'\n        模域 ModelSphere 开源社区由 '}
-                <strong className="text-sky-700">{'范式智能'}</strong>
-                {' 与 '}
-                <strong className="text-sky-700">{'睿思智联'}</strong>
-                {' 共同发起\n      '}
+                {translate({
+                  id: 'site.3b8623b23db6',
+                  message: '\n        模域 ModelSphere 开源社区由 ',
+                })}
+                <strong className="text-sky-700">
+                  {translate({ id: 'site.c675275a63a8', message: '范式智能' })}
+                </strong>
+                {translate({ id: 'site.774163e6ec8a', message: ' 与 ' })}
+                <strong className="text-sky-700">
+                  {translate({ id: 'site.aeafd074c2fc', message: '睿思智联' })}
+                </strong>
+                {translate({
+                  id: 'site.c8456611a220',
+                  message: ' 共同发起\n      ',
+                })}
               </p>
             </div>
 
@@ -506,9 +559,11 @@ export function CommunityContent() {
                 <div>
                   <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
                     <span className="px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-700 font-label-caps text-xs font-bold">
-                      {
-                        '\n              CO-INITIATOR / 联合发起单位\n            '
-                      }
+                      {translate({
+                        id: 'site.2912bec6369c',
+                        message:
+                          '\n              CO-INITIATOR / 联合发起单位\n            ',
+                      })}
                     </span>
                     <span
                       className="material-symbols-outlined text-sky-600 text-[22px]"
@@ -523,7 +578,10 @@ export function CommunityContent() {
                     </div>
                     <div>
                       <h3 className="font-headline-sm text-xl font-bold text-slate-900">
-                        {'范式智能 (PHANCY)'}
+                        {translate({
+                          id: 'site.12e49b14f011',
+                          message: '范式智能 (PHANCY)',
+                        })}
                       </h3>
                       <p className="font-code-sm text-xs text-slate-500">
                         {'Enterprise AI Infrastructure'}
@@ -531,9 +589,11 @@ export function CommunityContent() {
                     </div>
                   </div>
                   <p className="font-body-sm text-sm text-slate-600 leading-relaxed mb-6">
-                    {
-                      '\n            作为社区联合发起方，负责提供工业级异构算力集群底座验证支持、海量信创芯片软硬件适配数据沉淀，以及企业级生产落地场景的持续拓展与规范制定。\n          '
-                    }
+                    {translate({
+                      id: 'site.3cc070cc56f5',
+                      message:
+                        '\n            作为社区联合发起方，负责提供工业级异构算力集群底座验证支持、海量信创芯片软硬件适配数据沉淀，以及企业级生产落地场景的持续拓展与规范制定。\n          ',
+                    })}
                   </p>
                 </div>
               </div>
@@ -542,9 +602,11 @@ export function CommunityContent() {
                 <div>
                   <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
                     <span className="px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 font-label-caps text-xs font-bold">
-                      {
-                        '\n              CO-INITIATOR / 联合发起单位\n            '
-                      }
+                      {translate({
+                        id: 'site.2912bec6369c',
+                        message:
+                          '\n              CO-INITIATOR / 联合发起单位\n            ',
+                      })}
                     </span>
                     <span
                       className="material-symbols-outlined text-indigo-600 text-[22px]"
@@ -559,7 +621,10 @@ export function CommunityContent() {
                     </div>
                     <div>
                       <h3 className="font-headline-sm text-xl font-bold text-slate-900">
-                        {'睿思智联 (RiseUnion)'}
+                        {translate({
+                          id: 'site.3986f9785b06',
+                          message: '睿思智联 (RiseUnion)',
+                        })}
                       </h3>
                       <p className="font-code-sm text-xs text-slate-500">
                         {'Cloud-Native AI Middleware'}
@@ -567,9 +632,11 @@ export function CommunityContent() {
                     </div>
                   </div>
                   <p className="font-body-sm text-sm text-slate-600 leading-relaxed mb-6">
-                    {
-                      '\n            作为社区联合发起方，主导核心推理中间件研发、AutoTune 调优搜索算法、Kubernetes 云原生推理算子设计，以及面向极端并发的智能路由网关工程演进。\n          '
-                    }
+                    {translate({
+                      id: 'site.de57ac18e315',
+                      message:
+                        '\n            作为社区联合发起方，主导核心推理中间件研发、AutoTune 调优搜索算法、Kubernetes 云原生推理算子设计，以及面向极端并发的智能路由网关工程演进。\n          ',
+                    })}
                   </p>
                 </div>
               </div>
@@ -581,17 +648,28 @@ export function CommunityContent() {
             >
               <div className="flex flex-col gap-1 text-center md:text-left">
                 <h4 className="font-headline-sm text-base font-bold text-slate-900">
-                  {'硬件适配生态与企业共建伙伴计划'}
+                  {translate({
+                    id: 'site.85906b73debe',
+                    message: '硬件适配生态与企业共建伙伴计划',
+                  })}
                 </h4>
                 <p className="font-body-sm text-sm text-slate-600">
-                  {'欢迎更多芯片与企业团队加入社区生态共建。'}
+                  {translate({
+                    id: 'site.470e382248f4',
+                    message: '欢迎更多芯片与企业团队加入社区生态共建。',
+                  })}
                 </p>
               </div>
               <a
                 className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-sky-600 text-white font-body-sm text-sm font-semibold hover:bg-sky-700 transition-colors shadow-sm shrink-0"
                 href="mailto:contact@modelsphere.org"
               >
-                <span className="">{'申请加入生态共建'}</span>
+                <span className="">
+                  {translate({
+                    id: 'site.e2caa71efc6d',
+                    message: '申请加入生态共建',
+                  })}
+                </span>
                 <span
                   className="material-symbols-outlined text-[16px]"
                   aria-hidden="true"
@@ -620,12 +698,17 @@ export function CommunityContent() {
                 className="font-headline-lg text-2xl md:text-3xl font-bold text-slate-900 tracking-tight"
                 id="community-channels-title"
               >
-                {'社区交流与连接渠道'}
+                {translate({
+                  id: 'site.cebdad8111ec',
+                  message: '社区交流与连接渠道',
+                })}
               </h2>
               <p className="font-body-md text-sm text-slate-600">
-                {
-                  '无论是架构探讨、集群选型，还是实时故障排查，随时随地与核心团队保持对话'
-                }
+                {translate({
+                  id: 'site.89ab9255e823',
+                  message:
+                    '无论是架构探讨、集群选型，还是实时故障排查，随时随地与核心团队保持对话',
+                })}
               </p>
             </div>
 
@@ -646,21 +729,29 @@ export function CommunityContent() {
                       </span>
                     </div>
                     <span className="px-2.5 py-0.5 rounded-full bg-sky-50 border border-sky-100 text-sky-700 font-label-caps text-xs font-semibold">
-                      {'实时答疑'}
+                      {translate({
+                        id: 'site.2e212e970075',
+                        message: '实时答疑',
+                      })}
                     </span>
                   </div>
                   <div>
                     <h3 className="font-headline-sm text-lg font-bold text-slate-900 mb-0.5">
-                      {'微信技术交流群'}
+                      {translate({
+                        id: 'site.c6e8323544d9',
+                        message: '微信技术交流群',
+                      })}
                     </h3>
                     <span className="font-code-sm text-xs text-slate-500">
                       {'ModelSphere User SIG Group'}
                     </span>
                   </div>
                   <p className="font-body-sm text-sm text-slate-600 leading-relaxed">
-                    {
-                      '\n            与核心架构师及生产 SRE 零距离交流，快速获得集群部署排障、配方微调建议及版本支持。\n          '
-                    }
+                    {translate({
+                      id: 'site.55454bf1b266',
+                      message:
+                        '\n            与核心架构师及生产 SRE 零距离交流，快速获得集群部署排障、配方微调建议及版本支持。\n          ',
+                    })}
                   </p>
 
                   <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl flex flex-col items-center justify-center text-center gap-2">
@@ -669,18 +760,27 @@ export function CommunityContent() {
                       href={groupQr}
                       target="_blank"
                       rel="noopener noreferrer"
-                      title="打开入群二维码原图"
+                      title={translate({
+                        id: 'site.dd751622c21f',
+                        message: '打开入群二维码原图',
+                      })}
                     >
                       <img
                         className="w-full h-full"
                         src={groupQr}
-                        alt="微信技术交流群入群二维码"
+                        alt={translate({
+                          id: 'site.7842c842f4dd',
+                          message: '微信技术交流群入群二维码',
+                        })}
                         width={500}
                         height={500}
                       />
                     </a>
                     <span className="font-code-sm text-xs text-slate-500">
-                      {'ModelSphere社群'}
+                      {translate({
+                        id: 'site.6d84003b6085',
+                        message: 'ModelSphere社群',
+                      })}
                     </span>
                   </div>
                 </div>
@@ -690,9 +790,17 @@ export function CommunityContent() {
                     href={groupQr}
                     target="_blank"
                     rel="noopener noreferrer"
-                    title="打开入群二维码原图，使用微信扫码加入"
+                    title={translate({
+                      id: 'site.8835a79bd079',
+                      message: '打开入群二维码原图，使用微信扫码加入',
+                    })}
                   >
-                    <span className="">{'扫码加入技术交流微信群'}</span>
+                    <span className="">
+                      {translate({
+                        id: 'site.2fffee3edd5a',
+                        message: '扫码加入技术交流微信群',
+                      })}
+                    </span>
                   </a>
                 </div>
               </div>
@@ -709,21 +817,29 @@ export function CommunityContent() {
                       </span>
                     </div>
                     <span className="px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-label-caps text-xs font-semibold">
-                      {'主干社区'}
+                      {translate({
+                        id: 'site.726e8fe3b48a',
+                        message: '主干社区',
+                      })}
                     </span>
                   </div>
                   <div>
                     <h3 className="font-headline-sm text-lg font-bold text-slate-900 mb-0.5">
-                      {'GitHub 开源社区'}
+                      {translate({
+                        id: 'site.c9a0666ada33',
+                        message: 'GitHub 开源社区',
+                      })}
                     </h3>
                     <span className="font-code-sm text-xs text-slate-500">
                       {'github.com/modelsphere'}
                     </span>
                   </div>
                   <p className="font-body-sm text-sm text-slate-600 leading-relaxed">
-                    {
-                      '\n            Star 关注主干仓库，提交 Issue 报告环境问题，发起 PR 贡献代码或在 Discussions 规划下代算子。\n          '
-                    }
+                    {translate({
+                      id: 'site.d5eed28ffc8f',
+                      message:
+                        '\n            Star 关注主干仓库，提交 Issue 报告环境问题，发起 PR 贡献代码或在 Discussions 规划下代算子。\n          ',
+                    })}
                   </p>
                   <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex flex-col gap-2 font-code-sm text-xs">
                     <div className="flex items-center justify-between">
@@ -755,7 +871,12 @@ export function CommunityContent() {
                     >
                       {'star'}
                     </span>
-                    <span className="">{'前往 GitHub 组织'}</span>
+                    <span className="">
+                      {translate({
+                        id: 'site.5581608eea5e',
+                        message: '前往 GitHub 组织',
+                      })}
+                    </span>
                   </a>
                 </div>
               </div>
@@ -784,84 +905,103 @@ export function CommunityFooter() {
                 src={symbol}
               />
               <span className="font-headline-sm text-lg font-bold text-slate-900">
-                {'模域 ModelSphere'}
+                {translate({
+                  id: 'site.df36818e82c3',
+                  message: '模域 ModelSphere',
+                })}
               </span>
             </div>
             <p className="font-body-sm text-sm text-slate-600 max-w-sm leading-relaxed">
-              <span className="">{'模域 ModelSphere'}</span>
-              {
-                ' 是由范式智能（PHANCY）与睿思智联（RiseUnion）共同发起，面向大模型推理的开源生产级基础设施社区，打通异构算力适配、云原生集群调度与极限性能调优，让大模型从“实验室能跑”直通“生产好用”。'
-              }
+              <span className="">
+                {translate({
+                  id: 'site.df36818e82c3',
+                  message: '模域 ModelSphere',
+                })}
+              </span>
+              {translate({
+                id: 'site.b0237d6403f1',
+                message:
+                  ' 是由范式智能（PHANCY）与睿思智联（RiseUnion）共同发起，面向大模型推理的开源生产级基础设施社区，打通异构算力适配、云原生集群调度与极限性能调优，让大模型从“实验室能跑”直通“生产好用”。',
+              })}
             </p>
             <div className="flex items-center gap-3 font-code-sm text-xs text-slate-500 pt-1"></div>
           </div>
           <div className="flex flex-col gap-2.5">
             <div className="font-label-caps text-xs text-slate-400 font-bold uppercase tracking-wider">
-              {'核心产品'}
+              {translate({ id: 'site.6db8afcd8915', message: '核心产品' })}
             </div>
             <Link
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               to="/docs"
             >
-              {'推理引擎运行时'}
+              {translate({
+                id: 'site.0cde2d8a5585',
+                message: '推理引擎运行时',
+              })}
             </Link>
             <Link
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               to="/models"
             >
-              {'模型加速套件'}
+              {translate({ id: 'site.f7821c3f955a', message: '模型加速套件' })}
             </Link>
             <Link
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               to="/models"
             >
-              {'性能基准测评'}
+              {translate({ id: 'site.5f7a4b1ece53', message: '性能基准测评' })}
             </Link>
             <Link
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               to="/docs"
             >
-              {'分布式编排器'}
+              {translate({ id: 'site.7d1bb773a6bf', message: '分布式编排器' })}
             </Link>
           </div>
           <div className="flex flex-col gap-2.5">
             <div className="font-label-caps text-xs text-slate-400 font-bold uppercase tracking-wider">
-              {'社区与生态'}
+              {translate({ id: 'site.8c59843609d4', message: '社区与生态' })}
             </div>
             <a
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               href={siteHref('/community#community-channels')}
             >
-              {'开发者社区 SIG'}
+              {translate({
+                id: 'site.a39d5d6a8909',
+                message: '开发者社区 SIG',
+              })}
             </a>
             <a
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               href={siteHref('/community#community-maintainers')}
             >
-              {'社区维护者治理'}
+              {translate({
+                id: 'site.b78151d50c19',
+                message: '社区维护者治理',
+              })}
             </a>
             <Link
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               to="/community"
             >
-              {'贡献者荣誉墙'}
+              {translate({ id: 'site.2bcf194ad150', message: '贡献者荣誉墙' })}
             </Link>
             <a
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               href={siteHref('/community#community-calendar')}
             >
-              {'线上技术日历'}
+              {translate({ id: 'site.536c0bc75f5d', message: '线上技术日历' })}
             </a>
           </div>
           <div className="flex flex-col gap-2.5">
             <div className="font-label-caps text-xs text-slate-400 font-bold uppercase tracking-wider">
-              {'开发者资源'}
+              {translate({ id: 'site.f0009e1a62b1', message: '开发者资源' })}
             </div>
             <Link
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               to="/docs"
             >
-              {'快速接入文档'}
+              {translate({ id: 'site.ed82269fbd7e', message: '快速接入文档' })}
             </Link>
             <Link
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
@@ -873,13 +1013,13 @@ export function CommunityFooter() {
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               to="/blog"
             >
-              {'架构演进内幕'}
+              {translate({ id: 'site.85f3058b9a7e', message: '架构演进内幕' })}
             </Link>
             <Link
               className="font-body-sm text-sm text-slate-600 hover:text-sky-600 transition-colors"
               to="/blog"
             >
-              {'量化实战案例'}
+              {translate({ id: 'site.359c2cf95c95', message: '量化实战案例' })}
             </Link>
           </div>
         </div>

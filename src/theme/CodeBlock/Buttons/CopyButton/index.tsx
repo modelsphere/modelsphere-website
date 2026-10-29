@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { useEffect, useRef, useState } from 'react';
 import { useCodeBlockContext } from '@docusaurus/theme-common/internal';
 import type { Props } from '@theme/CodeBlock/Buttons/CopyButton';
@@ -38,22 +39,25 @@ export default function CopyButton({ className }: Props) {
         className={`${className ?? ''} copy-button`}
         disabled={status === 'copying'}
         onClick={copy}
-        aria-label="复制代码"
+        aria-label={translate({ id: 'site.420c20dd9fcc', message: '复制代码' })}
       >
         {status === 'done'
-          ? '已复制'
+          ? translate({ id: 'site.8f6f8d979c98', message: '已复制' })
           : status === 'copying'
-            ? '复制中'
-            : '复制代码'}
+            ? translate({ id: 'site.35b9d1632e80', message: '复制中' })
+            : translate({ id: 'site.420c20dd9fcc', message: '复制代码' })}
       </button>
       <span
         role="status"
         className={status === 'failed' ? 'copy-error' : 'sr-only'}
       >
         {status === 'failed'
-          ? '复制失败，请手动选择代码'
+          ? translate({
+              id: 'site.bc31718db91d',
+              message: '复制失败，请手动选择代码',
+            })
           : status === 'done'
-            ? '代码已复制'
+            ? translate({ id: 'site.ea538e2ae64c', message: '代码已复制' })
             : ''}
       </span>
     </span>

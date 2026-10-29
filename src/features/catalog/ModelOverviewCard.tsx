@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { useId } from 'react';
 import { safeUrl, type Model } from './data';
 import styles from './styles.module.css';
@@ -17,7 +18,8 @@ export function ModelOverviewCard({
         {model.displayName ?? model.name}
       </Heading>
       <p className={styles.modelOverviewDescription}>
-        {model.description ?? '暂无模型说明。'}
+        {model.description ??
+          translate({ id: 'site.4acb91dda8b7', message: '暂无模型说明。' })}
       </p>
       <div className={styles.modelOverviewFooter}>
         <div className={`${styles.chips} ${styles.modelOverviewTags}`}>
@@ -33,7 +35,13 @@ export function ModelOverviewCard({
             target="_blank"
             rel="noreferrer"
           >
-            <span>Hugging Face：{model.source.hf}</span>
+            <span>
+              {translate({
+                id: 'site.punctuation.huggingFace',
+                message: 'Hugging Face：',
+              })}
+              {model.source.hf}
+            </span>
             <span aria-hidden="true">↗</span>
           </a>
         )}

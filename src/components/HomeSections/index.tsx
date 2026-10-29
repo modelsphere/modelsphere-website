@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import { useSitePath } from '@site/src/lib/use-site-path';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import React from 'react';
@@ -10,8 +11,15 @@ export function FaultTolerance() {
       className="w-full py-12 px-margin bg-slate-50/70 border-b border-slate-200/70"
       id="fault-tolerance"
       data-home-design=""
-      aria-label="大模型推理断流续写"
-      aria-description="按设计稿展示的机制、配置与性能示例，不代表运行时状态、实测证明或服务保证。"
+      aria-label={translate({
+        id: 'site.0df458657238',
+        message: '大模型推理断流续写',
+      })}
+      aria-description={translate({
+        id: 'site.a52a481c1137',
+        message:
+          '按设计稿展示的机制、配置与性能示例，不代表运行时状态、实测证明或服务保证。',
+      })}
     >
       <div className="max-w-7xl mx-auto flex flex-col gap-8">
         <div className="flex items-center gap-2" data-home-intro="">
@@ -36,11 +44,17 @@ export function FaultTolerance() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  大模型推理断流续写：
+                  {translate({
+                    id: 'site.47c4307c4726',
+                    message: '大模型推理断流续写：',
+                  })}
                 </a>
               </h2>
               <p className="font-headline-lg text-3xl xl:text-4xl font-extrabold text-emerald-600 tracking-tight leading-tight mt-1">
-                {'\n100% 隔离服务崩溃断流\n'}
+                {translate({
+                  id: 'site.51226c2de14d',
+                  message: '\n100% 隔离服务崩溃断流\n',
+                })}
               </p>
               <div>
                 <br />
@@ -59,11 +73,16 @@ export function FaultTolerance() {
                 </div>
                 <div className="font-body-md text-sm leading-relaxed">
                   <strong className="text-slate-900 font-semibold">
-                    {'Hang-Watcher 旁路秒级探活：'}
+                    {translate({
+                      id: 'site.5cf8fbac4dd2',
+                      message: 'Hang-Watcher 旁路秒级探活：',
+                    })}
                   </strong>
-                  {
-                    '\n独立旁路探针实时监听引擎的 Token Emit 时间戳，若单 Token 生成等待时长超过动态阈值（如 150ms 超出 P99.9），立即将节点判定为 Hang 状态并下发熔断。\n'
-                  }
+                  {translate({
+                    id: 'site.0e6ae6afa50a',
+                    message:
+                      '\n独立旁路探针实时监听引擎的 Token Emit 时间戳，若单 Token 生成等待时长超过动态阈值（如 150ms 超出 P99.9），立即将节点判定为 Hang 状态并下发熔断。\n',
+                  })}
                 </div>
               </div>
               <div className="flex items-start gap-3.5">
@@ -77,11 +96,16 @@ export function FaultTolerance() {
                 </div>
                 <div className="font-body-md text-sm leading-relaxed">
                   <strong className="text-slate-900 font-semibold">
-                    {'Token 上下文状态重放：'}
+                    {translate({
+                      id: 'site.9c5774927a7b',
+                      message: 'Token 上下文状态重放：',
+                    })}
                   </strong>
-                  {
-                    '\n网关层实时缓存当前流式对话已吐出的 Token 1~N，并在检测到节点异常时，自动向健康节点发起包含历史 Token 的接续 Prefill 请求。\n'
-                  }
+                  {translate({
+                    id: 'site.4fcc2464b707',
+                    message:
+                      '\n网关层实时缓存当前流式对话已吐出的 Token 1~N，并在检测到节点异常时，自动向健康节点发起包含历史 Token 的接续 Prefill 请求。\n',
+                  })}
                 </div>
               </div>
               <div className="flex items-start gap-3.5">
@@ -95,11 +119,16 @@ export function FaultTolerance() {
                 </div>
                 <div className="font-body-md text-sm leading-relaxed">
                   <strong className="text-slate-900 font-semibold">
-                    {'客户端 SSE 无感知透明接力：'}
+                    {translate({
+                      id: 'site.a42264b66b5c',
+                      message: '客户端 SSE 无感知透明接力：',
+                    })}
                   </strong>
-                  {
-                    '\n客户端浏览器或 API Client 的长连接永不中断，直接在 Token N+1 处无缝追加输出，前端对话 UI 毫无卡死与重试刷新感。\n'
-                  }
+                  {translate({
+                    id: 'site.b644cf4ef045',
+                    message:
+                      '\n客户端浏览器或 API Client 的长连接永不中断，直接在 Token N+1 处无缝追加输出，前端对话 UI 毫无卡死与重试刷新感。\n',
+                  })}
                   <div>
                     <br />
                   </div>
@@ -135,7 +164,10 @@ export function FaultTolerance() {
                       {'01'}
                     </span>
                     <span className="font-bold text-slate-900 text-sm">
-                      {'正常流式推理阶段'}
+                      {translate({
+                        id: 'site.00dd4ced7c84',
+                        message: '正常流式推理阶段',
+                      })}
                     </span>
                   </div>
                   <span className="px-2 py-0.5 rounded text-[11px] font-bold font-code-sm bg-emerald-100 text-emerald-700 border border-emerald-200">
@@ -143,9 +175,20 @@ export function FaultTolerance() {
                   </span>
                 </div>
                 <p className="text-slate-600">
-                  {'\n客户端保持 SSE 长连接；网关将请求分流至 '}
-                  <strong className="text-sky-700">{'模型服务 A'}</strong>
-                  {'；服务依次生成并吐出 Token 1 → 2 → 3 → 4 → 5。\n'}
+                  {translate({
+                    id: 'site.f3eb7665088b',
+                    message: '\n客户端保持 SSE 长连接；网关将请求分流至 ',
+                  })}
+                  <strong className="text-sky-700">
+                    {translate({
+                      id: 'site.4b911f91b5ec',
+                      message: '模型服务 A',
+                    })}
+                  </strong>
+                  {translate({
+                    id: 'site.020f416393b4',
+                    message: '；服务依次生成并吐出 Token 1 → 2 → 3 → 4 → 5。\n',
+                  })}
                 </p>
                 <div className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 font-code-sm text-[11px] text-slate-600 flex items-center gap-1.5 overflow-x-auto shadow-inner">
                   <span className="text-slate-400 select-none">
@@ -175,7 +218,10 @@ export function FaultTolerance() {
                       {'02'}
                     </span>
                     <span className="font-bold text-red-900 text-sm">
-                      {'突发故障 & 旁路探针捕获'}
+                      {translate({
+                        id: 'site.0a3f56544d29',
+                        message: '突发故障 & 旁路探针捕获',
+                      })}
                     </span>
                   </div>
                   <span className="px-2 py-0.5 rounded text-[11px] font-bold font-code-sm bg-red-100 text-red-700 border border-red-300">
@@ -183,10 +229,17 @@ export function FaultTolerance() {
                   </span>
                 </div>
                 <p className="text-slate-700">
-                  <strong className="text-red-700">{'模型服务 A'}</strong>
-                  {
-                    ' 遭遇 GPU 显存死锁或 CUDA Illegal Memory Access，生成中断。Hang-Watcher 探针在 140ms 内检测到 Token Emit 超时，通知网关切断与 A 的通道。\n'
-                  }
+                  <strong className="text-red-700">
+                    {translate({
+                      id: 'site.4b911f91b5ec',
+                      message: '模型服务 A',
+                    })}
+                  </strong>
+                  {translate({
+                    id: 'site.554610a92c94',
+                    message:
+                      ' 遭遇 GPU 显存死锁或 CUDA Illegal Memory Access，生成中断。Hang-Watcher 探针在 140ms 内检测到 Token Emit 超时，通知网关切断与 A 的通道。\n',
+                  })}
                 </p>
               </div>
               <div className="p-3.5 rounded-xl bg-sky-50/60 border border-sky-200 flex flex-col gap-2">
@@ -196,7 +249,10 @@ export function FaultTolerance() {
                       {'03'}
                     </span>
                     <span className="font-bold text-slate-900 text-sm">
-                      {'携带上下文无缝切换健康节点'}
+                      {translate({
+                        id: 'site.995b760b23bd',
+                        message: '携带上下文无缝切换健康节点',
+                      })}
                     </span>
                   </div>
                   <span className="px-2 py-0.5 rounded text-[11px] font-bold font-code-sm bg-sky-100 text-sky-700 border border-sky-300">
@@ -204,10 +260,17 @@ export function FaultTolerance() {
                   </span>
                 </div>
                 <p className="text-slate-700">
-                  {
-                    '\n聚合调度网关截取已吐出的 Token 1~5，结合 L3 KV Cache 共享句柄，瞬间重定向发送至健康备用节点 '
-                  }
-                  <strong className="text-sky-700">{'模型服务 B'}</strong>
+                  {translate({
+                    id: 'site.ef4c19e88cc2',
+                    message:
+                      '\n聚合调度网关截取已吐出的 Token 1~5，结合 L3 KV Cache 共享句柄，瞬间重定向发送至健康备用节点 ',
+                  })}
+                  <strong className="text-sky-700">
+                    {translate({
+                      id: 'site.fcd75b2b2a93',
+                      message: '模型服务 B',
+                    })}
+                  </strong>
                   {'。\n'}
                 </p>
               </div>
@@ -218,7 +281,10 @@ export function FaultTolerance() {
                       {'04'}
                     </span>
                     <span className="font-bold text-emerald-900 text-sm">
-                      {'断点接续与透明推流'}
+                      {translate({
+                        id: 'site.1c174d4246c5',
+                        message: '断点接续与透明推流',
+                      })}
                     </span>
                   </div>
                   <span className="px-2 py-0.5 rounded text-[11px] font-bold font-code-sm bg-emerald-100 text-emerald-700 border border-emerald-300">
@@ -226,10 +292,17 @@ export function FaultTolerance() {
                   </span>
                 </div>
                 <p className="text-slate-700">
-                  <strong className="text-emerald-700">{'模型服务 B'}</strong>
-                  {
-                    ' 极速计算并接续生成 Token 6 → 7 → 8... 网关直接追加注入原 SSE 流，客户端用户界面毫无感知，零丢字体验。\n'
-                  }
+                  <strong className="text-emerald-700">
+                    {translate({
+                      id: 'site.fcd75b2b2a93',
+                      message: '模型服务 B',
+                    })}
+                  </strong>
+                  {translate({
+                    id: 'site.596ae806ae2a',
+                    message:
+                      ' 极速计算并接续生成 Token 6 → 7 → 8... 网关直接追加注入原 SSE 流，客户端用户界面毫无感知，零丢字体验。\n',
+                  })}
                 </p>
                 <div className="px-3 py-1.5 rounded-lg bg-white border border-emerald-200 font-code-sm text-[11px] text-slate-700 flex items-center gap-1.5 overflow-x-auto shadow-inner">
                   <span className="text-slate-400 select-none">
@@ -261,8 +334,15 @@ export function QosScaling() {
       className="w-full py-12 px-margin bg-white border-b border-slate-200/70"
       id="qos-scaling"
       data-home-design=""
-      aria-label="服务质量保障与弹性伸缩"
-      aria-description="按设计稿展示的机制、配置与性能示例，不代表运行时状态、实测证明或服务保证。"
+      aria-label={translate({
+        id: 'site.f039310ac86e',
+        message: '服务质量保障与弹性伸缩',
+      })}
+      aria-description={translate({
+        id: 'site.a52a481c1137',
+        message:
+          '按设计稿展示的机制、配置与性能示例，不代表运行时状态、实测证明或服务保证。',
+      })}
     >
       <div className="max-w-7xl mx-auto flex flex-col gap-8">
         <div className="flex flex-col gap-2" data-home-intro="">
@@ -278,12 +358,17 @@ export function QosScaling() {
             </span>
           </div>
           <h2 className="font-headline-lg text-3xl xl:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            {'\n服务质量保障与 SLO 动态弹性伸缩\n'}
+            {translate({
+              id: 'site.e12e17ea0cf2',
+              message: '\n服务质量保障与 SLO 动态弹性伸缩\n',
+            })}
           </h2>
           <p className="font-body-md text-sm text-slate-600 leading-relaxed">
-            {
-              '\n告别单一粗暴的 TPM/RPM 静态限流，建立基于首字延迟 (TTFT) 与每秒产出 (OTPS) 的生产级实时反馈调控。\n'
-            }
+            {translate({
+              id: 'site.77ee6098da09',
+              message:
+                '\n告别单一粗暴的 TPM/RPM 静态限流，建立基于首字延迟 (TTFT) 与每秒产出 (OTPS) 的生产级实时反馈调控。\n',
+            })}
           </p>
         </div>
         <div
@@ -302,7 +387,10 @@ export function QosScaling() {
                     {'speed'}
                   </span>
                   <h3 className="font-headline-sm text-slate-900 font-bold text-lg md:text-[20px] tracking-tight">
-                    {'QoS 动态限流 (TTFT / OTPS)'}
+                    {translate({
+                      id: 'site.0a35a4b7aaa5',
+                      message: 'QoS 动态限流 (TTFT / OTPS)',
+                    })}
                   </h3>
                 </div>
                 <span className="px-2.5 py-1 rounded-full text-xs font-semibold font-code-sm bg-sky-50 text-sky-600 border border-sky-100 uppercase tracking-wide">
@@ -310,9 +398,11 @@ export function QosScaling() {
                 </span>
               </div>
               <p className="font-body-md text-xs sm:text-sm text-slate-600 leading-relaxed mt-2 mb-4">
-                {
-                  '\n静态限流无法感知 Prefill 算力饱和引发的排队雪崩。ModelSphere 动态监测首字延迟。当 TTFT 突破阈值时，网关在毫秒级返回携带 Retry-After: 120ms 的智能 429 退避，避免集群被拖死。\n'
-                }
+                {translate({
+                  id: 'site.62dacb9461f9',
+                  message:
+                    '\n静态限流无法感知 Prefill 算力饱和引发的排队雪崩。ModelSphere 动态监测首字延迟。当 TTFT 突破阈值时，网关在毫秒级返回携带 Retry-After: 120ms 的智能 429 退避，避免集群被拖死。\n',
+                })}
               </p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-4 flex flex-col justify-between shadow-inner gap-4 font-code-sm text-xs">
@@ -508,7 +598,10 @@ export function QosScaling() {
                     {'auto_mode'}
                   </span>
                   <h3 className="font-headline-sm text-slate-900 font-bold text-lg md:text-[20px] tracking-tight">
-                    {'SLO 弹性扩缩容 (K8s HPA/EDA)'}
+                    {translate({
+                      id: 'site.7b85ca14caf0',
+                      message: 'SLO 弹性扩缩容 (K8s HPA/EDA)',
+                    })}
                   </h3>
                 </div>
                 <span className="px-2.5 py-1 rounded-full text-xs font-semibold font-code-sm bg-emerald-50 text-emerald-700 border border-emerald-200/80 uppercase tracking-wide">
@@ -516,9 +609,11 @@ export function QosScaling() {
                 </span>
               </div>
               <p className="font-body-md text-xs sm:text-sm text-slate-600 leading-relaxed mt-2 mb-4">
-                {
-                  '\n随并发需求毫秒级调整推理 Pod 副本；非高峰期高优模型借用闲置芯片，使集群整体 GPU 利用率从行业平均 45% 大幅跃升至 85% 以上，且缩容时保证就绪请求排空再释放。\n'
-                }
+                {translate({
+                  id: 'site.69fb535284fa',
+                  message:
+                    '\n随并发需求毫秒级调整推理 Pod 副本；非高峰期高优模型借用闲置芯片，使集群整体 GPU 利用率从行业平均 45% 大幅跃升至 85% 以上，且缩容时保证就绪请求排空再释放。\n',
+                })}
               </p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-4 flex flex-col justify-between shadow-inner gap-4">
@@ -608,7 +703,10 @@ export function QosScaling() {
                     {'Hardware Sharing'}
                   </span>
                   <span className="font-bold text-slate-800">
-                    {'B300 + 昇腾'}
+                    {translate({
+                      id: 'site.9656f879000d',
+                      message: 'B300 + 昇腾',
+                    })}
                   </span>
                 </div>
               </div>
@@ -644,8 +742,15 @@ export function AutotuneEvolution() {
       className="w-full py-12 px-margin bg-slate-50/70 border-b border-slate-200/70"
       id="autotune-evolution"
       data-home-design=""
-      aria-label="性能持续优化"
-      aria-description="按设计稿展示的机制、配置与性能示例，不代表运行时状态、实测证明或服务保证。"
+      aria-label={translate({
+        id: 'site.e9a6e8e7991e',
+        message: '性能持续优化',
+      })}
+      aria-description={translate({
+        id: 'site.a52a481c1137',
+        message:
+          '按设计稿展示的机制、配置与性能示例，不代表运行时状态、实测证明或服务保证。',
+      })}
     >
       <div className="max-w-7xl mx-auto flex flex-col gap-8">
         <div className="flex flex-col gap-2" data-home-intro="">
@@ -661,12 +766,17 @@ export function AutotuneEvolution() {
             </span>
           </div>
           <h2 className="font-headline-lg text-3xl xl:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            {'Tuning-Agent 性能持续优化'}
+            {translate({
+              id: 'site.04c52c423435',
+              message: 'Tuning-Agent 性能持续优化',
+            })}
           </h2>
           <p className="font-body-md text-sm text-slate-600 leading-relaxed whitespace-nowrap">
-            {
-              '\n      告别繁冗的人工基准盲测。ModelSphere 将线上真实请求、低谷空闲算力、网格化超参搜索与零停机灰度上线串联成全自动化演进飞轮。\n    '
-            }
+            {translate({
+              id: 'site.e4e65d542ec8',
+              message:
+                '\n      告别繁冗的人工基准盲测。ModelSphere 将线上真实请求、低谷空闲算力、网格化超参搜索与零停机灰度上线串联成全自动化演进飞轮。\n    ',
+            })}
           </p>
         </div>
         <div
@@ -677,48 +787,84 @@ export function AutotuneEvolution() {
           <div className="xl:col-span-5 flex flex-col justify-center relative z-10">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 font-code-sm text-xs w-fit mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-sky-600 animate-pulse"></span>
-              <span>{'演进范式跃迁'}</span>
+              <span>
+                {translate({
+                  id: 'site.6054a2fd5372',
+                  message: '演进范式跃迁',
+                })}
+              </span>
             </div>
             <h3 className="font-headline-sm text-2xl font-bold text-slate-900 leading-snug tracking-tight mb-2">
-              {'从“人工盲测”跨越到“自主演进”'}
+              {translate({
+                id: 'site.ec073b0edf7e',
+                message: '从“人工盲测”跨越到“自主演进”',
+              })}
             </h3>
             <p className="font-body-md text-sm text-slate-600 mb-6 leading-relaxed">
-              {'用空闲算力持续榨干硬件潜能，让 LLM 推理服务越用越快。'}
+              {translate({
+                id: 'site.8baa61b6a1aa',
+                message:
+                  '用空闲算力持续榨干硬件潜能，让 LLM 推理服务越用越快。',
+              })}
             </p>
             <div className="flex flex-col gap-3.5">
               <div className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/80 flex items-start gap-3">
                 <span className="px-2 py-0.5 rounded text-xs font-bold font-code-sm bg-sky-100 text-sky-800 border border-sky-200 flex-shrink-0 mt-0.5">
-                  {'采样更准'}
+                  {translate({ id: 'site.45bc36393c8b', message: '采样更准' })}
                 </span>
                 <p className="font-body-sm text-xs text-slate-700 leading-relaxed">
-                  <span className="text-slate-400">{'静态数据集测试'}</span>
+                  <span className="text-slate-400">
+                    {translate({
+                      id: 'site.ca1f46545b3a',
+                      message: '静态数据集测试',
+                    })}
+                  </span>
                   {' → '}
                   <strong className="text-slate-900">
-                    {'7 天滑动窗口真实流量特征蓄水'}
+                    {translate({
+                      id: 'site.51f3302d2b27',
+                      message: '7 天滑动窗口真实流量特征蓄水',
+                    })}
                   </strong>
                 </p>
               </div>
               <div className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/80 flex items-start gap-3">
                 <span className="px-2 py-0.5 rounded text-xs font-bold font-code-sm bg-amber-100 text-amber-800 border border-amber-200 flex-shrink-0 mt-0.5">
-                  {'成本更低'}
+                  {translate({ id: 'site.7017dcf74465', message: '成本更低' })}
                 </span>
                 <p className="font-body-sm text-xs text-slate-700 leading-relaxed">
-                  <span className="text-slate-400">{'占用生产资源压测'}</span>
+                  <span className="text-slate-400">
+                    {translate({
+                      id: 'site.9b5db700cd4b',
+                      message: '占用生产资源压测',
+                    })}
+                  </span>
                   {' → '}
                   <strong className="text-slate-900">
-                    {'夜间低峰期闲置算力并发网格搜索'}
+                    {translate({
+                      id: 'site.a4c039468112',
+                      message: '夜间低峰期闲置算力并发网格搜索',
+                    })}
                   </strong>
                 </p>
               </div>
               <div className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/80 flex items-start gap-3">
                 <span className="px-2 py-0.5 rounded text-xs font-bold font-code-sm bg-emerald-100 text-emerald-800 border border-emerald-200 flex-shrink-0 mt-0.5">
-                  {'交付更稳'}
+                  {translate({ id: 'site.8768d9a795d5', message: '交付更稳' })}
                 </span>
                 <p className="font-body-sm text-xs text-slate-700 leading-relaxed">
-                  <span className="text-slate-400">{'停机重启更新参数'}</span>
+                  <span className="text-slate-400">
+                    {translate({
+                      id: 'site.c2f315ee2543',
+                      message: '停机重启更新参数',
+                    })}
+                  </span>
                   {' → '}
                   <strong className="text-slate-900">
-                    {'冠军方案自动验证，生产环境零停机热加载'}
+                    {translate({
+                      id: 'site.138b5fd6020a',
+                      message: '冠军方案自动验证，生产环境零停机热加载',
+                    })}
                   </strong>
                 </p>
               </div>
@@ -739,15 +885,24 @@ export function AutotuneEvolution() {
                       {'1'}
                     </span>
                     <span className="font-headline-sm text-slate-900 font-bold text-xs sm:text-sm tracking-tight home-autotune-title">
-                      {'线上推理服务'}
+                      {translate({
+                        id: 'site.15f0b92fe41e',
+                        message: '线上推理服务',
+                      })}
                     </span>
                   </div>
                   <span className="px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    {'稳定运行'}
+                    {translate({
+                      id: 'site.b9b42c232cf6',
+                      message: '稳定运行',
+                    })}
                   </span>
                 </div>
                 <p className="font-body-sm text-[11px] text-slate-600 mb-2 leading-tight">
-                  {'稳定运行，持续提供高质量低时延高可用服务'}
+                  {translate({
+                    id: 'site.0b2b2f8f71a2',
+                    message: '稳定运行，持续提供高质量低时延高可用服务',
+                  })}
                 </p>
                 <div className="rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-around gap-1.5 shadow-inner">
                   <div className="flex flex-col gap-0.5 p-1 rounded bg-slate-900 text-sky-400 border border-slate-800 shadow-sm flex-1">
@@ -797,15 +952,24 @@ export function AutotuneEvolution() {
                       {'5'}
                     </span>
                     <span className="font-headline-sm text-slate-900 font-bold text-xs tracking-tight home-autotune-title">
-                      {'自动化上线'}
+                      {translate({
+                        id: 'site.56d89537b868',
+                        message: '自动化上线',
+                      })}
                     </span>
                   </div>
                   <span className="px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    {'生产灰度'}
+                    {translate({
+                      id: 'site.a762c19d9aca',
+                      message: '生产灰度',
+                    })}
                   </span>
                 </div>
                 <p className="font-body-sm text-[10px] text-slate-600 mb-1.5 leading-tight">
-                  {'最优配置自动部署，零丢流热加载'}
+                  {translate({
+                    id: 'site.2818b323ef17',
+                    message: '最优配置自动部署，零丢流热加载',
+                  })}
                 </p>
                 <div className="rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-between gap-1.5 shadow-inner">
                   <div className="w-6 h-6 rounded-md bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
@@ -841,7 +1005,10 @@ export function AutotuneEvolution() {
                     </span>
                   </div>
                   <h4 className="font-headline-sm text-slate-900 font-extrabold text-xs tracking-tight leading-tight">
-                    {'持续性能优化闭环'}
+                    {translate({
+                      id: 'site.6b338826b141',
+                      message: '持续性能优化闭环',
+                    })}
                   </h4>
                   <span className="mt-1 px-1.5 py-0.5 rounded-full bg-white/90 border border-sky-200 text-sky-800 font-code-sm text-[8px] font-semibold shadow-sm">
                     {'AUTOTUNE ENGINE'}
@@ -858,15 +1025,24 @@ export function AutotuneEvolution() {
                       {'2'}
                     </span>
                     <span className="font-headline-sm text-slate-900 font-bold text-xs tracking-tight home-autotune-title">
-                      {'收集流量数据'}
+                      {translate({
+                        id: 'site.5d303f96e6f3',
+                        message: '收集流量数据',
+                      })}
                     </span>
                   </div>
                   <span className="px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                    {'特征蓄水'}
+                    {translate({
+                      id: 'site.003a7e708d44',
+                      message: '特征蓄水',
+                    })}
                   </span>
                 </div>
                 <p className="font-body-sm text-[10px] text-slate-600 mb-1.5 leading-tight">
-                  {'构建滑动窗口数据集与前缀拓扑'}
+                  {translate({
+                    id: 'site.48732aeaef82',
+                    message: '构建滑动窗口数据集与前缀拓扑',
+                  })}
                 </p>
                 <div className="rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center gap-1.5 shadow-inner">
                   <div className="w-6 h-6 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0">
@@ -902,15 +1078,24 @@ export function AutotuneEvolution() {
                       {'4'}
                     </span>
                     <span className="font-headline-sm text-slate-900 font-bold text-xs tracking-tight home-autotune-title">
-                      {'产出并验证配置'}
+                      {translate({
+                        id: 'site.3a8d95379980',
+                        message: '产出并验证配置',
+                      })}
                     </span>
                   </div>
                   <span className="px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
-                    {'真实负载'}
+                    {translate({
+                      id: 'site.11f6c0ce2b39',
+                      message: '真实负载',
+                    })}
                   </span>
                 </div>
                 <p className="font-body-sm text-[10px] text-slate-600 mb-1.5 leading-tight">
-                  {'基于真实负载比选出冠军推理方案'}
+                  {translate({
+                    id: 'site.9afaa4f936fa',
+                    message: '基于真实负载比选出冠军推理方案',
+                  })}
                 </p>
                 <div className="rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-between gap-2 shadow-inner">
                   <div className="flex items-end gap-1 h-5 flex-1">
@@ -951,15 +1136,24 @@ export function AutotuneEvolution() {
                       {'3'}
                     </span>
                     <span className="font-headline-sm text-slate-900 font-bold text-xs tracking-tight home-autotune-title">
-                      {'利用空闲算力调优'}
+                      {translate({
+                        id: 'site.d767694607d3',
+                        message: '利用空闲算力调优',
+                      })}
                     </span>
                   </div>
                   <span className="px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                    {'低峰搜索'}
+                    {translate({
+                      id: 'site.b6ad2f1e3dca',
+                      message: '低峰搜索',
+                    })}
                   </span>
                 </div>
                 <p className="font-body-sm text-[10px] text-slate-600 mb-1.5 leading-tight">
-                  {'夜间低峰期并发搜索更优推理超参'}
+                  {translate({
+                    id: 'site.a149e0e2f633',
+                    message: '夜间低峰期并发搜索更优推理超参',
+                  })}
                 </p>
                 <div className="rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-between gap-1.5 shadow-inner">
                   <div className="flex items-center gap-1.5">
@@ -1006,8 +1200,15 @@ export function Benchmarks() {
       className="w-full py-space-xl px-margin bg-white border-b border-slate-200/70"
       id="benchmarks"
       data-home-design=""
-      aria-label="透明可复现的真实实测"
-      aria-description="按设计稿展示的机制、配置与性能示例，不代表运行时状态、实测证明或服务保证。"
+      aria-label={translate({
+        id: 'site.8b7aba25d266',
+        message: '透明可复现的真实实测',
+      })}
+      aria-description={translate({
+        id: 'site.a52a481c1137',
+        message:
+          '按设计稿展示的机制、配置与性能示例，不代表运行时状态、实测证明或服务保证。',
+      })}
     >
       <div className="max-w-7xl mx-auto flex flex-col gap-space-lg">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-space-sm">
@@ -1016,12 +1217,17 @@ export function Benchmarks() {
               {'Empirical Telemetry'}
             </span>
             <h2 className="font-headline-lg text-headline-lg text-slate-900 font-bold tracking-tight">
-              {'\n              透明可复现的真实实测'}
+              {translate({
+                id: 'site.d796c2f55900',
+                message: '\n              透明可复现的真实实测',
+              })}
             </h2>
             <p className="font-body-md text-body-md text-slate-600">
-              {
-                '公开完整的基准输入输出分布、硬件拓扑与权衡代价，每一次调优收益皆可复核。\n            '
-              }
+              {translate({
+                id: 'site.c7ad3335dc85',
+                message:
+                  '公开完整的基准输入输出分布、硬件拓扑与权衡代价，每一次调优收益皆可复核。\n            ',
+              })}
             </p>
           </div>
           <div className="flex items-center gap-space-xs text-slate-500 font-code-sm text-code-sm">
@@ -1032,22 +1238,43 @@ export function Benchmarks() {
         <div className="w-full overflow-x-auto rounded-xl bg-white border border-slate-200 shadow-sm">
           <table
             className="w-full text-left font-body-md text-body-md"
-            aria-label="设计稿性能实测对照示例"
+            aria-label={translate({
+              id: 'site.de57ea95aff6',
+              message: '设计稿性能实测对照示例',
+            })}
             data-design-example=""
           >
             <thead className="bg-slate-50 border-b border-slate-200 font-label-caps text-label-caps text-slate-600 uppercase tracking-wider">
               <tr>
-                <th className="py-space-md px-space-md">{'模型与架构'}</th>
-                <th className="py-space-md px-space-md">{'硬件环境'}</th>
                 <th className="py-space-md px-space-md">
-                  {'负载场景 (Prompt+Output)'}
+                  {translate({
+                    id: 'site.0fb4c5c150d7',
+                    message: '模型与架构',
+                  })}
                 </th>
                 <th className="py-space-md px-space-md">
-                  {'吞吐对比 (Default vs Tuned)'}
+                  {translate({ id: 'site.3df1589c059d', message: '硬件环境' })}
                 </th>
-                <th className="py-space-md px-space-md">{'性能飞跃'}</th>
                 <th className="py-space-md px-space-md">
-                  {'调优技术与代价说明'}
+                  {translate({
+                    id: 'site.6f219ec00819',
+                    message: '负载场景 (Prompt+Output)',
+                  })}
+                </th>
+                <th className="py-space-md px-space-md">
+                  {translate({
+                    id: 'site.192d279d8ca7',
+                    message: '吞吐对比 (Default vs Tuned)',
+                  })}
+                </th>
+                <th className="py-space-md px-space-md">
+                  {translate({ id: 'site.84db1df6e46f', message: '性能飞跃' })}
+                </th>
+                <th className="py-space-md px-space-md">
+                  {translate({
+                    id: 'site.616abf2ae0ac',
+                    message: '调优技术与代价说明',
+                  })}
                 </th>
               </tr>
             </thead>
@@ -1060,7 +1287,10 @@ export function Benchmarks() {
                   {'8 × NVIDIA H100'}
                 </td>
                 <td className="py-space-md px-space-md text-slate-600">
-                  {'50k + 1.5k (长上下文)'}
+                  {translate({
+                    id: 'site.29891663b1f6',
+                    message: '50k + 1.5k (长上下文)',
+                  })}
                 </td>
                 <td className="py-space-md px-space-md">
                   <span className="text-slate-400">{'13,900'}</span>
@@ -1075,9 +1305,11 @@ export function Benchmarks() {
                   </span>
                 </td>
                 <td className="py-space-md px-space-md text-body-sm text-slate-600">
-                  {
-                    '\n                  并发 4→26; TTFT 4.81s→7.66s (符合 SLO ≤ 8s); GPQA 精度微降 3.03% (显式折中)\n                '
-                  }
+                  {translate({
+                    id: 'site.37e08ff4ea29',
+                    message:
+                      '\n                  并发 4→26; TTFT 4.81s→7.66s (符合 SLO ≤ 8s); GPQA 精度微降 3.03% (显式折中)\n                ',
+                  })}
                 </td>
               </tr>
               <tr className="bg-slate-50/50 hover:bg-slate-50 transition-colors">
@@ -1092,9 +1324,15 @@ export function Benchmarks() {
                 </td>
                 <td className="py-space-md px-space-md">
                   <span className="text-slate-500 font-medium">
-                    {'长文大幅跃升'}
+                    {translate({
+                      id: 'site.b5e1c7101db6',
+                      message: '长文大幅跃升',
+                    })}
                   </span>
-                  {' / 常用平稳\n                '}
+                  {translate({
+                    id: 'site.d138647f7bbb',
+                    message: ' / 常用平稳\n                ',
+                  })}
                 </td>
                 <td className="py-space-md px-space-md">
                   <span className="px-2 py-1 rounded bg-emerald-100 text-emerald-800 font-bold border border-emerald-200">
@@ -1102,9 +1340,11 @@ export function Benchmarks() {
                   </span>
                 </td>
                 <td className="py-space-md px-space-md text-body-sm text-slate-600">
-                  {
-                    '\n                  客观体现“负载改变收益改变”，AutoTune 针对超长上下文自适应调整 Chunk 分块\n                '
-                  }
+                  {translate({
+                    id: 'site.4f54906de742',
+                    message:
+                      '\n                  客观体现“负载改变收益改变”，AutoTune 针对超长上下文自适应调整 Chunk 分块\n                ',
+                  })}
                 </td>
               </tr>
               <tr className="hover:bg-slate-50/80 transition-colors">
@@ -1115,7 +1355,10 @@ export function Benchmarks() {
                   {'2 × NVIDIA H800'}
                 </td>
                 <td className="py-space-md px-space-md text-slate-600">
-                  {'Agentic (c=8 并发多轮)'}
+                  {translate({
+                    id: 'site.f8ae6c58fa2d',
+                    message: 'Agentic (c=8 并发多轮)',
+                  })}
                 </td>
                 <td className="py-space-md px-space-md">
                   <span className="text-slate-400">{'6,200'}</span>
@@ -1130,9 +1373,11 @@ export function Benchmarks() {
                   </span>
                 </td>
                 <td className="py-space-md px-space-md text-body-sm text-slate-600">
-                  {
-                    '\n                  SGLang + FlashAttention-3 + FP8 + Chunked Prefill 32768 + extra_buffer 深度融合\n                '
-                  }
+                  {translate({
+                    id: 'site.0e0c1daadf85',
+                    message:
+                      '\n                  SGLang + FlashAttention-3 + FP8 + Chunked Prefill 32768 + extra_buffer 深度融合\n                ',
+                  })}
                 </td>
               </tr>
               <tr className="bg-slate-50/50 hover:bg-slate-50 transition-colors">
@@ -1143,12 +1388,25 @@ export function Benchmarks() {
                   {'4 × NVIDIA B300'}
                 </td>
                 <td className="py-space-md px-space-md text-slate-600">
-                  {'全量生产仿真混合集'}
+                  {translate({
+                    id: 'site.7208c864516c',
+                    message: '全量生产仿真混合集',
+                  })}
                 </td>
                 <td className="py-space-md px-space-md">
-                  <span className="text-slate-500">{'基线对比'}</span>
+                  <span className="text-slate-500">
+                    {translate({
+                      id: 'site.2c837b9b1232',
+                      message: '基线对比',
+                    })}
+                  </span>
                   {' → '}
-                  <span className="text-sky-600 font-bold">{'最高峰值'}</span>
+                  <span className="text-sky-600 font-bold">
+                    {translate({
+                      id: 'site.f517c4451237',
+                      message: '最高峰值',
+                    })}
+                  </span>
                 </td>
                 <td className="py-space-md px-space-md">
                   <span className="px-2 py-1 rounded bg-sky-100 text-sky-800 font-bold border border-sky-200">
@@ -1156,9 +1414,11 @@ export function Benchmarks() {
                   </span>
                 </td>
                 <td className="py-space-md px-space-md text-body-sm text-slate-600">
-                  {
-                    '\n                  AutoTune 搜索至最优 TP4 单节点拓扑，集成 modelopt_fp4 极致内核\n                '
-                  }
+                  {translate({
+                    id: 'site.e459da12b0aa',
+                    message:
+                      '\n                  AutoTune 搜索至最优 TP4 单节点拓扑，集成 modelopt_fp4 极致内核\n                ',
+                  })}
                 </td>
               </tr>
             </tbody>
@@ -1176,7 +1436,7 @@ export function GetStarted() {
       className="w-full px-margin py-space-md"
       id="get-started"
       data-home-design=""
-      aria-label="开始部署"
+      aria-label={translate({ id: 'site.2209fac93619', message: '开始部署' })}
     >
       <div
         className="relative max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-xl text-center text-white py-16 px-6 sm:px-8"
@@ -1195,12 +1455,18 @@ export function GetStarted() {
               className="text-2xl sm:text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight"
               id="cta-title"
             >
-              {'\n        准备好让你的大模型推理集群提速了吗？\n      '}
+              {translate({
+                id: 'site.8bc9ff0b2fc6',
+                message:
+                  '\n        准备好让你的大模型推理集群提速了吗？\n      ',
+              })}
             </h2>
             <p className="text-white/80 text-sm sm:text-base md:text-lg max-w-3xl leading-relaxed mb-8 font-normal">
-              {
-                '全套源码完全开源，加入顶尖 AI Infra 工程师共建的下一代推理基础设施。\n      '
-              }
+              {translate({
+                id: 'site.69b036360050',
+                message:
+                  '全套源码完全开源，加入顶尖 AI Infra 工程师共建的下一代推理基础设施。\n      ',
+              })}
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
@@ -1210,7 +1476,9 @@ export function GetStarted() {
               )}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-blue-600 hover:bg-slate-50 transition-all font-semibold text-base shadow-md hover:shadow-lg"
             >
-              <span>{'立即部署'}</span>
+              <span>
+                {translate({ id: 'site.432ef28ba8ed', message: '立即部署' })}
+              </span>
               <svg
                 className="w-4 h-4 fill-current text-blue-600"
                 viewBox="0 0 24 24"
@@ -1232,7 +1500,12 @@ export function GetStarted() {
                   d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                 ></path>
               </svg>
-              <span>{'加入开发者交流群'}</span>
+              <span>
+                {translate({
+                  id: 'site.6f0b3350f913',
+                  message: '加入开发者交流群',
+                })}
+              </span>
             </a>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/80 font-code-sm text-xs sm:text-sm">
@@ -1260,8 +1533,11 @@ export function HomeFooter() {
       className="w-full bg-white border-t border-slate-200 site-footer home-source-footer"
       id="home-footer"
       data-home-design=""
-      aria-label="页脚资源"
-      aria-description="页脚状态、节点及 SHA 按设计稿展示为示例。"
+      aria-label={translate({ id: 'site.aba19a1bf2ae', message: '页脚资源' })}
+      aria-description={translate({
+        id: 'site.7cf2a56a3f5c',
+        message: '页脚状态、节点及 SHA 按设计稿展示为示例。',
+      })}
     >
       <div className="w-full max-w-7xl mx-auto px-margin py-space-xl">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-space-xl mb-space-xl">
@@ -1275,11 +1551,17 @@ export function HomeFooter() {
                 height="28"
               />
               <span className="font-headline-sm text-headline-sm text-slate-900 font-bold">
-                {'模域 ModelSphere'}
+                {translate({
+                  id: 'site.df36818e82c3',
+                  message: '模域 ModelSphere',
+                })}
               </span>
             </div>
             <p className="font-body-md text-body-md text-slate-600 max-w-sm">
-              {'让大模型推理从实验室能跑，到生产好用。'}
+              {translate({
+                id: 'site.20e8091eb03d',
+                message: '让大模型推理从实验室能跑，到生产好用。',
+              })}
             </p>
             <div className="flex items-center gap-space-sm pt-space-xs">
               <div className="flex items-center gap-1.5 px-space-xs py-1 rounded bg-slate-100 border border-slate-200">
@@ -1295,7 +1577,7 @@ export function HomeFooter() {
           </div>
           <div className="flex flex-col gap-space-sm">
             <span className="font-label-caps text-label-caps text-slate-400 uppercase tracking-wider font-semibold">
-              {'开源代码'}
+              {translate({ id: 'site.3dac0de92967', message: '开源代码' })}
               <br />
             </span>
             <ul className="flex flex-col gap-space-xs font-body-sm text-body-sm text-slate-600">
@@ -1305,11 +1587,19 @@ export function HomeFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {'GitHub 仓库'}
+                  {translate({
+                    id: 'site.720f02a99a32',
+                    message: 'GitHub 仓库',
+                  })}
                 </a>
               </li>
               <li>
-                <a href={siteHref('/models')}>{'Model Catalog 模型库'}</a>
+                <a href={siteHref('/models')}>
+                  {translate({
+                    id: 'site.1be2b13bec98',
+                    message: 'Model Catalog 模型库',
+                  })}
+                </a>
               </li>
               <li></li>
               <li></li>
@@ -1321,34 +1611,51 @@ export function HomeFooter() {
             tabIndex={-1}
           >
             <span className="font-label-caps text-label-caps text-slate-400 uppercase tracking-wider font-semibold">
-              {'社区与生态'}
+              {translate({ id: 'site.8c59843609d4', message: '社区与生态' })}
             </span>
             <ul className="flex flex-col gap-space-xs font-body-sm text-body-sm text-slate-600">
               <li>
-                <a href={siteHref('/blog')}>{'博客洞察'}</a>
+                <a href={siteHref('/blog')}>
+                  {translate({ id: 'site.87e8f72399c9', message: '博客洞察' })}
+                </a>
               </li>
               <li>
                 <span
                   className="hover:text-sky-600 transition-colors"
                   aria-disabled="true"
-                  title="即将开放"
+                  title={translate({
+                    id: 'site.1349f51625ad',
+                    message: '即将开放',
+                  })}
                 >
-                  {'微信开发者群'}
+                  {translate({
+                    id: 'site.6bd1de08068e',
+                    message: '微信开发者群',
+                  })}
                 </span>
               </li>
-              <li>{'ModelHubXC 信创模盒'}</li>
+              <li>
+                {translate({
+                  id: 'site.c61b1e0bcaa7',
+                  message: 'ModelHubXC 信创模盒',
+                })}
+              </li>
             </ul>
           </div>
           <div className="flex flex-col gap-space-sm">
             <span className="font-label-caps text-label-caps text-slate-400 uppercase tracking-wider font-semibold">
-              {'开发者资源'}
+              {translate({ id: 'site.f0009e1a62b1', message: '开发者资源' })}
             </span>
             <ul className="flex flex-col gap-space-xs font-body-sm text-body-sm text-slate-600">
               <li>
-                <a href={siteHref('/docs')}>{'技术文档'}</a>
+                <a href={siteHref('/docs')}>
+                  {translate({ id: 'site.6bca6751018f', message: '技术文档' })}
+                </a>
               </li>
               <li>
-                <a href={siteHref('/blog')}>{'博客洞察'}</a>
+                <a href={siteHref('/blog')}>
+                  {translate({ id: 'site.87e8f72399c9', message: '博客洞察' })}
+                </a>
               </li>
               <li></li>
               <li></li>
@@ -1356,14 +1663,17 @@ export function HomeFooter() {
           </div>
           <div className="flex flex-col gap-space-sm">
             <span className="font-label-caps text-label-caps text-slate-400 uppercase tracking-wider font-semibold">
-              {'法律与开源'}
+              {translate({ id: 'site.7a1ed67b3cce', message: '法律与开源' })}
             </span>
             <ul className="flex flex-col gap-space-xs font-body-sm text-body-sm text-slate-600">
               <li>
                 <span
                   className="hover:text-sky-600 transition-colors"
                   aria-disabled="true"
-                  title="即将开放"
+                  title={translate({
+                    id: 'site.1349f51625ad',
+                    message: '即将开放',
+                  })}
                 >
                   {'Apache 2.0 License'}
                 </span>
@@ -1372,7 +1682,10 @@ export function HomeFooter() {
                 <span
                   className="hover:text-sky-600 transition-colors"
                   aria-disabled="true"
-                  title="即将开放"
+                  title={translate({
+                    id: 'site.1349f51625ad',
+                    message: '即将开放',
+                  })}
                 >
                   {'Security Advisory'}
                 </span>
@@ -1382,16 +1695,25 @@ export function HomeFooter() {
                   className="hover:text-sky-600 transition-colors"
                   data-path="architecture"
                   aria-disabled="true"
-                  title="即将开放"
+                  title={translate({
+                    id: 'site.1349f51625ad',
+                    message: '即将开放',
+                  })}
                 >
-                  {'Roadmap 演进图'}
+                  {translate({
+                    id: 'site.7fb31e61f2a1',
+                    message: 'Roadmap 演进图',
+                  })}
                 </span>
               </li>
               <li>
                 <span
                   className="hover:text-sky-600 transition-colors"
                   aria-disabled="true"
-                  title="即将开放"
+                  title={translate({
+                    id: 'site.1349f51625ad',
+                    message: '即将开放',
+                  })}
                 >
                   {'Code of Conduct'}
                 </span>
@@ -1401,9 +1723,11 @@ export function HomeFooter() {
         </div>
         <div className="pt-space-lg border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-space-md font-code-sm text-code-sm text-slate-500">
           <div>
-            {
-              '© 2025 ModelSphere (模域) Open Source Project. All rights reserved.'
-            }
+            {translate({
+              id: 'site.ba465cbc14a4',
+              message:
+                '© 2025 ModelSphere (模域) Open Source Project. All rights reserved.',
+            })}
           </div>
           <div className="flex items-center gap-space-md">
             <span>{'Telemetry Node: AP-EAST-01'}</span>

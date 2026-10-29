@@ -45,7 +45,9 @@ export function markdownEntries(
     if (node.type === 'heading') {
       flush();
       heading = toString(node);
-      anchor = slugger.slug(heading);
+      const explicitId = /\s*\{#([^}]+)\}$/.exec(heading);
+      if (explicitId) heading = heading.slice(0, explicitId.index);
+      anchor = explicitId?.[1] ?? slugger.slug(heading);
     } else if (node.type === 'definition' || node.type === 'html') {
       return;
     } else if ('children' in node && node.type === 'containerDirective') {

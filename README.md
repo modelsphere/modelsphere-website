@@ -46,7 +46,7 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 | 维护与交付 | 用户与 AI 共同维护，公开仓库通过 GitHub Actions 发布到 GitHub Pages |
 | 发布 | 可以接受几分钟构建；检查实际合并提交，验证同一静态候选后发布；发布前失败保留旧站 |
 | 内容规模 | 按千位数验证，具体业务量待确定，不用测试样例冒充真实内容 |
-| 访问地区 | 中国大陆与海外；首期中文，跨地区可用不等于承诺统一延迟 |
+| 访问地区 | 中国大陆与海外；支持中文与英文，跨地区可用不等于承诺统一延迟 |
 | 视觉 | 顶部三张新版决定结构，旧稿仅补充深色色彩；全站跟随系统/浅色/深色，文档朴素；保留可访问性、响应式和减少动效 |
 | 内容真实性 | 无来源的参数与成绩不发布，示例与正式内容隔离 |
 
@@ -167,3 +167,14 @@ D13 首页文字效果保持：标题整体从下方翻起并渐显，桌面 48p
 此前 D13 的轻量渐显版本已完成 29 项单测、preview/mock Chromium 37/37、release/none Chromium 32/32 及两种构建产物检查，证据保留在 `reports/home-hero-motion/moderate/preview/`、`reports/home-hero-motion/moderate/release/`，不替代当前更强动效版本的复验。
 
 上一轮屏外动效修复在 Node.js 24.22.0、pnpm 10.22.0、Nginx 1.28 下完成：29 项单测、preview/mock Chromium 29/29、release/none Chromium 24/24 及两种构建产物检查通过。历史汇总保留在 `reports/home-motion-fix/validation.json`，修复前失败与两种候选的证据均保留；这些结果不替代 D13 及共享逻辑变更后的复验。既有文档试点记录另见[实施方案第 10 节](docs/development/docs-implementation.md#10-本轮交付与本地验证记录)。Safari、Firefox、真实移动设备、弱网及性能测量等完整矩阵尚未完成。当前没有 PR、已验证的提交 SHA 或远程运行链接，仅本地验证，未推送／未验证远程 CI，未部署；站内 Catalog、博客和完整门户仍待实施。
+
+
+## 中英文与翻译维护
+
+- 中文为默认语言；英文位于 `/en/`（Pages 部署为 `/modelsphere-website/en/`）。Header 提供地球图标及自定义语言下拉菜单，支持键盘选择、当前语言标记和移动端；无脚本时保留 EN / 中文链接。切换保留对应页面；启用脚本后同时保留查询参数和片段。语言由 URL 决定，站内导航保持当前语言。
+- React 文案使用 `@docusaurus/Translate`，英文资源为 `i18n/en/code.json`；来自纯数据辅助函数的展示文案在 `i18n/en/content.json` 维护，不改变模型标识、版本、筛选值或 YAML。
+- 文档翻译在 `i18n/en/docs/`，博客翻译在 `i18n/en/blog/<文章 id>.md`；博客翻译的 frontmatter 包含 `title`、`summary`。英文正文保留原文的示例说明和证据边界。
+- `scripts/prepare-translations.ts` 只从已筛选的 `.generated/docs`、`.generated/blog` 和摘要索引生成英文输入，保留来源的 id、slug 与发布时间。源文撤下或被过滤时，其译文不会发布。新增正文尚无译文时沿用原文，不生成虚假翻译；发布前应补齐译文。
+- 预览、正式构建均生成中英文及各自搜索索引；`pnpm dev:docs` 开发中文，`pnpm dev:en` 开发英文。`tests/e2e/i18n.spec.ts` 与 Pages 同名测试覆盖切换、英文阅读、搜索、手机与无脚本访问。
+
+预览和正式构建禁用持久编译缓存，产物检查会校验 CSS 资源的部署前缀及文件存在性，避免在根路径与 Pages 子路径之间切换时沿用旧字体或图片地址。

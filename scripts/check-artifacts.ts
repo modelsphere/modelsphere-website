@@ -68,6 +68,15 @@ export async function checkArtifacts(
       throw new Error(`Mock 博客资源泄漏: ${file}`);
     if (!/\.(html|js|json|map|css|xml|txt)$/.test(file)) continue;
     const text = await readFile(file, 'utf8');
+    if (file.endsWith('.css')) {
+      for (const [, href] of text.matchAll(/url\(["']?(\/[^)"']+)/g)) {
+        if (!href.startsWith(mode.baseUrl ?? '/'))
+          throw new Error(`CSS 静态资源缺少部署前缀：${href}`);
+        await stat(
+          path.join(dir, withoutBaseUrl(href.split(/[?#]/)[0], mode.baseUrl)),
+        );
+      }
+    }
     if (
       mode.target === 'release' &&
       !mode.publishExamples &&
@@ -118,7 +127,9 @@ export async function checkArtifacts(
     ),
   ) as Record<string, Record<string, unknown>>;
   const lists = Object.entries(routes).filter(([route]) =>
-    withoutBaseUrl(route, mode.baseUrl).startsWith('/blog-'),
+    withoutBaseUrl(route, mode.baseUrl)
+      .replace(/^\/en(?=\/)/, '')
+      .startsWith('/blog-'),
   );
   if (
     lists.length !== 1 ||
@@ -139,31 +150,47 @@ export async function checkArtifacts(
   const searchFiles = files.filter((file) =>
     /\/search-index\.[a-f0-9]{16}\.json$/.test(file),
   );
-  if (searchFiles.length !== 1) throw new Error('必须只发布当前版本的搜索索引');
-  const search: unknown = JSON.parse(await readFile(searchFiles[0], 'utf8'));
-  if (!isSearchIndex(search)) throw new Error('搜索索引格式无效');
-  const blogRoutes = new Set(
-    index.posts
-      .filter((post) => post.kind === 'internal')
-      .map((post) => post.href),
-  );
-  for (const entry of search.entries) {
-    if (entry.kind === 'docs' && !docRoutes.has(entry.pageHref))
-      throw new Error('未发布的文档进入搜索索引');
-    if (entry.kind === 'blog' && !blogRoutes.has(entry.pageHref))
-      throw new Error('未发布或站外博客进入搜索索引');
-    await stat(path.join(dir, `${entry.pageHref}.html`));
-  }
-  for (const route of blogRoutes)
-    if (!search.entries.some((entry) => entry.pageHref === route))
-      throw new Error('公开博客缺少搜索索引');
-  for (const route of docRoutes)
-    if (
-      !search.entries.some(
-        (entry) => entry.kind === 'docs' && entry.pageHref === route,
+  if (searchFiles.length !== 2)
+    throw new Error('每种语言必须只发布当前版本的搜索索引');
+  for (const locale of ['', 'en/']) {
+    const localeFiles = searchFiles.filter(
+      (file) => path.relative(dir, file).startsWith('en/') === Boolean(locale),
+    );
+    if (localeFiles.length !== 1)
+      throw new Error(`搜索索引语言缺失：${locale || 'zh-CN'}`);
+    const search: unknown = JSON.parse(await readFile(localeFiles[0], 'utf8'));
+    if (!isSearchIndex(search)) throw new Error('搜索索引格式无效');
+    const blogRoutes = new Set(
+      index.posts
+        .filter((post) => post.kind === 'internal')
+        .map((post) => post.href),
+    );
+    for (const entry of search.entries) {
+      if (entry.kind === 'docs' && !docRoutes.has(entry.pageHref))
+        throw new Error('未发布的文档进入搜索索引');
+      if (entry.kind === 'blog' && !blogRoutes.has(entry.pageHref))
+        throw new Error('未发布或站外博客进入搜索索引');
+      await stat(path.join(dir, locale, `${entry.pageHref}.html`));
+    }
+    for (const route of blogRoutes)
+      if (!search.entries.some((entry) => entry.pageHref === route))
+        throw new Error('公开博客缺少搜索索引');
+    for (const route of docRoutes)
+      if (
+        !search.entries.some(
+          (entry) => entry.kind === 'docs' && entry.pageHref === route,
+        )
       )
-    )
-      throw new Error(`公开文档缺少搜索索引：${route}`);
+        throw new Error(`公开文档缺少搜索索引：${route}`);
+  }
+  for (const route of ['index', 'models', 'community', 'docs', 'blog']) {
+    const english = await readFile(
+      path.join(dir, 'en', `${route}.html`),
+      'utf8',
+    );
+    if (!english.includes('lang="en"') || !english.includes('切换到简体中文'))
+      throw new Error(`英文页面或语言切换缺失：${route}`);
+  }
 }
 if (
   process.argv[1] &&

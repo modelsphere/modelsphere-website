@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import { useSitePath } from '@site/src/lib/use-site-path';
 import React, {
   useEffect,
@@ -144,8 +145,11 @@ export default function BlogList() {
     .filter((category) => category.count);
   return (
     <Layout
-      title="博客洞见"
-      description="ModelSphere 技术文章、版本动态与工程实践。"
+      title={translate({ id: 'site.7131e5de923b', message: '博客洞见' })}
+      description={translate({
+        id: 'site.3f0eb0817130',
+        message: 'ModelSphere 技术文章、版本动态与工程实践。',
+      })}
     >
       <main
         id="main-content"
@@ -153,25 +157,46 @@ export default function BlogList() {
         className={styles.blog}
         data-blog-enhanced={browser}
       >
-        <h1 className="sr-only">博客洞见</h1>
+        <h1 className="sr-only">
+          {translate({ id: 'site.7131e5de923b', message: '博客洞见' })}
+        </h1>
         <div className={styles.breadcrumbBar}>
-          <nav className={styles.container} aria-label="面包屑">
-            <a href={siteHref('/')}>首页</a>
+          <nav
+            className={styles.container}
+            aria-label={translate({
+              id: 'site.6770d01e7d15',
+              message: '面包屑',
+            })}
+          >
+            <a href={siteHref('/')}>
+              {translate({ id: 'site.203c08e0d44a', message: '首页' })}
+            </a>
             <span aria-hidden="true">/</span>
-            <span aria-current="page">技术博客与动态</span>
+            <span aria-current="page">
+              {translate({
+                id: 'site.7d205aabf9b4',
+                message: '技术博客与动态',
+              })}
+            </span>
           </nav>
         </div>
         {index.preview && (
           <p className={`${styles.container} ${styles.previewNote}`}>
-            示例预览 ·
-            以下文章仅用于验证博客排版与交互，不代表正式发布或实测结论。
+            {translate({
+              id: 'site.6c37157c0285',
+              message:
+                '示例预览 · 以下文章仅用于验证博客排版与交互，不代表正式发布或实测结论。',
+            })}
           </p>
         )}
         <div data-blog-results>
           {featured && (
             <section
               id="featured"
-              aria-label="推荐文章"
+              aria-label={translate({
+                id: 'site.073e542c41bc',
+                message: '推荐文章',
+              })}
               className={`${styles.container} ${styles.featuredSection}`}
             >
               <ArticleCard post={featured} index={index} featured />
@@ -183,7 +208,11 @@ export default function BlogList() {
             <div className={styles.container}>
               {!browser && (
                 <p className={styles.baselineNote}>
-                  以下展示全部文章摘要；启用脚本后可搜索、筛选和分页。
+                  {translate({
+                    id: 'site.b210d576d0b1',
+                    message:
+                      '以下展示全部文章摘要；启用脚本后可搜索、筛选和分页。',
+                  })}
                 </p>
               )}
               {browser && (
@@ -192,12 +221,18 @@ export default function BlogList() {
                     <div
                       className={styles.categories}
                       role="group"
-                      aria-label="文章分类"
+                      aria-label={translate({
+                        id: 'site.a68dbd81c80f',
+                        message: '文章分类',
+                      })}
                     >
                       {[
                         {
                           id: '',
-                          label: '全部文章',
+                          label: translate({
+                            id: 'site.1ab08ebf5324',
+                            message: '全部文章',
+                          }),
                           count: index.posts.length,
                         },
                         ...categories,
@@ -229,7 +264,12 @@ export default function BlogList() {
                           commit({ ...query, q: draft, page: 1 });
                       }}
                     >
-                      <label htmlFor="blog-search">搜索文章</label>
+                      <label htmlFor="blog-search">
+                        {translate({
+                          id: 'site.a8322456d17d',
+                          message: '搜索文章',
+                        })}
+                      </label>
                       <div className={styles.searchControls}>
                         <div className={styles.searchInput}>
                           <svg
@@ -247,7 +287,10 @@ export default function BlogList() {
                             id="blog-search"
                             type="search"
                             value={draft}
-                            placeholder="标题、作者、技术关键词或 PR 编号"
+                            placeholder={translate({
+                              id: 'site.7fc5b6f873c7',
+                              message: '标题、作者、技术关键词或 PR 编号',
+                            })}
                             onChange={(event) => setDraft(event.target.value)}
                             onCompositionStart={() => {
                               composing.current = true;
@@ -269,17 +312,26 @@ export default function BlogList() {
                         {draft && (
                           <button
                             type="button"
-                            aria-label="清空搜索"
+                            aria-label={translate({
+                              id: 'site.b6f00afa6537',
+                              message: '清空搜索',
+                            })}
                             onClick={() => {
                               commit({ ...query, q: '', page: 1 });
                               searchRef.current?.focus();
                             }}
                           >
-                            清空
+                            {translate({
+                              id: 'site.1ef3de06b32e',
+                              message: '清空',
+                            })}
                           </button>
                         )}
                         <button className={styles.searchSubmit} type="submit">
-                          搜索
+                          {translate({
+                            id: 'site.44ce7ae909bb',
+                            message: '搜索',
+                          })}
                         </button>
                       </div>
                     </form>
@@ -288,9 +340,17 @@ export default function BlogList() {
                     <div
                       className={styles.tags}
                       role="group"
-                      aria-label="热门标签"
+                      aria-label={translate({
+                        id: 'site.258ff2a21e38',
+                        message: '热门标签',
+                      })}
                     >
-                      <span>热门标签</span>
+                      <span>
+                        {translate({
+                          id: 'site.258ff2a21e38',
+                          message: '热门标签',
+                        })}
+                      </span>
                       {popularTags(index).map((tag) => (
                         <button
                           type="button"
@@ -319,7 +379,10 @@ export default function BlogList() {
                         searchRef.current?.focus();
                       }}
                     >
-                      清除筛选
+                      {translate({
+                        id: 'site.657d9cbf45ec',
+                        message: '清除筛选',
+                      })}
                     </button>
                   )}
                 </>
@@ -334,12 +397,29 @@ export default function BlogList() {
           <div className={styles.postColumn}>
             <div className={styles.resultsHeader}>
               <h2 ref={headingRef} tabIndex={-1}>
-                文章列表
+                {translate({ id: 'site.62e223f320e1', message: '文章列表' })}
               </h2>
               <p role="status" aria-live="polite">
                 {index.posts.length
                   ? results.total
-                    ? `找到 ${results.total} 篇文章${browser ? `，第 ${results.page} / ${results.pages} 页` : ''}`
+                    ? translate(
+                        {
+                          id: 'site.b57487d2b992',
+                          message: '找到 {v0} 篇文章{v1}',
+                        },
+                        {
+                          v0: results.total,
+                          v1: browser
+                            ? translate(
+                                {
+                                  id: 'site.85077554fc8b',
+                                  message: '，第 {v0} / {v1} 页',
+                                },
+                                { v0: results.page, v1: results.pages },
+                              )
+                            : '',
+                        },
+                      )
                     : ''
                   : ''}
               </p>
@@ -360,28 +440,55 @@ export default function BlogList() {
                   </span>
                   <h3>
                     {!index.posts.length
-                      ? '尚无公开文章'
+                      ? translate({
+                          id: 'site.88251ea8f5bf',
+                          message: '尚无公开文章',
+                        })
                       : featured
-                        ? '暂无其他文章'
-                        : '未找到匹配内容'}
+                        ? translate({
+                            id: 'site.4e2c695ab835',
+                            message: '暂无其他文章',
+                          })
+                        : translate({
+                            id: 'site.04069b9f5e16',
+                            message: '未找到匹配内容',
+                          })}
                   </h3>
                   <p>
                     {!index.posts.length
-                      ? '技术文章与项目动态将在这里发布。'
+                      ? translate({
+                          id: 'site.e1cdea003fa1',
+                          message: '技术文章与项目动态将在这里发布。',
+                        })
                       : featured
-                        ? '先从上方的推荐文章开始阅读。'
-                        : '试试其他关键词，或清除筛选查看全部文章。'}
+                        ? translate({
+                            id: 'site.fef24a7b6d42',
+                            message: '先从上方的推荐文章开始阅读。',
+                          })
+                        : translate({
+                            id: 'site.5973f418dd0e',
+                            message: '试试其他关键词，或清除筛选查看全部文章。',
+                          })}
                   </p>
                   {!index.posts.length && (
                     <a href="https://github.com/modelsphere">
-                      关注 ModelSphere 开源项目 ↗
+                      {translate({
+                        id: 'site.42b483023aa8',
+                        message: '关注 ModelSphere 开源项目 ↗',
+                      })}
                     </a>
                   )}
                 </div>
               )}
             </div>
             {browser && results.pages > 1 && (
-              <nav className={styles.pagination} aria-label="文章分页">
+              <nav
+                className={styles.pagination}
+                aria-label={translate({
+                  id: 'site.4b57a755743a',
+                  message: '文章分页',
+                })}
+              >
                 {results.page > 1 ? (
                   <a
                     href={siteHref(
@@ -390,10 +497,12 @@ export default function BlogList() {
                     )}
                     onClick={(event) => pageClick(event, results.page - 1)}
                   >
-                    上一页
+                    {translate({ id: 'site.c9b9ae7a6144', message: '上一页' })}
                   </a>
                 ) : (
-                  <span aria-disabled="true">上一页</span>
+                  <span aria-disabled="true">
+                    {translate({ id: 'site.c9b9ae7a6144', message: '上一页' })}
+                  </span>
                 )}
                 <span className={styles.mobilePage}>
                   {results.page} / {results.pages}
@@ -426,10 +535,12 @@ export default function BlogList() {
                     )}
                     onClick={(event) => pageClick(event, results.page + 1)}
                   >
-                    下一页
+                    {translate({ id: 'site.8a8542f69648', message: '下一页' })}
                   </a>
                 ) : (
-                  <span aria-disabled="true">下一页</span>
+                  <span aria-disabled="true">
+                    {translate({ id: 'site.8a8542f69648', message: '下一页' })}
+                  </span>
                 )}
               </nav>
             )}

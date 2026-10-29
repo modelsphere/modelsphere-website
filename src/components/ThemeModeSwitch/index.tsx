@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React from 'react';
 import { useColorMode } from '@docusaurus/theme-common';
 import useIsBrowser from '@docusaurus/useIsBrowser';
@@ -5,8 +6,16 @@ export default function ThemeModeSwitch() {
   const ready = useIsBrowser();
   const { colorMode, setColorMode } = useColorMode();
   const label = ready
-    ? `切换到${colorMode === 'dark' ? '浅' : '深'}色模式`
-    : '切换主题';
+    ? translate(
+        { id: 'site.a747886ebcde', message: '切换到{v0}色模式' },
+        {
+          v0:
+            colorMode === 'dark'
+              ? translate({ id: 'site.e445205d07c3', message: '浅' })
+              : translate({ id: 'site.d5f3c536a759', message: '深' }),
+        },
+      )
+    : translate({ id: 'site.7a1604323e8b', message: '切换主题' });
   return (
     <button
       type="button"

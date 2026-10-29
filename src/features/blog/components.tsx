@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import { useSitePath } from '@site/src/lib/use-site-path';
 import React, { useEffect, useRef, useState } from 'react';
 import { useColorMode } from '@docusaurus/theme-common';
@@ -32,8 +33,15 @@ export function Cover({
       }
     >
       {failed ? (
-        <span role="img" aria-label={media.alt || '图片暂不可用'}>
-          图片暂不可用{media.alt && <span> · {media.alt}</span>}
+        <span
+          role="img"
+          aria-label={
+            media.alt ||
+            translate({ id: 'site.62cab5ebabfe', message: '图片暂不可用' })
+          }
+        >
+          {translate({ id: 'site.62cab5ebabfe', message: '图片暂不可用' })}
+          {media.alt && <span> · {media.alt}</span>}
         </span>
       ) : (
         <picture>
@@ -86,8 +94,18 @@ export function PostMeta({ post }: { post: BlogPost }) {
     <div className={styles.meta}>
       <time dateTime={post.publishedAt}>{post.publishedAt}</time>
       {post.author && <span>{post.author}</span>}
-      {post.readingMinutes && <span>阅读约 {post.readingMinutes} 分钟</span>}
-      {post.kind === 'external' && <span>站外文章 ↗</span>}
+      {post.readingMinutes && (
+        <span>
+          {translate({ id: 'site.3a029a8ec767', message: '阅读约 ' })}
+          {post.readingMinutes}{' '}
+          {translate({ id: 'site.40de54344d22', message: ' 分钟' })}
+        </span>
+      )}
+      {post.kind === 'external' && (
+        <span>
+          {translate({ id: 'site.069f3017fe6c', message: '站外文章 ↗' })}
+        </span>
+      )}
     </div>
   );
 }
@@ -111,7 +129,10 @@ export function ArticleCard({
         <a
           className={styles.coverLink}
           href={siteHref(post.href)}
-          aria-label={`阅读：${post.title}`}
+          aria-label={translate(
+            { id: 'site.1e928fc6c931', message: '阅读：{v0}' },
+            { v0: post.title },
+          )}
         >
           <Cover media={post.cover} featured={featured} />
           {!featured && category && (
@@ -122,7 +143,11 @@ export function ArticleCard({
       <div className={styles.cardBody}>
         {(featured || (!post.cover && category)) && (
           <div className={styles.badges}>
-            {featured && <span className={styles.featuredBadge}>推荐阅读</span>}
+            {featured && (
+              <span className={styles.featuredBadge}>
+                {translate({ id: 'site.fac4c8cf0d71', message: '推荐阅读' })}
+              </span>
+            )}
             {category && (featured || !post.cover) && (
               <span className={styles.categoryBadge}>{category.label}</span>
             )}
@@ -154,11 +179,14 @@ export function ArticleCard({
             href={siteHref(post.href)}
             className={featured ? styles.primary : styles.readLink}
           >
-            阅读全文{' '}
+            {translate({ id: 'site.b7bac1d85c14', message: '阅读全文' })}{' '}
             <span className={styles.readArrow} aria-hidden="true">
               ↗
             </span>
-            <span className="sr-only">：{post.title}</span>
+            <span className="sr-only">
+              {translate({ id: 'site.punctuation.colon', message: '：' })}
+              {post.title}
+            </span>
           </a>
         </div>
       </div>
@@ -168,21 +196,38 @@ export function ArticleCard({
 export function Channels({ index }: { index: BlogIndex }) {
   if (!index.channels.length) return null;
   return (
-    <aside className={styles.channels} aria-label="社区交流渠道">
+    <aside
+      className={styles.channels}
+      aria-label={translate({
+        id: 'site.9ee338478652',
+        message: '社区交流渠道',
+      })}
+    >
       {index.channels.map((channel) => (
         <section className={styles.channel} key={channel.id}>
           <div className={styles.channelTitle}>
             <h2>{channel.title}</h2>
-            <span>{channel.kind === 'wechat' ? 'WeChat' : '知乎'}</span>
+            <span>
+              {channel.kind === 'wechat'
+                ? 'WeChat'
+                : translate({ id: 'site.1bfefe0febb2', message: '知乎' })}
+            </span>
           </div>
           <p>{channel.description}</p>
           {channel.qr && <Cover media={channel.qr} full />}
           {channel.contactLabel && (
             <p>
-              {channel.contactLabel}：<strong>{channel.contactValue}</strong>
+              {channel.contactLabel}
+              {translate({ id: 'site.punctuation.colon', message: '：' })}
+              <strong>{channel.contactValue}</strong>
             </p>
           )}
-          {channel.href && <a href={channel.href}>前往{channel.title} ↗</a>}
+          {channel.href && (
+            <a href={channel.href}>
+              {translate({ id: 'site.fa96079c3b2f', message: '前往' })}
+              {channel.title} ↗
+            </a>
+          )}
         </section>
       ))}
     </aside>

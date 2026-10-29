@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { resolveBuildMode } from '../src/lib/build-mode';
 import { prepareDocs } from './prepare-docs';
 import { prepareBlog } from './prepare-blog';
+import { prepareTranslations } from './prepare-translations';
 import { generateTokens } from './generate-tokens';
 import { artifactHash, checkArtifacts } from './check-artifacts';
 const action = process.argv[2];
@@ -15,6 +16,10 @@ const examplesSetting =
   (action === 'release' ? 'true' : 'false');
 const env = {
   ...process.env,
+  // CSS asset URLs depend on the deployment prefix, which is not part of
+  // Docusaurus 3's persistent cache key. Keep release/preview builds isolated.
+  DOCUSAURUS_NO_PERSISTENT_CACHE:
+    action === 'dev' ? process.env.DOCUSAURUS_NO_PERSISTENT_CACHE : 'true',
   SITE_BUILD_TARGET: action === 'dev' ? 'local' : action,
   SITE_PUBLISH_EXAMPLES: examplesSetting,
   DOCS_SOURCE_MODE: process.env.DOCS_SOURCE_MODE ?? 'content',
@@ -26,6 +31,7 @@ const env = {
 const mode = resolveBuildMode(env);
 const docs = await prepareDocs(process.cwd(), mode);
 const blog = await prepareBlog(process.cwd(), mode);
+await prepareTranslations(process.cwd());
 await generateTokens();
 for (const dir of ['.docusaurus', 'build'])
   await rm(dir, { recursive: true, force: true });
@@ -33,7 +39,16 @@ await mkdir('reports', { recursive: true });
 await rm('reports/build.json', { force: true });
 const args =
   action === 'dev'
-    ? ['start', '--host', '127.0.0.1', '--port', '3000', '--no-open']
+    ? [
+        'start',
+        '--host',
+        '127.0.0.1',
+        '--port',
+        '3000',
+        '--no-open',
+        '--locale',
+        process.env.SITE_LOCALE ?? 'zh-CN',
+      ]
     : ['build'];
 const child = spawn(
   process.execPath,

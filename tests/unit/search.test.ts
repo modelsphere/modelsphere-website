@@ -26,6 +26,15 @@ const entry = (overrides: Partial<SearchEntry> = {}): SearchEntry => ({
   ...overrides,
 });
 describe('site search', () => {
+  it('uses explicit translated heading anchors in search results', () => {
+    const entries = markdownEntries(
+      '## Core concepts {#核心概念}\nEnglish content',
+      { kind: 'docs', title: 'Guide', href: '/docs' },
+    );
+    expect(
+      entries.find((entry) => entry.heading === 'Core concepts')?.href,
+    ).toBe('/docs#' + encodeURIComponent('核心概念'));
+  });
   it('matches Chinese, case-insensitive English, all terms and scopes', () => {
     const index: SearchIndex = {
       version: 1,
@@ -138,6 +147,7 @@ describe('site search', () => {
       const plugin = searchPlugin({
         siteDir: root,
         baseUrl: '/',
+        i18n: { currentLocale: 'zh-CN' },
       } as LoadContext);
       const doc = {
         title: '公开文档',

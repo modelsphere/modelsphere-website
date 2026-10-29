@@ -10,8 +10,36 @@ for (const [id, expected] of Object.entries(source.modules)) {
     await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
-    const sharedFooter = id === 'home-footer';
-    const section = page.locator(sharedFooter ? '.community-footer' : `#${id}`);
+    // The shared footer now uses the approved community design.
+    if (id === 'home-footer') {
+      const footer = page.locator('footer.community-footer');
+      await expect(footer).toBeVisible();
+      for (const fragment of communitySource.footerCopy.filter(
+        (copy) =>
+          !['NODE_CLUSTER: READY', 'TELEMETRY: P99 22ms'].includes(copy),
+      ))
+        await expect(footer).toContainText(fragment);
+      await expect(
+        footer.getByRole('link', { name: '架构演进内幕', exact: true }),
+      ).toHaveAttribute('href', '/blog');
+      await expect(
+        footer.getByRole('link', { name: '快速接入文档', exact: true }),
+      ).toHaveAttribute('href', '/docs');
+      const layout = await footer.evaluate((element) => {
+        const inner = element.firstElementChild!.getBoundingClientRect();
+        return {
+          width: element.getBoundingClientRect().width,
+          left: inner.left,
+          right: inner.right,
+          padding: getComputedStyle(element.firstElementChild!).paddingLeft,
+        };
+      });
+      expect(layout.width).toBe(1280);
+      expect(layout.left).toBe(1280 - layout.right);
+      expect(layout.padding).toBe('32px');
+      return;
+    }
+    const section = page.locator(`#${id}`);
     if (id === 'benchmarks') {
       const current = await section.evaluate((element) => {
         const content = element.firstElementChild!.getBoundingClientRect();
@@ -71,22 +99,10 @@ for (const [id, expected] of Object.entries(source.modules)) {
         ),
       };
     });
-    expect(measured.text).toBe(
-      sharedFooter
-        ? communitySource.footerCopy
-            .filter(
-              (copy) =>
-                copy !== 'NODE_CLUSTER: READY' &&
-                copy !== 'TELEMETRY: P99 22ms',
-            )
-            .join(' ')
-        : expected.text,
-    );
+    expect(measured.text).toBe(expected.text);
     expect(measured.icons).toEqual(expected.icons);
     expect(measured.font).toBe(true);
-    expect(
-      Math.abs(measured.height - (sharedFooter ? 349 : expected.height)),
-    ).toBeLessThanOrEqual(1);
+    expect(Math.abs(measured.height - expected.height)).toBeLessThanOrEqual(1);
     expect(measured.headings).toEqual(
       expected.headings.map((heading) => ({
         text: heading.text,
