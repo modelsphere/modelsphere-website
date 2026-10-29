@@ -10,3 +10,4 @@ docs
 README.md
 src/css/tokens.css
 tests/fixtures/catalog/mimo.yaml
+tests/fixtures/catalog/glm53.yaml

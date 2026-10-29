@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { reportUrl, type Recipe } from './data';
-import { loadReport, type ReportData } from './report';
+import { loadReportDocument } from './report';
 import styles from './styles.module.css';
 export default function ReportPanel({
   r,
@@ -9,14 +9,14 @@ export default function ReportPanel({
   r: Recipe;
   commit: string;
 }) {
-  const [data, setData] = useState<ReportData | null>(null),
+  const [data, setData] = useState<string | null>(null),
     [error, setError] = useState(''),
     [retry, setRetry] = useState(0);
   useEffect(() => {
     const c = new AbortController();
     setData(null);
     setError('');
-    loadReport(r, commit, c.signal)
+    loadReportDocument(r, commit, c.signal)
       .then((x) => {
         if (!c.signal.aborted) setData(x);
       })
@@ -26,9 +26,6 @@ export default function ReportPanel({
       });
     return () => c.abort();
   }, [r.key, commit, retry]);
-  const runs = data
-    ? [data.comparison.baseline, ...data.comparison.attempts]
-    : [];
   return (
     <section
       id="benchmark"
@@ -59,102 +56,13 @@ export default function ReportPanel({
       ) : !data ? (
         <p role="status">正在读取报告数据…</p>
       ) : (
-        <>
-          <div className={styles.conditionGrid}>
-            {runs.map((run, i) => (
-              <div key={i}>
-                <strong>{i === 0 ? '基线配置' : `候选配置 ${i}`}</strong>
-                <dl>
-                  <div>
-                    <dt>加速器</dt>
-                    <dd>{run.environment?.gpu_name ?? '未提供'}</dd>
-                  </div>
-                  <div>
-                    <dt>GPU 数量</dt>
-                    <dd>{run.launch?.cards ?? '未提供'}</dd>
-                  </div>
-                  <div>
-                    <dt>CUDA</dt>
-                    <dd>{run.environment?.cuda_version ?? '未提供'}</dd>
-                  </div>
-                  <div>
-                    <dt>Engine</dt>
-                    <dd>
-                      {run.environment?.engine_version ??
-                        run.launch?.config?.engine ??
-                        '未提供'}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>测量开始</dt>
-                    <dd>{run.environment?.started_at ?? '未提供'}</dd>
-                  </div>
-                </dl>
-              </div>
-            ))}
-          </div>
-          <div className={styles.tableScroll}>
-            <table>
-              <caption>负载与 SLO 条件</caption>
-              <thead>
-                <tr>
-                  <th>负载</th>
-                  <th>输入 tokens</th>
-                  <th>输出 tokens</th>
-                  <th>TTFT 门槛</th>
-                  <th>单请求输出速度下限</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(data.comparison.benchmark?.modules ?? [])
-                  .filter((m) => m.params?.input_tokens != null)
-                  .map((m) => (
-                    <tr key={m.key}>
-                      <th>{m.key}</th>
-                      <td>{String(m.params?.input_tokens ?? '未提供')}</td>
-                      <td>{String(m.params?.output_tokens ?? '未提供')}</td>
-                      <td>
-                        {m.params?.slo_max_ttft_ms == null
-                          ? '未提供'
-                          : `${m.params.slo_ttft_percentile ?? '分位未提供'} ≤ ${m.params.slo_max_ttft_ms} ms`}
-                      </td>
-                      <td>
-                        {m.params?.slo_min_request_output_tps == null
-                          ? '未提供'
-                          : `${m.params.slo_min_request_output_tps} tokens/s`}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-          <div className={styles.tableScroll}>
-            <table>
-              <caption>各负载吞吐量提升</caption>
-              <thead>
-                <tr>
-                  <th>负载（输入 + 输出 tokens）</th>
-                  <th>吞吐量提升</th>
-                  <th>测量版本</th>
-                </tr>
-              </thead>
-              <tbody>
-                {r.tuning.flatMap((t) =>
-                  t.workloads.map((w) => (
-                    <tr key={t.optimized + w.name}>
-                      <th>{w.name}</th>
-                      <td>
-                        {w.uplift >= 0 ? '+' : ''}
-                        {w.uplift.toFixed(1)}%
-                      </td>
-                      <td>{t.optimized}</td>
-                    </tr>
-                  )),
-                )}
-              </tbody>
-            </table>
-          </div>
-        </>
+        <iframe
+          className={styles.reportFrame}
+          title="原始性能对照报告"
+          srcDoc={data}
+          sandbox="allow-scripts"
+          referrerPolicy="no-referrer"
+        />
       )}
     </section>
   );

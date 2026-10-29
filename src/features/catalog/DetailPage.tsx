@@ -8,17 +8,15 @@ import { useHistory, useLocation } from '@docusaurus/router';
 import {
   config,
   detailHref,
-  hardwareText,
   launchFacts,
   loadHistory,
   loadYaml,
   modelHref,
   recipesOf,
   reportUrl,
-  topologyLabel,
   type History,
 } from './data';
-import { CopyButton, RecipeCard, SourceLinks, SourceState } from './components';
+import { CopyButton, RecipeCard, SourceState } from './components';
 import { ModelOverviewCard } from './ModelOverviewCard';
 import { useCatalog } from './useCatalog';
 import {
@@ -31,6 +29,7 @@ import {
 } from './routes';
 import ReportPanel from './ReportPanel';
 import CatalogSelect from './CatalogSelect';
+import RecipeOverview from './RecipeOverview';
 import styles from './styles.module.css';
 
 export default function DetailPage({ kind }: { kind: 'model' | 'recipe' }) {
@@ -288,44 +287,12 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                 ) : (
                   recipe && (
                     <>
-                      <header
-                        className={`${styles.detailBox} ${styles.recipeOverview}`}
-                      >
-                        <div className={styles.detailTop}>
-                          <div>
-                            <h1 className={styles.recipeTitle}>
-                              {recipe.variant.id}
-                            </h1>
-                            <p>
-                              {model.displayName ?? model.name} · 当前配方版本{' '}
-                              {recipe.variant.version}
-                            </p>
-                          </div>
-                          <Link to={modelHref(model, c.commit, returnTo)}>
-                            全部模型配方 →
-                          </Link>
-                        </div>
-                        <div className={styles.conditionGrid}>
-                          <div>
-                            <strong>硬件</strong>
-                            <p>{hardwareText(recipe.variant)}</p>
-                          </div>
-                          <div>
-                            <strong>拓扑</strong>
-                            <p>{topologyLabel(recipe.variant)}</p>
-                          </div>
-                          <div>
-                            <strong>引擎 / Chart</strong>
-                            <p>
-                              {recipe.variant.engine} ·{' '}
-                              {recipe.variant.chart.name}{' '}
-                              {recipe.variant.chart.version}
-                            </p>
-                          </div>
-                        </div>
-                        <p>{recipe.variant.description}</p>
-                        <SourceLinks r={recipe} />
-                      </header>
+                      <RecipeOverview
+                        recipe={recipe}
+                        recipes={recipes}
+                        version={c.commit}
+                        returnTo={returnTo}
+                      />
                       <div
                         className={styles.recipeTabs}
                         role="tablist"

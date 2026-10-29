@@ -3,10 +3,13 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import baseline from '../../content/catalog/baseline.json';
 import { parseCatalog } from '../../src/features/catalog/data';
-import report from '../fixtures/catalog/mimo-report.json';
+const report = readFileSync('tests/fixtures/catalog/mimo-report.html', 'utf8');
 const yaml = readFileSync('tests/fixtures/catalog/mimo.yaml', 'utf8');
 const m = baseline.models.find((m) => m.name === 'mimo-v2.5')!;
 const variant = m.variants.find((v) => v.id === 'sglang-tp8-h100-optimized')!;
+function reportBody(page: Page) {
+  return page.frameLocator('iframe[title="原始性能对照报告"]').locator('body');
+}
 async function choose(page: Page, label: string, option: string) {
   await page.getByRole('combobox', { name: label, exact: true }).click();
   await page.getByRole('option', { name: option, exact: true }).click();
@@ -46,7 +49,7 @@ test.beforeEach(async ({ page }) => {
         return route.fulfill({ body: yaml, contentType: 'text/plain' });
       if (route.request().url().endsWith('mimo-v2.5-h100-report.html'))
         return route.fulfill({
-          body: `<!doctype html><html><body><script>window.upstreamScriptExecuted=true</script><script type="application/json" id="autotune-report-data">${JSON.stringify(report)}</script></body></html>`,
+          body: report,
           contentType: 'text/html',
         });
       return route.abort();
@@ -726,11 +729,9 @@ for (const layout of ['cards', 'table'])
     await page.getByRole('tab', { name: '性能对照' }).click();
     await expect(page).toHaveURL(/tab=performance/);
     await expect(page.getByRole('search')).toHaveCount(0);
-    await expect(page.locator('#benchmark')).toContainText(
-      'NVIDIA H100 80GB HBM3',
-    );
-    await expect(page.locator('#benchmark')).toContainText('50000');
-    await expect(page.locator('#benchmark')).toContainText('119.9%');
+    await expect(reportBody(page)).toContainText('NVIDIA H100 80GB HBM3');
+    await expect(reportBody(page)).toContainText('50000');
+    await expect(reportBody(page)).toContainText('119.9%');
     expect(await page.evaluate(() => 'upstreamScriptExecuted' in window)).toBe(
       false,
     );
@@ -738,7 +739,7 @@ for (const layout of ['cards', 'table'])
     await expect(
       page.getByRole('tab', { name: '性能对照', selected: true }),
     ).toBeVisible();
-    await expect(page.locator('#benchmark')).toContainText('119.9%');
+    await expect(reportBody(page)).toContainText('119.9%');
     await page.getByRole('link', { name: '返回模型目录', exact: true }).click();
     expect(new URL(page.url()).pathname + new URL(page.url()).search).toBe(
       catalog,
@@ -766,12 +767,12 @@ test('model recipe entries and performance gains lead into the same recipe detai
     .getByRole('link', { name: `查看 ${variant.id} 性能对照`, exact: true })
     .click();
   await expect(page).toHaveURL(/\/models\/recipe\?.*tab=performance/);
-  await expect(page.locator('#benchmark')).toContainText('119.9%');
+  await expect(reportBody(page)).toContainText('119.9%');
   await page.getByRole('tab', { name: '部署配置' }).click();
   await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
   await expect(page.locator('#benchmark')).toBeHidden();
   await page.getByRole('tab', { name: '性能对照' }).click();
-  await expect(page.locator('#benchmark')).toContainText('119.9%');
+  await expect(reportBody(page)).toContainText('119.9%');
   await page.getByRole('link', { name: '返回模型目录', exact: true }).click();
   expect(new URL(page.url()).pathname + new URL(page.url()).search).toBe(
     catalog,
@@ -811,7 +812,7 @@ for (const legacy of [
     await page.goto('/community');
     await page.goto(legacy);
     await expect(page).toHaveURL(/\/models\/recipe\?.*tab=performance/);
-    await expect(page.locator('#benchmark')).toContainText('119.9%');
+    await expect(reportBody(page)).toContainText('119.9%');
     await page.goBack();
     await expect(page).toHaveURL(/\/community$/);
   });
@@ -852,7 +853,7 @@ for (const width of [320, 1440])
     await expect(deployment).toHaveAttribute('aria-selected', 'true');
     await page.keyboard.press('Enter');
     await expect(performance).toBeFocused();
-    await expect(page.locator('#benchmark')).toContainText('119.9%');
+    await expect(reportBody(page)).toContainText('119.9%');
     await expect(performance).toHaveAttribute('aria-selected', 'true');
     expect(counts.report).toBe(1);
     const top = await page.evaluate(() => window.scrollY);
@@ -879,7 +880,7 @@ for (const width of [320, 1440])
     await expect(page.getByText('原始 YAML · SHA-256 校验通过')).toBeVisible();
     const afterReload = { ...counts };
     await performance.click();
-    await expect(page.locator('#benchmark')).toContainText('119.9%');
+    await expect(reportBody(page)).toContainText('119.9%');
     await history.click();
     await deployment.click();
     await performance.click();
@@ -888,6 +889,79 @@ for (const width of [320, 1440])
       baseline.commit,
     );
   });
+
+for (const width of [320, 1440])
+  test(`original report remains interactive and isolated at ${width}px`, async ({
+    page,
+  }, info) => {
+    await page.setViewportSize({ width, height: 1000 });
+    const request = page.waitForRequest((r) =>
+      r.url().endsWith('mimo-v2.5-h100-report.html'),
+    );
+    await page.goto(
+      `/models/recipe?modelId=mimo-v2.5&recipeId=${variant.id}&dataVersion=${baseline.commit}&tab=performance`,
+    );
+    expect((await request).url()).toBe(
+      `https://raw.githubusercontent.com/modelsphere/model-catalog/${baseline.commit}/models/mimo-v2.5/mimo-v2.5-h100-report.html`,
+    );
+    const frame = page.locator('iframe[title="原始性能对照报告"]');
+    await expect(frame).toHaveAttribute('sandbox', 'allow-scripts');
+    await expect(reportBody(page)).toHaveAttribute(
+      'data-parent-access',
+      'blocked',
+    );
+    await expect(page.locator('body')).not.toHaveAttribute(
+      'data-report-escaped',
+    );
+    expect(await page.evaluate(() => 'upstreamScriptExecuted' in window)).toBe(
+      false,
+    );
+    const button = reportBody(page).getByRole('button', {
+      name: 'Show raw results',
+    });
+    await button.click();
+    await expect(
+      reportBody(page).getByText('Original benchmark results'),
+    ).toBeVisible();
+    await page.getByRole('tab', { name: '部署配置' }).click();
+    await page.getByRole('tab', { name: '性能对照' }).click();
+    await expect(
+      reportBody(page).getByText('Original benchmark results'),
+    ).toBeVisible();
+    const bounds = (await frame.boundingBox())!;
+    expect(bounds.width).toBeGreaterThan(150);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
+    expect(bounds.height).toBeGreaterThanOrEqual(640);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(width);
+    await info.attach(`original-report-${width}`, {
+      body: await page.locator('#benchmark').screenshot(),
+      contentType: 'image/png',
+    });
+  });
+
+test('original report retries a failed request without requiring structured JSON', async ({
+  page,
+}) => {
+  let attempts = 0;
+  await page.route('**/mimo-v2.5-h100-report.html', (route) => {
+    attempts++;
+    return attempts === 1
+      ? route.fulfill({ status: 503, body: 'Unavailable' })
+      : route.fulfill({ body: report, contentType: 'text/html' });
+  });
+  await page.goto(
+    `/models/recipe?modelId=mimo-v2.5&recipeId=${variant.id}&tab=performance`,
+  );
+  await expect(page.locator('#benchmark')).toContainText('报告数据加载失败');
+  await expect(
+    page.getByRole('link', { name: '查看完整报告 ↗' }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: '重试', exact: true }).click();
+  await expect(reportBody(page)).toContainText('119.9%');
+  expect(attempts).toBe(2);
+});
 
 test('history opens the exact configuration and keeps reports bound to their measured version', async ({
   page,
@@ -948,7 +1022,7 @@ test('history opens the exact configuration and keeps reports bound to their mea
     oldYaml,
   );
   await page.getByRole('tab', { name: '性能对照' }).click();
-  await expect(page.locator('#benchmark')).toContainText('119.9%');
+  await expect(reportBody(page)).toContainText('119.9%');
   await expect(page.getByRole('tabpanel', { name: '性能对照' })).toContainText(
     `报告对应测量版本：${variant.id}@${variant.version}`,
   );
@@ -996,7 +1070,7 @@ test('configuration and history failures leave performance available and support
   await page.getByRole('tab', { name: '部署配置' }).click();
   await expect(page.getByRole('alert')).toContainText('不在所选目录');
   await page.getByRole('tab', { name: '性能对照' }).click();
-  await expect(page.locator('#benchmark')).toContainText('119.9%');
+  await expect(reportBody(page)).toContainText('119.9%');
   await expect(page.getByRole('alert')).toBeHidden();
 });
 
@@ -1057,7 +1131,7 @@ test('a report keeps its marked baseline when the catalog is offline and rejects
   await expect(
     page.getByText('公开数据暂时不可达', { exact: false }),
   ).toBeVisible();
-  await expect(page.locator('#benchmark')).toContainText('119.9%');
+  await expect(reportBody(page)).toContainText('119.9%');
   await expect(
     page.getByRole('link', { name: '返回模型目录', exact: true }),
   ).toHaveAttribute('href', '/models');
@@ -1073,7 +1147,7 @@ for (const width of [320, 390, 768, 1440])
       await page.goto(
         `/models/recipe?modelId=mimo-v2.5&recipeId=${variant.id}&tab=performance`,
       );
-      await expect(page.locator('#benchmark')).toContainText('119.9%');
+      await expect(reportBody(page)).toContainText('119.9%');
       for (const [tab, name] of [
         ['performance', '性能对照'],
         ['deployment', '部署配置'],
