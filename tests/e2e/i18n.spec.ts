@@ -269,7 +269,14 @@ test('custom language menu supports selection, dismissal, keyboard and both them
     .getByRole('combobox', { name: 'Change language', exact: true })
     .focus();
   await page.keyboard.press('Enter');
+  await expect(page.getByRole('listbox')).toBeVisible();
+  await expect(
+    page.getByRole('option', { name: 'English', exact: true }),
+  ).toBeFocused();
   await page.keyboard.press('Home');
+  await expect(
+    page.getByRole('option', { name: '简体中文', exact: true }),
+  ).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
 });
