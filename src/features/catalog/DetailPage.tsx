@@ -428,7 +428,11 @@ function DetailContent({ kind }: { kind: 'model' | 'recipe' }) {
                             )}
                             {(openedPerformance ||
                               activeTab === 'performance') && (
-                              <ReportPanel r={recipe} commit={c.commit} />
+                              <ReportPanel
+                                r={recipe}
+                                commit={c.commit}
+                                active={activeTab === 'performance'}
+                              />
                             )}
                           </>
                         ) : (
