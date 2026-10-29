@@ -941,6 +941,107 @@ for (const width of [320, 1440])
     });
   });
 
+for (const width of [320, 1440])
+  for (const colorScheme of ['light', 'dark'] as const)
+    test(`report fullscreen preserves content and fits ${width}px in ${colorScheme}`, async ({
+      page,
+    }, info) => {
+      await page.setViewportSize({ width, height: 1000 });
+      await page.emulateMedia({ colorScheme });
+      let requests = 0;
+      page.on('request', (request) => {
+        if (request.url().endsWith('mimo-v2.5-h100-report.html')) requests++;
+      });
+      await page.goto(
+        `/models/recipe?modelId=mimo-v2.5&recipeId=${variant.id}`,
+      );
+      await page.getByRole('tab', { name: '性能对照' }).click();
+      await expect(reportBody(page)).toContainText('119.9%');
+      await reportBody(page)
+        .getByRole('button', { name: 'Show raw results' })
+        .click();
+      const button = page.getByRole('button', {
+        name: '全屏观看',
+        exact: true,
+      });
+      await expect(button).toBeEnabled();
+      await button.click();
+      await expect
+        .poll(() => page.evaluate(() => document.fullscreenElement?.id))
+        .toBe('benchmark-report');
+      await expect(
+        page.getByRole('button', { name: '退出全屏', exact: true }),
+      ).toHaveAttribute('aria-pressed', 'true');
+      expect(
+        await page.evaluate(() => document.fullscreenElement?.tagName),
+      ).toBe('IFRAME');
+      expect(
+        await page
+          .locator('#benchmark')
+          .evaluate((el) => el.matches(':fullscreen')),
+      ).toBe(false);
+      await expect(
+        reportBody(page).getByText('Original benchmark results'),
+      ).toBeVisible();
+      const viewport = page.viewportSize()!;
+      const bounds = (await page.locator('#benchmark-report').boundingBox())!;
+      expect(bounds.x).toBeCloseTo(0, 0);
+      expect(bounds.y).toBeCloseTo(0, 0);
+      expect(bounds.width).toBeCloseTo(viewport.width, 0);
+      expect(bounds.height).toBeCloseTo(viewport.height, 0);
+      const frame = (await page
+        .locator('iframe[title="原始性能对照报告"]')
+        .boundingBox())!;
+      expect(frame.height).toBeCloseTo(viewport.height, 0);
+      expect(frame.y + frame.height).toBeLessThanOrEqual(viewport.height);
+      await info.attach('fullscreen-report', {
+        body: await page.screenshot(),
+        contentType: 'image/png',
+      });
+      // Browser-controlled exits (including Escape) restore the page and trigger fullscreenchange.
+      await page.evaluate(() => document.exitFullscreen());
+      await expect(page.locator('#benchmark-title')).toBeVisible();
+      await expect(button).toHaveAttribute('aria-pressed', 'false');
+      await expect(button).toBeFocused();
+      await expect
+        .poll(() => page.evaluate(() => document.fullscreenElement))
+        .toBeNull();
+      await expect(
+        reportBody(page).getByText('Original benchmark results'),
+      ).toBeVisible();
+      await button.click();
+      await page.goBack();
+      await expect(
+        page.getByRole('tab', { name: '部署配置', selected: true }),
+      ).toBeVisible();
+      await expect
+        .poll(() => page.evaluate(() => document.fullscreenElement))
+        .toBeNull();
+      expect(requests).toBe(1);
+    });
+
+test('fullscreen failure keeps the original report and standalone link available', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    HTMLElement.prototype.requestFullscreen = () =>
+      Promise.reject(new Error('Fullscreen denied'));
+  });
+  await page.goto(
+    `/models/recipe?modelId=mimo-v2.5&recipeId=${variant.id}&tab=performance`,
+  );
+  await expect(reportBody(page)).toContainText('119.9%');
+  await page.getByRole('button', { name: '全屏观看', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('暂时无法全屏观看');
+  await expect(
+    page.getByRole('link', { name: '查看完整报告 ↗' }),
+  ).toBeVisible();
+  await expect(reportBody(page)).toContainText('119.9%');
+  await expect(
+    page.getByRole('button', { name: '全屏观看', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'false');
+});
+
 test('original report retries a failed request without requiring structured JSON', async ({
   page,
 }) => {
@@ -955,6 +1056,9 @@ test('original report retries a failed request without requiring structured JSON
     `/models/recipe?modelId=mimo-v2.5&recipeId=${variant.id}&tab=performance`,
   );
   await expect(page.locator('#benchmark')).toContainText('报告数据加载失败');
+  await expect(
+    page.getByRole('button', { name: '全屏观看', exact: true }),
+  ).toBeDisabled();
   await expect(
     page.getByRole('link', { name: '查看完整报告 ↗' }),
   ).toBeVisible();
