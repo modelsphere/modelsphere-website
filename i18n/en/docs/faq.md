@@ -1,0 +1,50 @@
+---
+title: FAQ
+description: What to do when a menu is missing, a model is not ready, the gateway reports an error or a program gets 401.
+---
+
+## A menu is missing
+
+The sidebar shows only pages your account may open. Ask an administrator to grant the page permission on your role; see [Access control](access-control.md).
+
+## The Playground says no model is deployed
+
+Model Serving → Inference Services has no deployment yet; [deploy](deploy.md) one.
+
+## A model in the Playground is greyed out
+
+The deployment exists but cannot be called yet; the reason is under the greyed-out entry:
+
+- **no gateway route**: "Publish route" was off when it was deployed, so the model is reachable only inside the cluster. Upgrade the service with the route on.
+- **route not on the gateway yet**: the route was just created and the gateway has not picked it up; wait a moment.
+- **route has no ready instance yet**: the model is still loading or its instances are failing; see the next question.
+
+## An inference service stays in Loading
+
+A cold start of a large model takes 20–40 minutes; that is normal. After an hour it turns Not ready. Look at the **Instances**, **Events** and **Logs** tabs of the service. Common causes:
+
+- not enough GPUs, so the pod cannot be scheduled — check free GPUs on Model Serving → Nodes;
+- the image or weights failed to download — see events and logs.
+
+## Deploy and upgrade buttons are greyed out
+
+"This swissd is read-only": swissd on the cluster may not deploy. An operator has to turn on `allowDeploy` in Swiss's configuration.
+
+"A release without a plan cannot be upgraded here": the service was not deployed by Swiss and can only be viewed.
+
+## The Playground reports a gateway error
+
+| Message | What to do |
+|---|---|
+| no llm backend configured | the console was installed without a gateway; an operator sets `playground.gateway` in the chart |
+| the gateway rejected the credentials | wrong gateway key; check the Secret referenced by the entrypoint auth in the site profile |
+| no permission on the llm backend | the role needs get and create on `backends/llm` |
+| the gateway is unreachable | its address did not resolve or the service is down; contact an operator |
+
+## A program gets 401
+
+The API key is missing, wrong, expired or deleted. Check it on Router → API Keys and create a new one if needed.
+
+## Forgotten password
+
+Ask an administrator. Once signed in, you can change your password any time from the avatar menu.

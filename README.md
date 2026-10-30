@@ -2,19 +2,19 @@
 
 项目名称：`modelsphere-website`。
 
-当前文档源为 `content/docs/`，开发、预览、正式构建默认递归读取；新增 Markdown 会自动进入侧栏和搜索，支持通过相对路径引用目录内的 PNG、JPEG、WebP、GIF 图片。维护格式与发布步骤见[技术文档实施与维护规范](docs/development/docs-implementation.md)。既有两篇文档仍保留示例说明。`tests/fixtures/docs/` 仅用于显式 mock 回归，`DOCS_SOURCE_MODE=none` 显示准备页。博客默认读取 `content/blog/<id>/index.md` 与 `content/pages/blog.json`，新增及发布规范见[博客功能与内容维护](docs/development/blog-implementation.md)。既有博客示例保留标记，由 `SITE_PUBLISH_EXAMPLES` 控制；`tests/fixtures/blog/` 仅用于显式 mock 回归。
+当前文档源为 `content/docs/`，开发、预览、正式构建默认递归读取；新增 Markdown 会自动进入侧栏和搜索，支持通过相对路径引用目录内的 PNG、JPEG、WebP、GIF 图片。维护格式与发布步骤见[技术文档实施与维护规范](docs/development/docs-implementation.md)。当前正式目录已发布 Console 使用文档 7 篇，内容来自 console 仓库随版本发布的使用文档。`tests/fixtures/docs/` 仅用于显式 mock 回归，`DOCS_SOURCE_MODE=none` 显示准备页。博客默认读取 `content/blog/<id>/index.md` 与 `content/pages/blog.json`，新增及发布规范见[博客功能与内容维护](docs/development/blog-implementation.md)。既有博客示例保留标记，由 `SITE_PUBLISH_EXAMPLES` 控制；`tests/fixtures/blog/` 仅用于显式 mock 回归。
 
 面向 AI 基础设施、平台、算法与稳定性团队的公开官网，覆盖产品介绍、技术架构、模型目录与测评、快速开始与文档、技术博客、社区与生态。
 
-设计来源：[ModelSphere 推理基础设施官网](https://stitch.withgoogle.com/projects/3601238558355976464)。页面结构仅采用顶部“首页-更新”“模型目录”“博客洞见-更新”三张新版，底部旧稿仅参考 dark mode 色彩；[来源快照](docs/design/sources/stitch-foundations.json)记录当前采用范围与原始证据。Header 的独立来源覆盖和已实现文档双层 Footer 保留为既定特例。当前已实现首页、博客功能与文档栏目试点；博客与文档均已接入正式内容目录，当前保留明确标注的阅读示例。
+设计来源：[ModelSphere 推理基础设施官网](https://stitch.withgoogle.com/projects/3601238558355976464)。页面结构仅采用顶部“首页-更新”“模型目录”“博客洞见-更新”三张新版，底部旧稿仅参考 dark mode 色彩；[来源快照](docs/design/sources/stitch-foundations.json)记录当前采用范围与原始证据。Header 的独立来源覆盖和已实现文档双层 Footer 保留为既定特例。当前已实现首页、博客功能与文档栏目；博客保留明确标注的阅读示例，文档栏目已发布 Console 使用文档。
 
 首页按 hero、四张同时展开的能力卡、断流续写、SLO、Tuning-Agent、最多四条合格测评、渐变 CTA 排列。Catalog 默认显示配方卡片，按源报告记录的最佳负载增幅降序，保留测量版本与口径提示，不表示统一吞吐排名；信息边界见[可靠性清单](docs/development/catalog-implementation.md)。博客推荐文章优先，采用分类、技术标签、搜索与可选社区侧栏；详情由 Markdown 生成独立阅读页。浅深主题共享布局与 Space Grotesk / Geist / JetBrains Mono 字体，Header 的 Inter 为既定例外；开发者文档保留标准阅读格式。
 
 ## 当前阶段
 
-已确认采用 **Docusaurus + React + TypeScript 统一全站**，博客首期使用 **Markdown/Git 发布**。门户、博客和开发者文档构建为一个静态站点；Model Catalog 使用自定义 React 界面读取独立数据源。当前已建立 Docusaurus 应用、依赖锁文件和 CI 配置，实现首页、博客列表与阅读页、两篇 Mock 文档及太阳／月亮主题切换。站内 Catalog 现已接入公开源；博客与文档在本仓库正式目录维护，独立文档仓库同步尚未接入。首期选择公开仓库与 GitHub Pages 项目地址；是否已上线以 Actions 发布结果和线上版本为准。
+已确认采用 **Docusaurus + React + TypeScript 统一全站**，博客首期使用 **Markdown/Git 发布**。门户、博客和开发者文档构建为一个静态站点；Model Catalog 使用自定义 React 界面读取独立数据源。当前已建立 Docusaurus 应用、依赖锁文件和 CI 配置，实现首页、博客列表与阅读页、文档栏目及太阳／月亮主题切换。站内 Catalog 现已接入公开源；博客与文档在本仓库正式目录维护，独立文档仓库同步尚未接入。首期选择公开仓库与 GitHub Pages 项目地址；是否已上线以 Actions 发布结果和线上版本为准。
 
-首页按最新首页稿实现六个区块：`hero`、`comparison`、`fault-tolerance`、`qos-scaling`、`autotune-evolution`、`get-started`。完整架构与机制图、说明文字和真实链接均在初始 HTML 中静态输出；首页标题按 D13 整体翻起渐显，引导语与简介从左滑入渐显，架构拓扑正文按 D14 从上向下揭示。屏外能力卡与各机制直接子块分别在自身起点进入 85% 触发线时入场；并排时左右聚合，堆叠时逐卡上移渐显。首屏按钮、技术标签、拓扑标题及其上方三张卡静态可用；架构数据与布局保持稳定，减少动效、无脚本及历史恢复显示最终态。机制说明链接到已核对的项目资料及固定提交，示意曲线明确标注为机制示意。现有资料不足以满足测评报告和完整测试条件要求，因此省略 `benchmarks`，不展示设计稿样例成绩。模型入口进入站内 `/models`，目录读取公开 Catalog 数据；正式 `/docs` 读取 `content/docs/`，既有阅读示例保留说明。
+首页按最新首页稿实现六个区块：`hero`、`comparison`、`fault-tolerance`、`qos-scaling`、`autotune-evolution`、`get-started`。完整架构与机制图、说明文字和真实链接均在初始 HTML 中静态输出；首页标题按 D13 整体翻起渐显，引导语与简介从左滑入渐显，架构拓扑正文按 D14 从上向下揭示。屏外能力卡与各机制直接子块分别在自身起点进入 85% 触发线时入场；并排时左右聚合，堆叠时逐卡上移渐显。首屏按钮、技术标签、拓扑标题及其上方三张卡静态可用；架构数据与布局保持稳定，减少动效、无脚本及历史恢复显示最终态。机制说明链接到已核对的项目资料及固定提交，示意曲线明确标注为机制示意。现有资料不足以满足测评报告和完整测试条件要求，因此省略 `benchmarks`，不展示设计稿样例成绩。模型入口进入站内 `/models`，目录读取公开 Catalog 数据；正式 `/docs` 读取 `content/docs/`，当前发布 Console 使用文档。
 
 技术与发布边界以[工程与代码生成规范](docs/development/engineering.md)为依据；[架构说明](docs/design/architecture.html)、页面、组件、内容及交互规范描述同一套当前设计。修改直接覆盖原文，不保留并行架构副本。
 
@@ -68,7 +68,7 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 | 05.1 | [动效与加载模块](docs/design/interactions/motion-and-loading.md) | 首页五组双侧入场已通过本地复验，旧版本证据独立保留；其余门户待实施 |
 | 06 | [工程与代码生成规范](docs/development/engineering.md) | 统一全站与 Git 博客已确认；文档试点工程已建立 |
 | 06.1 | [架构说明](docs/design/architecture.html) | 与当前准则一致；部署参数和容量目标待验证 |
-| 06.2 | [文档栏目实施方案](docs/development/docs-implementation.md) | 两篇 Mock、文档阅读与双主题已实现；Header 搜索已接入，真实内容后续接入 |
+| 06.2 | [文档栏目实施方案](docs/development/docs-implementation.md) | 文档阅读、双主题与 Header 搜索已实现；已发布 Console 使用文档 7 篇 |
 | 07 | 验收与 CI 规范 `docs/development/acceptance.md` | 待生成 |
 
 尚未生成的文档只列出计划路径，不创建空规范。设计变量已落地为 `design/tokens.json`，生成 `src/css/tokens.css`；后续业务数据结构按对应模块实施。
@@ -107,7 +107,7 @@ E2E_BASE_URL=http://localhost:4173 TEST_DOCS_MODE=content pnpm test:pages
 
 可在 Actions 的 **Website checks** 使用 **Run workflow**，选择 `main` 重试发布。回滚通过 PR 撤销问题提交，待检查通过后合并并重新发布；发布前失败不会替换现有站点，发布后验收失败需要修复或回滚，尚无自动回滚。更换自定义域名或迁移 Kubernetes 时再调整发布配置。
 
-## 本地运行文档试点
+## 本地运行文档
 
 运行环境：Node.js **24.22.0**、pnpm **10.22.0**；版本固定在 `.node-version` 和 `package.json`。
 
@@ -173,7 +173,7 @@ D13 首页文字效果保持：标题整体从下方翻起并渐显，桌面 48p
 
 - 中文为默认语言；英文位于 `/en/`（Pages 部署为 `/modelsphere-website/en/`）。Header 提供地球图标及自定义语言下拉菜单，支持键盘选择、当前语言标记和移动端；无脚本时保留 EN / 中文链接。切换保留对应页面；启用脚本后同时保留查询参数和片段。语言由 URL 决定，站内导航保持当前语言。
 - React 文案使用 `@docusaurus/Translate`，英文资源为 `i18n/en/code.json`；来自纯数据辅助函数的展示文案在 `i18n/en/content.json` 维护，不改变模型标识、版本、筛选值或 YAML。
-- 文档翻译在 `i18n/en/docs/`，博客翻译在 `i18n/en/blog/<文章 id>.md`；博客翻译的 frontmatter 包含 `title`、`summary`。英文正文保留原文的示例说明和证据边界。
+- 文档翻译在 `i18n/en/docs/`，博客翻译在 `i18n/en/blog/<文章 id>.md`；博客翻译的 frontmatter 包含 `title`、`summary`。英文正文保留原文的示例说明和证据边界。文档英文译文与中文源文共用同一正文结构，标题和摘要写在译文 frontmatter；中文源文变更后应同步更新译文。固定 Mock 示例的英文译文单独放在 `tests/fixtures/docs-en/`，mock 构建不读取正式文档译文。
 - `scripts/prepare-translations.ts` 只从已筛选的 `.generated/docs`、`.generated/blog` 和摘要索引生成英文输入，保留来源的 id、slug 与发布时间。源文撤下或被过滤时，其译文不会发布。新增正文尚无译文时沿用原文，不生成虚假翻译；发布前应补齐译文。
 - 预览、正式构建均生成中英文及各自搜索索引；`pnpm dev:docs` 开发中文，`pnpm dev:en` 开发英文。`tests/e2e/i18n.spec.ts` 与 Pages 同名测试覆盖切换、英文阅读、搜索、手机与无脚本访问。
 

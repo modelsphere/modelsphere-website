@@ -2,6 +2,17 @@ import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import baseline from '../../content/catalog/baseline.json';
 
+const docsContent = process.env.TEST_DOCS_MODE === 'content';
+const enHomeTitle = docsContent ? 'User Guide' : 'Understanding ModelSphere';
+const enQuickstartTitle = docsContent
+  ? 'Getting started'
+  : 'Quickstart (example)';
+const quickstartLinkName = docsContent
+  ? 'Getting started'
+  : 'quickstart example';
+const articleAnchor = docsContent ? '阅读顺序' : '核心概念';
+const articleAnchorText = docsContent ? 'Reading order' : 'Core concepts';
+
 let prefix = '/';
 test.beforeEach(({ baseURL }) => {
   prefix = new URL(baseURL ?? 'http://localhost:4173').pathname;
@@ -42,17 +53,17 @@ test('English docs, blog and search use translated content and localized links',
   await page.goto(site('en/docs'));
   await expect(
     page.getByRole('heading', {
-      name: 'Understanding ModelSphere',
+      name: enHomeTitle,
       exact: true,
     }),
   ).toBeVisible();
   await page
-    .getByRole('link', { name: 'quickstart example', exact: true })
+    .getByRole('link', { name: quickstartLinkName, exact: true })
     .first()
     .click();
   await expect(page).toHaveURL(new RegExp(`${site('en/docs/quickstart')}$`));
   await expect(
-    page.getByRole('heading', { name: 'Quickstart (example)', exact: true }),
+    page.getByRole('heading', { name: enQuickstartTitle, exact: true }),
   ).toBeVisible();
   await page.goto(site('en/blog'));
   await expect(
@@ -96,7 +107,7 @@ test('language switch is accessible on mobile and English pages render without s
   await staticPage.goto(new URL(site('en/docs'), page.url()).href);
   await expect(
     staticPage.getByRole('heading', {
-      name: 'Understanding ModelSphere',
+      name: enHomeTitle,
       exact: true,
     }),
   ).toBeVisible();
@@ -151,13 +162,15 @@ test('navigation controls do not overlap the brand in either language', async ({
 test('switching an article language retains the current section', async ({
   page,
 }) => {
-  await page.goto(site('docs#核心概念'));
+  await page.goto(site(`docs#${articleAnchor}`));
   await chooseLanguage(page, 'English');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.locator('h2#核心概念')).toBeInViewport();
-  await expect(page.locator('h2#核心概念')).toContainText('Core concepts');
+  await expect(page.locator(`h2#${articleAnchor}`)).toBeInViewport();
+  await expect(page.locator(`h2#${articleAnchor}`)).toContainText(
+    articleAnchorText,
+  );
   await chooseLanguage(page, '简体中文');
-  await expect(page.locator('h2#核心概念')).toBeInViewport();
+  await expect(page.locator(`h2#${articleAnchor}`)).toBeInViewport();
 });
 
 test('English recipe details translate deployment and history tabs', async ({

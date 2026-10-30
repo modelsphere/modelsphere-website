@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 const release = process.env.TEST_DOCS_MODE === 'none';
+const docsContent = process.env.TEST_DOCS_MODE === 'content';
+const docsHomeTitle = release
+  ? '文档准备中'
+  : docsContent
+    ? '使用文档'
+    : '认识 ModelSphere';
 const indexPattern = '**/search-index.*.json';
 
 test('global search is lazy, keyboard accessible, and restores focus', async ({
@@ -152,16 +158,19 @@ test('without JavaScript the search is clearly unavailable and content stays rea
     page.getByRole('button', { name: '搜索文档和博客', exact: true }),
   ).toBeDisabled();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    release ? '文档准备中' : '认识 ModelSphere',
+    docsHomeTitle,
   );
   await context.close();
 });
 
 test.describe('published preview content search', () => {
-  test.skip(release, 'Mock content is excluded from release');
   test('searches code and headings, filters sources and navigates to the matched section', async ({
     page,
   }) => {
+    test.skip(
+      process.env.TEST_DOCS_MODE !== 'mock',
+      'Fixed mock docs content only',
+    );
     await page.goto('/blog');
     await page
       .getByRole('button', { name: '搜索文档和博客', exact: true })
@@ -189,6 +198,7 @@ test.describe('published preview content search', () => {
   test('searches blog body and tags, excludes external articles, and respects IME composition', async ({
     page,
   }) => {
+    test.skip(release, 'Mock content is excluded from release');
     await page.goto('/docs');
     await page
       .getByRole('button', { name: '搜索文档和博客', exact: true })
@@ -220,5 +230,29 @@ test.describe('published preview content search', () => {
     await dialog.getByRole('button', { name: '清空搜索' }).click();
     await expect(input).toHaveValue('');
     await expect(input).toBeFocused();
+  });
+});
+
+test.describe('published docs search', () => {
+  test('searches the published user guide and navigates to the matched section', async ({
+    page,
+  }) => {
+    test.skip(!docsContent, 'Published content only');
+    await page.goto('/');
+    await page
+      .getByRole('button', { name: '搜索文档和博客', exact: true })
+      .click();
+    const dialog = page.getByRole('dialog');
+    const input = dialog.getByRole('searchbox');
+    await input.fill('创建 API 密钥');
+    await dialog.getByRole('button', { name: '文档', exact: true }).click();
+    const result = dialog.locator('[data-search-result]').first();
+    await expect(result).toBeVisible();
+    await expect(result).toHaveAttribute('href', /\/docs\/api#/);
+    await result.click();
+    await expect(page).toHaveURL(/\/docs\/api#.*$/);
+    expect(decodeURIComponent(new URL(page.url()).hash)).toBe('#创建-api-密钥');
+    await expect(page.locator('#创建-api-密钥')).toBeInViewport();
+    await expect(dialog).toHaveCount(0);
   });
 });

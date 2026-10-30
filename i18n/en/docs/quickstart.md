@@ -1,74 +1,46 @@
 ---
-title: Quickstart (example)
-description: Read example prerequisites, copy a static configuration, and check the copied text.
+title: Getting started
+description: Sign in to the Console, learn the interface and menus, and follow one flow from picking a model to calling it from code.
 ---
 
-This guide uses a static configuration to demonstrate a typical documentation workflow: review the prerequisites, inspect the configuration, and check the copied text. Everything happens in your browser and text editor.
+ModelSphere Console is the single entry point of the inference platform: deploy models, try them out and issue API keys here; programs then call models through the OpenAI-compatible API with those keys.
 
-## Before you begin
+## The whole flow
 
-:::warning Example configuration; do not deploy
-
-This is not a ModelSphere installation guide. The fields below are used to check layout, syntax highlighting, and copying. They do not represent actual APIs, Helm parameters, or Kubernetes resources. Do not submit them to a cluster or use them in production.
-
-:::
-
-To understand models, engines, and recipes first, return to [Understanding ModelSphere](index.md). A real quickstart will specify supported versions, permissions, installation steps, and validation methods.
-
-## Example environment information
-
-No GPU, cluster, or model weights are required. This table illustrates how a guide should list prerequisites; it does not give actual deployment requirements.
-
-| Item | Requirement in this example | Purpose |
-| --- | --- | --- |
-| Browser | Able to display this website | Reading and copying text |
-| Text editor | Any local plain-text editor | Checking copied text without executing it |
-| Network | Page resources have loaded | No model API or data service calls |
-| Cluster access | Not required | No deployment operations |
-
-For real usage, check every prerequisite against the official guide. These reading requirements are not a complete installation checklist.
-
-## Example configuration
-
-The YAML below demonstrates fields, strings, booleans, and comments. **Do not deploy it.** The copy button copies only the code, excluding surrounding explanations.
-
-```yaml title="example.yaml · for reading only"
-# Documentation UI example, not a ModelSphere deployment configuration
-exampleOnly: true
-name: sample-inference-demo
-model: placeholder-model
-purpose: documentation-preview
+```
+pick a model -> deploy an inference service -> wait until ready -> try it in the Playground -> create an API key -> call /v1
 ```
 
-`exampleOnly` marks this as sample text. The other fields illustrate naming and indentation. These fields are not part of the product’s configuration schema; changing them will not create an inference service.
+| Step | Page | See |
+|---|---|---|
+| Pick and deploy a model | Model Serving → Model Library | [Deploying models](deploy.md) |
+| Watch the rollout | Model Serving → Inference Services | [Deploying models](deploy.md) |
+| Chat with a model | Playground → Chat | [Playground](playground.md) |
+| Issue keys | Router → API Keys | [Calling the API](api.md) |
+| Manage users and roles | Access Control → Users | [Access control](access-control.md) |
 
-## Steps
+## Signing in
 
-1. **Read the environment information**: confirm this is example documentation for reading and copying, with no cluster operations.
-2. **Inspect and copy the configuration**: read the explanation, then use the copy button or select the code and use your system's copy shortcut.
-3. **Check the text**: paste into a plain-text editor and verify comments, fields, colons, and line breaks. Do not execute the text in a terminal.
+- Sign in with the username and password your administrator gave you. The administrator account created at install time is `admin`.
+- **The first sign-in asks you to set a new password.** Keeping the initial one is allowed, with a warning, but choose one only you know.
+- To change it later: avatar at the top right → **Change password**. At least 8 characters; the strength meter updates as you type.
 
-The button briefly confirms a successful copy. If copying fails, select the code manually. The code stays readable regardless of clipboard access.
+## The interface
 
-## Verify the result
+- The **sidebar** groups pages by feature and shows only the pages your account may open. If a menu is missing, your role does not grant it; ask an administrator.
+- **Top right**:
+  - User Guide: opens this guide from any page.
+  - Language icon: switch between Chinese and English.
+  - Palette icon: preferences, with three layouts (mixed nav, classic, minimal). Stored in this browser only.
+  - Avatar: your identity, change password, sign out.
+- The **Overview** page shows the current session (user, groups, role) and each module's summary cards.
 
-Use this checklist to verify the reading workflow. Completion means the example text was copied; it does not mean a service started or a model loaded.
+## Menus
 
-- [ ] You can see `exampleOnly: true` and understand it is not a deployment parameter.
-- [ ] The comment and four fields are copied without page titles or line numbers.
-- [ ] Line breaks in the editor match the page.
-- [ ] The table of contents lets you jump to any section, and the previous-article link works.
-
-On mobile, scroll horizontally within the code area if needed. The page should remain stable, with the copy button in the code toolbar.
-
-## Common questions
-
-### Why can’t I deploy this configuration?
-
-This example verifies the documentation experience. There is no product configuration parser for this example, and it has not been validated in a real environment. Real deployments require official material with explicit versions, prerequisites, and verification steps.
-
-### What if copying fails?
-
-Some browsers restrict clipboard access. Select the code manually and choose Copy in your system menu. You can continue reading if copying fails, and there is no need to change your browser’s security settings.
-
-Return to [Understanding ModelSphere](index.md) to review the concepts. Official guides will be added here over time. This article remains an example, not a deployment reference.
+| Group | Menus | Purpose |
+|---|---|---|
+| Model Serving | Inference Services, Model Library, Nodes, Activity, Site Profile | Deploy and manage inference services |
+| Playground | Chat | Talk to models in the browser |
+| Router | API Keys | Keys that programs use to call `/v1` |
+| Access Control | Users, Login History, Roles | Accounts and permissions |
+| Help | User Guide | This guide |

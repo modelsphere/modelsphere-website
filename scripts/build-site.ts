@@ -31,7 +31,7 @@ const env = {
 const mode = resolveBuildMode(env);
 const docs = await prepareDocs(process.cwd(), mode);
 const blog = await prepareBlog(process.cwd(), mode);
-await prepareTranslations(process.cwd());
+await prepareTranslations(process.cwd(), mode.source);
 await generateTokens();
 for (const dir of ['.docusaurus', 'build'])
   await rm(dir, { recursive: true, force: true });

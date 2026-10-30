@@ -52,6 +52,7 @@ it('stages only published translations and retains source routing metadata', asy
       '.generated/blog/published',
       'i18n/en/docs',
       'i18n/en/blog',
+      'tests/fixtures/docs-en',
     ])
       await mkdir(path.join(root, directory), { recursive: true });
     const put = (file: string, value: string) =>
@@ -59,12 +60,20 @@ it('stages only published translations and retains source routing metadata', asy
     await put('i18n/en/code.json', '{}');
     await put('i18n/en/docs-sidebar.json', '{}');
     await put(
-      '.generated/docs/overview.md',
+      '.generated/docs/index.md',
       '---\nid: source-id\nslug: /\ntitle: 原文\n---\n原文正文\n\n## 中文章节',
+    );
+    await put(
+      '.generated/docs/overview.md',
+      '---\nid: fixture-id\nslug: /\ntitle: 示例原文\n---\n示例正文\n\n## 示例章节',
     );
     await put(
       'i18n/en/docs/index.md',
       '---\ntitle: English docs\n---\nTranslated body\n\n## English section',
+    );
+    await put(
+      'tests/fixtures/docs-en/overview.md',
+      '---\ntitle: Fixture docs\n---\nFixture body\n\n## Fixture section',
     );
     await put(
       '.generated/blog/published/index.md',
@@ -94,18 +103,29 @@ it('stages only published translations and retains source routing metadata', asy
     );
     await prepareTranslations(root);
     const output = '.generated/locales/en/';
-    const doc = await readFile(
-      path.join(
-        root,
-        output,
-        'docusaurus-plugin-content-docs/current/overview.md',
-      ),
-      'utf8',
+    const current = path.join(
+      root,
+      output,
+      'docusaurus-plugin-content-docs/current',
     );
+    const doc = await readFile(path.join(current, 'index.md'), 'utf8');
     expect(doc).toContain('id: source-id');
     expect(doc).toContain('slug: /');
     expect(doc).toContain('Translated body');
     expect(doc).toContain('## English section {#中文章节}');
+    expect(await readFile(path.join(current, 'overview.md'), 'utf8')).toContain(
+      '示例正文',
+    );
+    await prepareTranslations(root, 'mock');
+    const fixture = await readFile(path.join(current, 'overview.md'), 'utf8');
+    expect(fixture).toContain('id: fixture-id');
+    expect(fixture).toContain('slug: /');
+    expect(fixture).toContain('title: Fixture docs');
+    expect(fixture).toContain('Fixture body');
+    expect(fixture).toContain('## Fixture section {#示例章节}');
+    expect(await readFile(path.join(current, 'index.md'), 'utf8')).toContain(
+      '原文正文',
+    );
     const post = await readFile(
       path.join(
         root,
