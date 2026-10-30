@@ -40,19 +40,23 @@ function preserveHeadingIds(source: string, translated: string) {
   }
   return output;
 }
-async function translation(root: string, kind: string, name: string) {
+async function translationAt(directory: string, name: string) {
   try {
-    return markdown(
-      await readFile(path.join(root, 'i18n/en', kind, name), 'utf8'),
-    );
+    return markdown(await readFile(path.join(directory, name), 'utf8'));
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined;
     throw error;
   }
 }
+async function translation(root: string, kind: string, name: string) {
+  return translationAt(path.join(root, 'i18n/en', kind), name);
+}
 
 /** Only stage translations for content that passed the publication filters. */
-export async function prepareTranslations(root: string) {
+export async function prepareTranslations(
+  root: string,
+  source: 'none' | 'mock' | 'content' = 'content',
+) {
   const output = path.join(root, '.generated/locales/en');
   await rm(output, { recursive: true, force: true });
   await mkdir(output, { recursive: true });
@@ -65,6 +69,12 @@ export async function prepareTranslations(root: string) {
     'docusaurus-plugin-content-docs/current',
   );
   await cp(path.join(root, '.generated/docs'), docsOutput, { recursive: true });
+  // Published docs translate from the site source; fixed mock fixtures keep
+  // their own translations so they never depend on content docs.
+  const docsTranslations =
+    source === 'mock'
+      ? path.join(root, 'tests/fixtures/docs-en')
+      : path.join(root, 'i18n/en/docs');
   async function docs(directory: string) {
     for (const entry of await readdir(directory, { withFileTypes: true })) {
       const file = path.join(directory, entry.name);
@@ -75,20 +85,9 @@ export async function prepareTranslations(root: string) {
       if (!entry.name.endsWith('.md')) continue;
       const source = markdown(await readFile(file, 'utf8'));
       const relative = path.relative(docsOutput, file);
-      const translated = await translation(
-        root,
-        'docs',
-        source.meta.slug === '/' ? 'index.md' : relative,
-      );
+      const translated = await translationAt(docsTranslations, relative);
       if (!translated) continue;
-      // Fixtures use overview.md; published content uses index.md.
-      const overview = (await readdir(docsOutput)).includes('overview.md')
-        ? 'overview.md'
-        : 'index.md';
-      const body = preserveHeadingIds(source.body, translated.body).replaceAll(
-        '](index.md)',
-        `](${overview})`,
-      );
+      const body = preserveHeadingIds(source.body, translated.body);
       await writeFile(
         file,
         `---\n${stringify({ ...source.meta, title: translated.meta.title ?? source.meta.title, description: translated.meta.description ?? source.meta.description })}---\n${body}`,

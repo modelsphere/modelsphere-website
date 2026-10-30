@@ -1,32 +1,40 @@
 import { test, expect } from '@playwright/test';
 const mock = process.env.TEST_DOCS_MODE !== 'none';
+const content = process.env.TEST_DOCS_MODE === 'content';
+const homeTitle = content ? '使用文档' : '认识 ModelSphere';
+const quickstartTitle = content ? '快速开始' : '快速开始（示例）';
+const tocAnchor = content ? '登录' : '配置示例';
+const copiedSnippet = content ? '模型库选模型' : 'exampleOnly: true';
 if (mock) {
-  test('two docs, native navigation, anchors and direct refresh', async ({
+  test('documentation home, chapter navigation, anchors and direct refresh', async ({
     page,
   }) => {
     await page.goto('/docs');
     await expect(
-      page.getByRole('heading', { name: '认识 ModelSphere', exact: true }),
+      page.getByRole('heading', { name: homeTitle, exact: true }),
     ).toHaveCount(1);
     await page.getByRole('link', { name: /下一页.*快速开始/ }).click();
     await expect(page).toHaveURL(/\/docs\/quickstart$/);
     await page.reload();
     await expect(
-      page.getByRole('heading', { name: '快速开始（示例）', exact: true }),
+      page.getByRole('heading', { name: quickstartTitle, exact: true }),
     ).toBeVisible();
-    await page.locator('.docs-toc a').filter({ hasText: '配置示例' }).click();
+    await page.locator('.docs-toc a').filter({ hasText: tocAnchor }).click();
     await expect(page).toHaveURL(/#/);
     await expect(
-      page.getByRole('heading', { name: /^配置示例/, level: 2 }),
+      page.getByRole('heading', {
+        name: new RegExp(`^${tocAnchor}`),
+        level: 2,
+      }),
     ).toBeInViewport();
-    const headingBox = await page.locator('h2#配置示例').boundingBox();
+    const headingBox = await page.locator(`h2#${tocAnchor}`).boundingBox();
     const headerBox = await page.locator('.site-header').boundingBox();
     expect(headingBox!.y).toBeGreaterThanOrEqual(
       headerBox!.y + headerBox!.height,
     );
     await page.goBack();
     await expect(
-      page.getByRole('heading', { name: '快速开始（示例）', exact: true }),
+      page.getByRole('heading', { name: quickstartTitle, exact: true }),
     ).toBeVisible();
   });
   test('clipboard success and failure both give finite feedback', async ({
@@ -45,7 +53,7 @@ if (mock) {
     await copyButton.click();
     await expect(page.getByRole('status')).toHaveText('代码已复制');
     expect(await page.evaluate(() => navigator.clipboard.readText())).toContain(
-      'exampleOnly: true',
+      copiedSnippet,
     );
     await expect(page.getByRole('status')).toBeEmpty({ timeout: 4000 });
     await page.evaluate(() =>
@@ -118,7 +126,7 @@ if (mock) {
         '.markdown p, .markdown li, .markdown td, .markdown th { font-size: 200%; line-height: 1.6; }',
     });
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      '快速开始（示例）',
+      quickstartTitle,
     );
     expect(
       await page.evaluate(
@@ -134,7 +142,7 @@ if (mock) {
     await expect(
       page
         .getByRole('navigation', { name: '移动文档导航' })
-        .getByRole('link', { name: '认识 ModelSphere' }),
+        .getByRole('link', { name: homeTitle }),
     ).toBeFocused();
   });
   test('no-script documents and native collapsible navigation remain readable', async ({
@@ -149,7 +157,7 @@ if (mock) {
     const page = await context.newPage();
     await page.goto(`${baseURL}/docs/quickstart`);
     await expect(
-      page.getByRole('heading', { name: '快速开始（示例）', exact: true }),
+      page.getByRole('heading', { name: quickstartTitle, exact: true }),
     ).toBeVisible();
     await page.locator('.docs-mobile-nav summary').click();
     await expect(

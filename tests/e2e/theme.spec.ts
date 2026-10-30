@@ -1,8 +1,14 @@
 import { test, expect } from '@playwright/test';
+const docsHomeTitle =
+  process.env.TEST_DOCS_MODE === 'none'
+    ? '文档准备中'
+    : process.env.TEST_DOCS_MODE === 'content'
+      ? '使用文档'
+      : '认识 ModelSphere';
 test.beforeEach(async ({ page }) => {
   await page.goto('docs');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    process.env.TEST_DOCS_MODE === 'none' ? '文档准备中' : '认识 ModelSphere',
+    docsHomeTitle,
   );
 });
 test('first visit follows system; icon toggle persists a manual choice', async ({

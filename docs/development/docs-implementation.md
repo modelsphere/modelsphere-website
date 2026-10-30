@@ -2,7 +2,7 @@
 
 | 属性 | 内容 |
 | --- | --- |
-| 更新日期 | 2026-10-28 |
+| 更新日期 | 2026-10-30 |
 | 正式文档源 | 网站仓库 `content/docs/` |
 | 公开栏目 | `/docs`，GitHub Pages 部署时自动添加项目路径 |
 | 文档框架 | Docusaurus，复用侧栏、正文、目录、代码复制、主题与搜索 |
@@ -16,18 +16,21 @@ modelsphere-website/
 ├── content/docs/                 正式网站文档源
 │   ├── index.md                  文档首页，slug: /
 │   ├── quickstart.md             快速开始，slug: /quickstart
-│   ├── images/                   本地图片或共享图片资源
-│   ├── deployment/
-│   │   └── kubernetes.md          部署说明，slug: /deployment/kubernetes
-│   └── guides/
-│       └── model-serving.md      使用指南，slug: /guides/model-serving
+│   ├── deploy.md                 部署模型，slug: /deploy
+│   ├── playground.md             Playground，slug: /playground
+│   ├── api.md                    调用 API，slug: /api
+│   ├── access-control.md         访问控制，slug: /access-control
+│   ├── faq.md                    常见问题，slug: /faq
+│   └── images/                   本地图片或共享图片资源
+├── i18n/en/docs/                 英文译文，按 content/docs 的相对路径对应
 ├── tests/fixtures/docs/          固定的两篇测试示例
+├── tests/fixtures/docs-en/       固定测试示例的英文译文，只用于 mock 构建
 ├── docs/design/                  内部设计规范，不发布
 ├── docs/development/             内部开发规范，不发布
 └── .generated/docs/              构建暂存，不提交、不手工编辑
 ```
 
-树中的子目录文件是组织方式示例，并非已提供的产品指南。当前正式目录保留两篇既有阅读示例及其正文说明，尚未补充真实部署指南；切换目录不代表示例配置经过产品或生产验证。测试 fixture 独立保留，日常文档维护不修改它。
+当前正式目录发布 Console 使用文档 7 篇：文档首页与快速开始、部署模型、Playground、调用 API、访问控制、常见问题。内容来自 console 仓库随版本发布的使用文档（`web/src/modules/docs/content/`），迁移时只做站点格式和链接适配，不在本站另写一套操作说明；Console 文档里的界面位置在网站中以纯文本路径呈现，文档之间使用站内相对链接。测试 fixture 独立保留，日常文档维护不修改它。Mock 构建的英文译文与正式内容分开：`prepareTranslations` 在 mock 来源下读取 `tests/fixtures/docs-en/`，固定示例不依赖 `content/docs/` 与 `i18n/en/docs/` 的变化；正式构建按生成目录的相对路径读取 `i18n/en/docs/`。
 
 ## 2 新增文档格式
 
