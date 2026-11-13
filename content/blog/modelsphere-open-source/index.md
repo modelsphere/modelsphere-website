@@ -5,7 +5,7 @@ summary: 模域 ModelSphere 开源了面向生产环境的大模型推理平台�
 kind: internal
 slug: modelsphere-open-source
 publishedAt: 2026-11-04
-updatedAt: 2026-11-05T10:54:24+08:00
+updatedAt: '2026-11-13T15:51:00+08:00'
 evidenceIds: []
 categoryId: release
 tagIds:
