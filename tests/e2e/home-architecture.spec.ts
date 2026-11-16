@@ -27,9 +27,9 @@ for (const width of [390, 1440]) {
               'Model deployment & tuning',
               'Cache-aware request routing',
               'Dynamic rate limiting',
-              'Prefill/Decode separation',
+              'PD disaggregation',
               'Three-tier KV cache',
-              'Quality-based autoscaling',
+              'QoS-based autoscaling',
               'Automatic stream resumption',
               'Tuning Agent optimization',
             ]

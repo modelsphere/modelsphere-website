@@ -354,7 +354,7 @@
     "description": "先进推理服务架构"
   },
   "site.edd7e7d90181": {
-    "message": "High-performance deployment from day one",
+    "message": "Day-0 high-performance deployment",
     "description": "新模型首日高性能部署"
   },
   "site.7d8e6b772d8d": {
@@ -1986,7 +1986,7 @@
     "description": "停机重启更新参数"
   },
   "site.138b5fd6020a": {
-    "message": "Automatically validate the best configuration and hot-load it in production without downtime",
+    "message": "Automatically validate the best configuration and hot-reload it in production without downtime",
     "description": "冠军方案自动验证，生产环境零停机热加载"
   },
   "site.15f0b92fe41e": {
@@ -2142,7 +2142,7 @@
     "description": "\n        准备好让你的大模型推理集群提速了吗？\n      "
   },
   "site.69b036360050": {
-    "message": "Explore the open source code and build the next generation of inference infrastructure with AI engineers.",
+    "message": "Explore the open source code and build the next generation of inference infrastructure with leading AI infrastructure engineers.",
     "description": "全套源码完全开源，加入顶尖 AI Infra 工程师共建的下一代推理基础设施。\n      "
   },
   "site.432ef28ba8ed": {
@@ -2551,11 +2551,11 @@
     "description": "全部厂商"
   },
   "catalog.hardwareFilter": {
-    "message": "Hardware models",
+    "message": "Hardware",
     "description": "硬件型号"
   },
   "catalog.hardwareModel": {
-    "message": "Model",
+    "message": "Hardware",
     "description": "型号"
   },
   "英伟达 NVIDIA": {
@@ -2605,7 +2605,7 @@
     "description": "动态限流"
   },
   "home.architecture.pd": {
-    "message": "Prefill/Decode separation",
+    "message": "PD disaggregation",
     "description": "PD 分离部署"
   },
   "home.architecture.cache": {
@@ -2613,7 +2613,7 @@
     "description": "三级 KV 缓存"
   },
   "home.architecture.scaling": {
-    "message": "Quality-based autoscaling",
+    "message": "QoS-based autoscaling",
     "description": "基于服务质量的自动扩缩容"
   },
   "home.architecture.continuation": {
@@ -2629,7 +2629,7 @@
     "description": "华为昇腾"
   },
   "home.architecture.iluvatar": {
-    "message": "Iluvatar",
+    "message": "Iluvatar CoreX",
     "description": "天数智芯"
   },
   "home.architecture.moore": {
@@ -2745,7 +2745,7 @@
     "description": "触发熔断"
   },
   "home.continuation.interruption": {
-    "message": "Hardware interruption",
+    "message": "Hardware failure",
     "description": "硬件中断"
   },
   "home.continuation.machineB": {
