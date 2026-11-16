@@ -528,12 +528,6 @@ function DynamicRateLimiting() {
                     message: '更低运维成本',
                   })}
                 </h3>
-                <span className={styles.detailPill}>
-                  {translate({
-                    id: 'home.qos.operationsPill',
-                    message: '零人工打标',
-                  })}
-                </span>
               </div>
               <p>
                 {translate({

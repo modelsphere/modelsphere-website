@@ -69,7 +69,7 @@
       ]
     },
     "autotune-evolution": {
-      "text": "CORE MECHANISM 03 · CONTINUOUS SELF-EVOLUTION Tuning Agent 性能持续优化 告别繁冗的人工基准盲测。ModelSphere 将线上真实请求、低谷空闲算力、网格化超参搜索与零停机灰度上线串联成全自动化演进飞轮。 演进范式跃迁 从“人工盲测”跨越到“自主演进” 用空闲算力持续榨干硬件潜能，让 LLM 推理服务越用越快。 采样更准 静态数据集测试 → 7 天滑动窗口真实流量特征蓄水 成本更低 占用生产资源压测 → 夜间低峰期闲置算力并发网格搜索 交付更稳 停机重启更新参数 → 冠军方案自动验证，生产环境零停机热加载 1 线上推理服务 稳定运行 稳定运行，持续提供高质量低时延高可用服务 NODE-01 NODE-02 NODE-03 5 自动化上线 生产灰度 最优配置自动部署，零丢流热加载 Config Push 100% Rolling Deploy 持续性能优化闭环 TUNING AGENT 2 收集流量数据 特征蓄水 构建滑动窗口数据集与前缀拓扑 Window 7 Days Prompt Profiler 4 产出并验证配置 真实负载 基于真实负载比选出冠军推理方案 ★ +48.6% SLO P99<200ms 3 利用空闲算力调优 低峰搜索 夜间低峰期并发搜索更优推理超参 02:00~06:00 Night Tuning Chunk/TP 18 Sets",
+      "text": "CORE MECHANISM 03 · CONTINUOUS SELF-EVOLUTION Tuning Agent 性能持续优化 告别繁冗的人工基准盲测。ModelSphere 将线上真实请求、低谷空闲算力、网格化超参搜索与零停机灰度上线串联成全自动化演进飞轮。 演进范式跃迁 从“人工盲测”跨越到“自主演进” 用空闲算力持续榨干硬件潜能，让 LLM 推理服务越用越快。 采样更准 静态数据集测试 → 7 天滑动窗口真实流量特征蓄水 成本更低 占用生产资源压测 → 夜间低峰期闲置算力并发网格搜索 交付更稳 停机重启更新参数 → 冠军方案自动验证，生产环境零停机热加载 1 线上推理服务 稳定运行 稳定运行，持续提供高质量低时延高可用服务 NODE-01 NODE-02 NODE-03 5 自动化上线 生产灰度 最优配置自动部署，零丢流热加载 Config Push 100% Rolling Deploy 持续性能优化闭环 TUNING AGENT 2 收集流量数据 特征蓄水 构建滑动窗口数据集与流量压力模式 Window 7 Days Prompt Profiler 4 产出并验证配置 真实负载 基于真实负载比选出冠军推理方案 ★ +48.6% SLO P99<200ms 3 利用空闲算力调优 低峰搜索 夜间低峰期并发搜索更优推理超参 02:00~06:00 Night Tuning Chunk/TP 18 Sets",
       "height": 680,
       "headings": [
         {

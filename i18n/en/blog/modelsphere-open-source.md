@@ -1,13 +1,18 @@
 ---
 title: 'From “it runs” to “production-ready”: ModelSphere open-sources its production-grade inference infrastructure'
 summary: 'ModelSphere has open-sourced its platform for production LLM inference, bringing model deployment, heterogeneous compute management, autoscaling, and automated tuning together to help teams reduce setup and operational work, launch services faster, and keep them running reliably.'
+cover:
+  src: architecture.en.png
+  alt: 'ModelSphere architecture: applications connect through ModelSphere capabilities and integrated inference engines to heterogeneous AI accelerators'
+  width: 3642
+  height: 1310
 ---
 
 In a demo environment, one accelerator, one engine, and one curl command are often enough. Once traffic enters production, the checklist changes: heterogeneous chips need support, Kubernetes needs setup, routing, rate limiting, and scaling need integration, and generation must continue even when a node fails. Many teams get stuck here—the model can answer, but keeping the service reliably on duty is difficult.
 
 vLLM and SGLang have already pushed single-machine throughput a long way forward. But production needs more than a faster engine: it needs the whole fleet to run reliably and economically during peaks. What really consumes people's time is often the scheduling and governance layer outside the engine.
 
-That is why ModelSphere is open-sourcing its platform. It is an open-source platform for production-grade large-model inference. Built on Kubernetes, it brings model deployment, cache-aware routing, SLO-based elastic scaling, observability, interrupted-stream recovery, and a Tuning Agent that keeps looking for better configurations against real workloads into one production-ready inference scheduling system.
+That is why ModelSphere is open-sourcing its platform. It is an open-source platform for production-grade LLM inference. Built on Kubernetes, it brings model deployment, cache-aware routing, SLO-based elastic scaling, observability, Seamless In-Flight Generation Recovery, and a Tuning Agent that keeps looking for better configurations against real workloads into one production-ready inference scheduling system.
 
 ## Who we are
 
@@ -15,7 +20,7 @@ ModelSphere wants to help enterprises and developers build less from scratch and
 
 It does not aim to replace vLLM or SGLang—the inference engine continues to make each instance compute efficiently; ModelSphere makes it manageable and scalable across the cluster, and able to reconnect when something fails.
 
-![ZeQnjrln.webp](repository.webp)
+![The ModelSphere repository on GitHub](repository.webp)
 
 ModelSphere GitHub address:
 
@@ -33,11 +38,11 @@ ModelSphere turns these manual operations into automated capabilities:
 
 - From “single-instance optimization” to “cluster coordination”: conventional inference engines address single-node computational efficiency; ModelSphere manages multi-node clusters, using request routing and elastic scaling to ensure business availability under high concurrency.
 
-- From “difficult adaptation” to “unified management”: when inference engines are used in isolation, chip-driver adaptation requires manual work; ModelSphere natively supports heterogeneous compute including Ascend, Iluvatar, Hygon DCU, and Moore Threads, pooling resources and scheduling them centrally so a heterogeneous K8s cluster can be managed like a single resource.
+- From “difficult adaptation” to “unified management”: when inference engines are used in isolation, chip-driver adaptation requires manual work; ModelSphere natively supports heterogeneous compute including Ascend, Iluvatar CoreX, Hygon DCU, and Moore Threads, pooling resources and scheduling them centrally so a heterogeneous K8s cluster can be managed like a single resource.
 
 In one sentence: vLLM and SGLang make a single machine run fast; ModelSphere makes the whole inference cluster run reliably, cost less to manage, and reach production faster.
 
-![image.png](architecture.png)
+![ModelSphere architecture: applications connect through ModelSphere capabilities and integrated inference engines to heterogeneous AI accelerators](architecture.en.png)
 
 ### **One platform, greater efficiency for AI teams in multiple dimensions**
 
@@ -59,19 +64,19 @@ With ModelSphere, developers can leave behind hundreds of lines of cumbersome en
 make helm-apply ENV=mycluster
 ```
 
-ModelSphere natively includes enterprise operational capabilities such as automatic elastic scaling, PD-disaggregated deployment, a three-tier KV cache architecture, service-quality-based dynamic rate limiting, and automatic recovery of interrupted streams, ensuring exceptional efficiency and stability for inference services in demanding enterprise environments.
+ModelSphere natively includes enterprise operational capabilities such as automatic elastic scaling, PD-disaggregated deployment, a three-tier KV cache architecture, service-quality-based dynamic rate limiting, and in-flight generation recovery, ensuring exceptional efficiency and stability for inference services in demanding enterprise environments.
 
 The platform also provides an intuitive, clean graphical control panel, making the management of large, complex heterogeneous K8s clusters as straightforward as ordering takeout.
 
-![LPB6EcgQ.webp](console.webp)
+![The Model Library page in the ModelSphere Console](console.en.jpg)
 
 ### **| Continuous automated tuning, multiplying performance**
 
 ModelSphere has continuously evolving low-level performance optimization capabilities. Users can turn low-level optimizations directly into lower inference costs and a more stable production service experience without writing complex tuning code.
 
-Through its built-in AutoTune intelligent model scheduling strategy and hardware-accelerated, adaptive load-balancing scheduling, ModelSphere can deliver several-fold improvements in maximum throughput (Tokens/sec) and time to first response, making full use of every bit of compute and greatly reducing inference cost per token.
+Through its built-in AutoTune intelligent model scheduling strategy and hardware-accelerated, adaptive load-balancing scheduling, ModelSphere can deliver several-fold improvements in maximum throughput (Tokens/sec) and time to first token (TTFT), making full use of every bit of compute and greatly reducing inference cost per token.
 
-![q4TA6pHQ.webp](throughput.webp)
+![Normalized throughput of the baseline and optimized Kimi K3 configurations on 8 × B300 for the Agent long-context and long-document QA workloads](throughput.en.png)
 
 Taking B300 + Kimi K3 (mixed precision) as an example, the experiment compared baseline and optimized configurations under SLO constraints of TTFT p50 ≤ 8,000 ms and per-request generation speed ≥ 15 tok/s. Throughput normalized to eight accelerators was: (1) Agent long-context scenario: from 7,850 tok/s to 12,368 tok/s, an improvement of 57.6%; (2) Document QA scenario: from 8,394 tok/s to 10,189 tok/s, an improvement of 21.4%.
 
@@ -81,15 +86,15 @@ This means that for real production workloads such as Agent long-context tasks a
 
 The platform deeply integrates the powerful EngineX inference engine, providing native support and in-depth optimization for a variety of heterogeneous accelerators on the market.
 
-Whether Huawei Ascend, Iluvatar, Moore Threads, or Hygon DCU, these domestic compute chips can be managed together and scheduled across ModelSphere. Users do not need to rewrite a single line of low-level logic for different chips, giving enterprises “compute freedom” and supply-chain security.
+Whether Huawei Ascend, Iluvatar CoreX, Moore Threads, or Hygon DCU, these heterogeneous AI chips can be managed together and scheduled across ModelSphere. Users do not need to rewrite a single line of low-level logic for different chips, giving enterprises “compute freedom” and supply-chain security.
 
-### **| Rapid integration and optimization of mainstream large models with “zero delay”**
+### **| Day-0 integration and optimization of mainstream LLMs**
 
-Keeping pace with leading global open-source communities, the ModelSphere team can complete low-level adaptation and performance tuning for the latest mainstream large models as soon as they become available.
+Keeping pace with leading global open-source communities, the ModelSphere team can complete low-level adaptation and performance tuning for the latest mainstream LLMs as soon as they become available.
 
 The platform is already perfectly adapted by default to popular foundation models including DeepSeek-V4/V4-Flash, Qwen, Kimi, MiniMax, and GLM. Once a model is released, it can go straight into production: “take what you need and deploy immediately.”
 
-![BlG63S9T.gif](model-deployment.gif)
+![Browsing deployment recipes in the ModelSphere model catalog](model-deployment.gif)
 
 ## Join us
 

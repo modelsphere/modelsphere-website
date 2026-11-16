@@ -299,6 +299,29 @@ async function validateMedia(directory: string, value: BlogMedia) {
   ])
     if (src) await localImage(directory, src);
 }
+/**
+ * English translations may reference their own images and declare their own
+ * cover. Those files live next to the source article and are validated and
+ * staged here, before the blog manifest is written.
+ */
+async function englishTranslation(root: string, id: string) {
+  let raw: string;
+  try {
+    raw = await readFile(path.join(root, 'i18n/en/blog', `${id}.md`), 'utf8');
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined;
+    throw error;
+  }
+  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)([\s\S]*)$/.exec(raw);
+  if (!match) throw new Error(`英文译文缺少 YAML 元数据：${id}`);
+  const yaml = parseDocument(match[1], { uniqueKeys: true });
+  if (yaml.errors.length) throw new Error(yaml.errors[0].message);
+  const meta = yaml.toJS({ maxAliasCount: 0 }) as Record<string, unknown>;
+  return {
+    images: inspectMarkdown(match[2]).images,
+    cover: meta.cover === undefined ? undefined : media.parse(meta.cover),
+  };
+}
 interface PreparedArticle {
   meta: z.infer<typeof articleSchema>;
   body: string;
@@ -506,6 +529,10 @@ export async function prepareBlog(
   const posts: BlogPost[] = [];
   for (const article of articles) {
     const { meta, body, directory, inspection } = article;
+    const english =
+      meta.kind === 'internal'
+        ? await englishTranslation(root, meta.id)
+        : undefined;
     const post: BlogPost = {
       id: meta.id,
       title: meta.title,
@@ -525,6 +552,11 @@ export async function prepareBlog(
       cover: meta.cover
         ? await stageMedia(directory, meta.id, meta.cover)
         : undefined,
+      ...(english?.cover && {
+        translatedCovers: {
+          en: await stageMedia(directory, meta.id, english.cover),
+        },
+      }),
     };
     posts.push(post);
     if (meta.kind === 'external') continue;
@@ -534,7 +566,10 @@ export async function prepareBlog(
       path.join(target, 'index.md'),
       `---\n${stringify({ title: meta.title, description: meta.summary, slug: meta.slug, date: meta.publishedAt })}---\n${body}`,
     );
-    for (const src of new Set(inspection.images)) {
+    for (const src of new Set([
+      ...inspection.images,
+      ...(english?.images ?? []),
+    ])) {
       const relative = await localImage(directory, src);
       await mkdir(path.dirname(path.join(target, relative)), {
         recursive: true,

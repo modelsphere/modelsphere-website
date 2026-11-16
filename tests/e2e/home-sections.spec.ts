@@ -469,7 +469,7 @@ test('QoS matches the design spacing, arrow shape, title alignment and chart pos
   for (const removed of ['计算复杂度 ×50', '+34.8% 吞吐提升', 'P99 抖动 < 8%'])
     await expect(section).not.toContainText(removed);
   await expect(section).toContainText('时变动态拓扑');
-  await expect(section).toContainText('零人工打标');
+  await expect(section).not.toContainText('零人工打标');
   const challenge = section.locator(
     '[data-qos-card="challenge"] [data-qos-card-header]',
   );
