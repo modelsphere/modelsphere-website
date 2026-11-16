@@ -27,7 +27,7 @@ The GLM-5.3-Flash deployment shows how ModelSphere captures hardware-specific op
 
 The test used **eight of Ascend's latest 950DT chips** and served the quantized model with vLLM-Ascend. The baseline recipe uses TP8 and DP1; the optimized recipe switches to TP2 and DP4 and runs the model with expert parallelism. Beyond the parallelism changes, we also enabled FlashComm1 sequence parallelism and the Ascend NPU graph and kernel compilation optimizations. These changes aim to make computation and communication during inference more efficient on this hardware. As the chart below shows, **while meeting the SLO, the tuned GLM-5.3-Flash achieves up to 53.5% higher throughput on Ascend 950** ([see the full report](https://modelsphere.tech/en/models/recipe?modelId=glm-5.3-flash&recipeId=vllm-dp4-tp2-950dt-optimized&dataVersion=9666e210408d123249852e2d9744bd6f16620cef&returnTo=%2Fmodels%3Fvendor%3Dascend%26hardware%3DAscend-910B4%26hardware%3DAscend-950DT&tab=performance)).
 
-![Normalized throughput of the baseline and optimized GLM-5.3-Flash recipes on 8 × Ascend 950DT, each at its best concurrency within the SLO](glm53.png)
+![Normalized throughput of the baseline and optimized GLM-5.3-Flash recipes on 8 × Ascend 950DT, each at its best concurrency within the SLO](glm53.en.png)
 
 ### Changing the parallelism strategy so multiple accelerators handle concurrent requests better
 

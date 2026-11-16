@@ -25,7 +25,7 @@ Inside the gateway, a request is split into at most two "legs":
 
 - **leg2**: the continuation request the gateway sends on its own when leg1 ends before the answer is finished. Its output is rewritten and appended after what leg1 has already forwarded.
 
-![Flow of in-flight generation recovery: leg1 forwards the original request through continuation_gateway and the downstream routing gateway to an inference instance; when it stalls or drops, leg2 sends a continuation request with the prefix and its output is appended after leg1](overview.jpg)
+![Flow of in-flight generation recovery: leg1 forwards the original request through continuation_gateway and the downstream routing gateway to an inference instance; when it stalls or drops, leg2 sends a continuation request with the prefix and its output is appended after leg1](overview.en.png)
 
 Note: **the service is stateful within a request and stateless across requests**. Continuation has to remember what has been forwarded, parse SSE semantics, send extra requests and rewrite usage in place, so it cannot be a transparent byte forwarder. But all state lives in the coroutine of a single request and nothing is shared between replicas, so the gateway scales horizontally and needs no sticky sessions.
 

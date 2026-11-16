@@ -9,7 +9,7 @@ This is an **example blog post** for checking featured articles, tables of conte
 
 In a hypothetical inference service, a request passes through ingress, routing, and an engine. When reading an architecture, first list the inputs, outputs, and failure paths of each layer.
 
-![Illustrative request and service layers](@site/content/blog/example-blog-platform/cover.png)
+![Illustrative request and service layers](cover.png)
 
 ## Define component responsibilities
 

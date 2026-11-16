@@ -1,6 +1,11 @@
 ---
 title: 'From “it runs” to “production-ready”: ModelSphere open-sources its production-grade inference infrastructure'
 summary: 'ModelSphere has open-sourced its platform for production LLM inference, bringing model deployment, heterogeneous compute management, autoscaling, and automated tuning together to help teams reduce setup and operational work, launch services faster, and keep them running reliably.'
+cover:
+  src: architecture.en.png
+  alt: 'ModelSphere architecture: applications connect through ModelSphere capabilities and integrated inference engines to heterogeneous AI accelerators'
+  width: 3642
+  height: 1310
 ---
 
 In a demo environment, one accelerator, one engine, and one curl command are often enough. Once traffic enters production, the checklist changes: heterogeneous chips need support, Kubernetes needs setup, routing, rate limiting, and scaling need integration, and generation must continue even when a node fails. Many teams get stuck here—the model can answer, but keeping the service reliably on duty is difficult.
@@ -15,7 +20,7 @@ ModelSphere wants to help enterprises and developers build less from scratch and
 
 It does not aim to replace vLLM or SGLang—the inference engine continues to make each instance compute efficiently; ModelSphere makes it manageable and scalable across the cluster, and able to reconnect when something fails.
 
-![ZeQnjrln.webp](repository.webp)
+![The ModelSphere repository on GitHub](repository.webp)
 
 ModelSphere GitHub address:
 
@@ -37,7 +42,7 @@ ModelSphere turns these manual operations into automated capabilities:
 
 In one sentence: vLLM and SGLang make a single machine run fast; ModelSphere makes the whole inference cluster run reliably, cost less to manage, and reach production faster.
 
-![image.png](architecture.png)
+![ModelSphere architecture: applications connect through ModelSphere capabilities and integrated inference engines to heterogeneous AI accelerators](architecture.en.png)
 
 ### **One platform, greater efficiency for AI teams in multiple dimensions**
 
@@ -63,7 +68,7 @@ ModelSphere natively includes enterprise operational capabilities such as automa
 
 The platform also provides an intuitive, clean graphical control panel, making the management of large, complex heterogeneous K8s clusters as straightforward as ordering takeout.
 
-![LPB6EcgQ.webp](console.webp)
+![The Model Library page in the ModelSphere Console](console.en.jpg)
 
 ### **| Continuous automated tuning, multiplying performance**
 
@@ -71,7 +76,7 @@ ModelSphere has continuously evolving low-level performance optimization capabil
 
 Through its built-in AutoTune intelligent model scheduling strategy and hardware-accelerated, adaptive load-balancing scheduling, ModelSphere can deliver several-fold improvements in maximum throughput (Tokens/sec) and time to first token (TTFT), making full use of every bit of compute and greatly reducing inference cost per token.
 
-![q4TA6pHQ.webp](throughput.webp)
+![Normalized throughput of the baseline and optimized Kimi K3 configurations on 8 × B300 for the Agent long-context and long-document QA workloads](throughput.en.png)
 
 Taking B300 + Kimi K3 (mixed precision) as an example, the experiment compared baseline and optimized configurations under SLO constraints of TTFT p50 ≤ 8,000 ms and per-request generation speed ≥ 15 tok/s. Throughput normalized to eight accelerators was: (1) Agent long-context scenario: from 7,850 tok/s to 12,368 tok/s, an improvement of 57.6%; (2) Document QA scenario: from 8,394 tok/s to 10,189 tok/s, an improvement of 21.4%.
 
@@ -89,7 +94,7 @@ Keeping pace with leading global open-source communities, the ModelSphere team c
 
 The platform is already perfectly adapted by default to popular foundation models including DeepSeek-V4/V4-Flash, Qwen, Kimi, MiniMax, and GLM. Once a model is released, it can go straight into production: “take what you need and deploy immediately.”
 
-![BlG63S9T.gif](model-deployment.gif)
+![Browsing deployment recipes in the ModelSphere model catalog](model-deployment.gif)
 
 ## Join us
 
