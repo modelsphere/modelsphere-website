@@ -53,12 +53,12 @@ LLM inference runs a large number of operators. Besides the computation in each 
 
 For how these techniques work, see the [vLLM-Ascend graph mode documentation](https://docs.vllm.ai/projects/ascend/en/v0.30.0/user_guide/feature_guide/graph_mode.html). This test compares the whole configuration against the baseline, so the gain cannot be attributed to any single optimization.
 
-| Item                  | Configuration or result                                                                         |
-| --------------------- | ----------------------------------------------------------------------------------------------- |
-| Hardware              | 8 × Ascend 950DT                                                                                |
-| Inference engine      | vLLM-Ascend                                                                                     |
-| Baseline recipe       | TP8, DP1                                                                                        |
-| Optimized recipe      | TP2, DP4, with communication and compilation optimizations                                      |
+| Item                  | Configuration or result                                                                          |
+| --------------------- | ------------------------------------------------------------------------------------------------ |
+| Hardware              | 8 × Ascend 950DT                                                                                 |
+| Inference engine      | vLLM-Ascend                                                                                      |
+| Baseline recipe       | TP8, DP1                                                                                         |
+| Optimized recipe      | TP2, DP4, with communication and compilation optimizations                                       |
 | Workloads and results | 50k input, 1.5k output: **53.5%** higher total throughput; 8k input, 1k output: **11.7%** higher |
 
 These results compare total throughput at the highest concurrency found by the test sweep, under the constraints that median time to first token does not exceed 20 seconds and per-request output speed is at least 5 tokens per second. Model quality has not been evaluated and the tests have not yet been repeated.
