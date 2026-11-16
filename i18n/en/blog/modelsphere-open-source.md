@@ -7,7 +7,7 @@ In a demo environment, one accelerator, one engine, and one curl command are oft
 
 vLLM and SGLang have already pushed single-machine throughput a long way forward. But production needs more than a faster engine: it needs the whole fleet to run reliably and economically during peaks. What really consumes people's time is often the scheduling and governance layer outside the engine.
 
-That is why ModelSphere is open-sourcing its platform. It is an open-source platform for production-grade LLM inference. Built on Kubernetes, it brings model deployment, cache-aware routing, SLO-based elastic scaling, observability, interrupted-stream recovery, and a Tuning Agent that keeps looking for better configurations against real workloads into one production-ready inference scheduling system.
+That is why ModelSphere is open-sourcing its platform. It is an open-source platform for production-grade LLM inference. Built on Kubernetes, it brings model deployment, cache-aware routing, SLO-based elastic scaling, observability, Seamless In-Flight Generation Recovery, and a Tuning Agent that keeps looking for better configurations against real workloads into one production-ready inference scheduling system.
 
 ## Who we are
 
@@ -59,7 +59,7 @@ With ModelSphere, developers can leave behind hundreds of lines of cumbersome en
 make helm-apply ENV=mycluster
 ```
 
-ModelSphere natively includes enterprise operational capabilities such as automatic elastic scaling, PD-disaggregated deployment, a three-tier KV cache architecture, service-quality-based dynamic rate limiting, and automatic recovery of interrupted streams, ensuring exceptional efficiency and stability for inference services in demanding enterprise environments.
+ModelSphere natively includes enterprise operational capabilities such as automatic elastic scaling, PD-disaggregated deployment, a three-tier KV cache architecture, service-quality-based dynamic rate limiting, and in-flight generation recovery, ensuring exceptional efficiency and stability for inference services in demanding enterprise environments.
 
 The platform also provides an intuitive, clean graphical control panel, making the management of large, complex heterogeneous K8s clusters as straightforward as ordering takeout.
 
@@ -81,7 +81,7 @@ This means that for real production workloads such as Agent long-context tasks a
 
 The platform deeply integrates the powerful EngineX inference engine, providing native support and in-depth optimization for a variety of heterogeneous accelerators on the market.
 
-Whether Huawei Ascend, Iluvatar CoreX, Moore Threads, or Hygon DCU, these domestic compute chips can be managed together and scheduled across ModelSphere. Users do not need to rewrite a single line of low-level logic for different chips, giving enterprises “compute freedom” and supply-chain security.
+Whether Huawei Ascend, Iluvatar CoreX, Moore Threads, or Hygon DCU, these heterogeneous AI chips can be managed together and scheduled across ModelSphere. Users do not need to rewrite a single line of low-level logic for different chips, giving enterprises “compute freedom” and supply-chain security.
 
 ### **| Day-0 integration and optimization of mainstream LLMs**
 

@@ -37,7 +37,7 @@
 <rect x="681" y="215" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
 <text x="892.5" y="255" font-size="22" text-anchor="middle" font-weight="600">SLO-based autoscaling</text>
 <rect x="1126" y="215" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
-<text x="1337.5" y="255" font-size="22" text-anchor="middle" font-weight="600">Automatic stream recovery</text>
+<text x="1337.5" y="255" font-size="22" text-anchor="middle" font-weight="600">In-flight generation recovery</text>
 <rect x="1571" y="215" width="423" height="65" rx="10" fill="#ebe1f7" stroke="#dfc9fa" stroke-width="2"/>
 <text x="1782.5" y="255" font-size="22" text-anchor="middle" font-weight="600">Continuous Tuning Agent</text>
 <path d="M236 305H1993" stroke="#e6edf5" stroke-width="2"/>

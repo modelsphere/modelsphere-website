@@ -390,7 +390,7 @@
     "description": "、全维可观测性、"
   },
   "site.93ef299c39a9": {
-    "message": "failover and response continuation",
+    "message": "failover with in-flight generation recovery",
     "description": "故障切换及断流续写"
   },
   "site.de1d5dd076fb": {
@@ -590,11 +590,11 @@
     "description": "范式智能 (PHANCY)"
   },
   "site.3cc070cc56f5": {
-    "message": "As a community co-founder, Phancy supports validation of production-grade heterogeneous clusters, contributes hardware and software compatibility data for domestic chips, expands enterprise deployment use cases, and helps define standards.",
+    "message": "As a community co-founder, Phancy supports validation of production-grade heterogeneous clusters, contributes hardware and software compatibility data for heterogeneous AI chips, expands enterprise deployment use cases, and helps define standards.",
     "description": "\n            作为社区联合发起方，负责提供工业级异构算力集群底座验证支持、海量信创芯片软硬件适配数据沉淀，以及企业级生产落地场景的持续拓展与规范制定。\n          "
   },
   "site.de57ac18e315": {
-    "message": "As a community co-founder, RiseUnion leads development of core inference middleware, Tuning Agent search algorithms, cloud-native Kubernetes inference operators, and intelligent routing gateways for high concurrency.",
+    "message": "As a community co-founder, RiseUnion leads development of core inference middleware, Tuning Agent search algorithms, cloud-native Kubernetes Operators for inference, and intelligent routing gateways for high concurrency.",
     "description": "\n            作为社区联合发起方，主导核心推理中间件研发、Tuning Agent 调优搜索算法、Kubernetes 云原生推理算子设计，以及面向极端并发的智能路由网关工程演进。\n          "
   },
   "site.85906b73debe": {
@@ -658,7 +658,7 @@
     "description": "GitHub 开源社区"
   },
   "site.d5eed28ffc8f": {
-    "message": "Star the repositories, report issues, contribute pull requests, or discuss the next generation of operators.",
+    "message": "Star the repositories, report issues, contribute pull requests, or discuss the roadmap in GitHub Discussions.",
     "description": "\n            Star 关注主干仓库，提交 Issue 报告环境问题，发起 PR 贡献代码或在 Discussions 规划下代算子。\n          "
   },
   "site.5581608eea5e": {
@@ -1814,7 +1814,7 @@
     "description": "代码已复制"
   },
   "site.0df458657238": {
-    "message": "Resumable LLM streaming",
+    "message": "Seamless In-Flight Generation Recovery",
     "description": "大模型推理断流续写"
   },
   "site.a52a481c1137": {
@@ -1822,7 +1822,7 @@
     "description": "按设计稿展示的机制、配置与性能示例，不代表运行时状态、实测证明或服务保证。"
   },
   "site.47c4307c4726": {
-    "message": "Resumable LLM streaming:",
+    "message": "Seamless In-Flight Generation Recovery:",
     "description": "大模型推理断流续写："
   },
   "site.51226c2de14d": {
@@ -2026,8 +2026,8 @@
     "description": "特征蓄水"
   },
   "site.48732aeaef82": {
-    "message": "Build sliding-window datasets and prefix topology",
-    "description": "构建滑动窗口数据集与前缀拓扑"
+    "message": "Build sliding-window datasets and traffic load patterns",
+    "description": "构建滑动窗口数据集与流量压力模式"
   },
   "site.3a8d95379980": {
     "message": "Generate and validate configurations",
@@ -2254,7 +2254,7 @@
     "description": "模域 ModelSphere 核心底座"
   },
   "site.dc956c11f710": {
-    "message": "Cache-aware request routing, QoS-based autoscaling, automatic stream recovery, and continuous performance tuning with Tuning Agent.",
+    "message": "Cache-aware request routing, QoS-based autoscaling, in-flight generation recovery, and continuous performance tuning with Tuning Agent.",
     "description": "请求缓存感知路由、基于服务质量的自动扩缩容、服务断流自动续写、Tuning Agent 性能持续调优"
   },
   "site.ab33ee65f2ee": {
@@ -2278,7 +2278,7 @@
     "description": "全栈分层调度协同流"
   },
   "site.0a4af1dd5219": {
-    "message": "ModelSphere connects applications through routing, rate limiting, PD disaggregation, KV caching, autoscaling, stream recovery, and Tuning Agent to vLLM, SGLang, and heterogeneous compute.",
+    "message": "ModelSphere connects applications through routing, rate limiting, PD disaggregation, KV caching, autoscaling, in-flight generation recovery, and Tuning Agent to vLLM, SGLang, and heterogeneous compute.",
     "description": "模域 ModelSphere 系统分层架构与算力调度拓扑：上层应用生态通过 ModelSphere 的路由、限流、PD 分离、KV 缓存、自动扩缩容、断流续写和 Tuning Agent，连接 vLLM、SGLang 等推理引擎与多元异构算力。"
   },
   "site.340bc68d8384": {
@@ -2444,7 +2444,7 @@
     "message": "Inference engineering"
   },
   "断流续写": {
-    "message": "Stream recovery"
+    "message": "In-flight generation recovery"
   },
   "可观测性": {
     "message": "Observability"
@@ -2617,7 +2617,7 @@
     "description": "基于服务质量的自动扩缩容"
   },
   "home.architecture.continuation": {
-    "message": "Automatic stream resumption",
+    "message": "In-flight generation recovery",
     "description": "服务断流自动续写"
   },
   "home.architecture.tuning": {
@@ -2785,7 +2785,7 @@
     "description": "集群级故障恢复"
   },
   "home.continuation.title": {
-    "message": "Stream resumption:",
+    "message": "Seamless In-Flight Generation Recovery:",
     "description": "断流续写："
   },
   "home.continuation.subtitle": {
@@ -2869,7 +2869,7 @@
     "description": "因此系统需要结合已有上下文，将请求转交健康节点并接续输出，降低硬件故障对业务的影响。"
   },
   "home.continuation.technology": {
-    "message": "Stream resumption technology",
+    "message": "In-flight generation recovery",
     "description": "断流续写技术"
   },
   "home.continuation.pipeline": {
@@ -3219,10 +3219,6 @@
   "home.qos.solutionNote": {
     "message": "An elastic concurrency ceiling that wastes no GPU cycles.",
     "description": "弹性水位线动态吸顶，不浪费任何一颗 GPU 周期。"
-  },
-  "home.qos.operationsPill": {
-    "message": "No manual labeling",
-    "description": "零人工打标"
   },
   "catalog.viewRecipe": {
     "message": "View recipe",

@@ -30,7 +30,7 @@ for (const width of [390, 1440]) {
               'PD disaggregation',
               'Three-tier KV cache',
               'QoS-based autoscaling',
-              'Automatic stream resumption',
+              'In-flight generation recovery',
               'Tuning Agent optimization',
             ]
           : [

@@ -604,7 +604,7 @@ export function AutotuneEvolution() {
                 <p className="font-body-sm text-[10px] text-slate-600 mb-1.5 leading-tight">
                   {translate({
                     id: 'site.48732aeaef82',
-                    message: '构建滑动窗口数据集与前缀拓扑',
+                    message: '构建滑动窗口数据集与流量压力模式',
                   })}
                 </p>
                 <div className="rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center gap-1.5 shadow-inner">
