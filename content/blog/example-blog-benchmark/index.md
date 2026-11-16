@@ -8,7 +8,6 @@ publishedAt: 2026-10-16
 updatedAt: 2026-10-22T10:00:00+08:00
 example: true
 evidenceIds: []
-author: 示例作者
 categoryId: performance
 tagIds:
   - benchmarks

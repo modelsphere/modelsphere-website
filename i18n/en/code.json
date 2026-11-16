@@ -1022,8 +1022,8 @@
     "description": "搜索文章"
   },
   "site.7fc5b6f873c7": {
-    "message": "Title, author, technical keyword, or PR number",
-    "description": "标题、作者、技术关键词或 PR 编号"
+    "message": "Title, technical keyword, or PR number",
+    "description": "标题、技术关键词或 PR 编号"
   },
   "site.44ce7ae909bb": {
     "message": "Search",

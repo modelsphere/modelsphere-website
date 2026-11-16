@@ -16,7 +16,6 @@ technicalKeywords:
   - GLM-5.3-Flash
   - 950DT
   - MoE
-author: 罗平益
 ---
 
 ## 昇腾部署方案现已收录
