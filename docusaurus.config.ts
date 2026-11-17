@@ -3,6 +3,7 @@ import type { ThemeConfig } from '@docusaurus/preset-classic';
 import { resolveBuildMode } from './src/lib/build-mode';
 import { assertPrepared } from './src/lib/prepared-input';
 import { assertPreparedBlog } from './src/lib/prepared-blog';
+import { localeRedirectScript } from './src/lib/locale';
 import { mkdir } from 'node:fs/promises';
 import { readDocumentation } from './scripts/check-docs';
 import remarkFollowCard from './plugins/blog/remark-follow-card';
@@ -114,6 +115,16 @@ export default async function config(): Promise<Config> {
       ],
     ],
     headTags: [
+      // Chinese is the default build; send English readers on before paint.
+      ...(english
+        ? []
+        : [
+            {
+              tagName: 'script',
+              attributes: {},
+              innerHTML: localeRedirectScript(mode.baseUrl ?? '/'),
+            },
+          ]),
       {
         tagName: 'script',
         attributes: {},
