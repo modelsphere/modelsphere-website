@@ -42,8 +42,7 @@ function redirect({
         if (blocked.includes(name)) throw new Error('Storage blocked');
         return {
           getItem: (key: string) => values[name].get(key) ?? null,
-          setItem: (key: string, value: string) =>
-            values[name].set(key, value),
+          setItem: (key: string, value: string) => values[name].set(key, value),
         };
       },
     });
