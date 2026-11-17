@@ -65,7 +65,7 @@ for (const [id, expected] of Object.entries(modules)) {
         '/docs',
         process.env.TEST_DOCS_MODE === 'none' ? '/docs' : '/docs/quickstart',
         '/community',
-        'https://github.com/modelsphere',
+        'https://github.com/modelsphere/modelsphere',
         '/community#community-channels',
       ]);
       const layout = await footer.evaluate((element) => {

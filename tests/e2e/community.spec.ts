@@ -93,7 +93,7 @@ test('community preserves approved copy and the four-section order without the c
     '/docs',
     process.env.TEST_DOCS_MODE === 'none' ? '/docs' : '/docs/quickstart',
     '/community',
-    'https://github.com/modelsphere',
+    'https://github.com/modelsphere/modelsphere',
     '/community#community-channels',
   ]);
   for (const copy of removedPartnerCopy)
@@ -203,8 +203,8 @@ test('community preserves approved copy and the four-section order without the c
   ).toHaveAttribute('href', '/community/wechat-official-account-qr.png');
   await expect(channels).toContainText('Apache-2.0');
   await expect(
-    channels.getByRole('link', { name: '前往 GitHub 组织', exact: true }),
-  ).toHaveAttribute('href', 'https://github.com/modelsphere');
+    channels.getByRole('link', { name: '前往 GitHub 仓库', exact: true }),
+  ).toHaveAttribute('href', 'https://github.com/modelsphere/modelsphere');
   const qr = channels.getByRole('img', { name: '微信技术交流群入群二维码' });
   await expect(qr).toHaveAttribute('src', '/community/wechat-group-qr.png');
   expect(

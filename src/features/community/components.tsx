@@ -91,7 +91,7 @@ export function CommunityHeader() {
         <div className="flex items-center gap-3">
           <a
             className="hidden md:flex items-center bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-slate-700 hover:border-slate-300 hover:bg-slate-100 transition-all shadow-sm"
-            href="https://github.com/modelsphere"
+            href="https://github.com/modelsphere/modelsphere"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -888,7 +888,7 @@ export function CommunityContent() {
                       })}
                     </h3>
                     <span className="font-code-sm text-xs text-slate-500">
-                      {'github.com/modelsphere'}
+                      {'github.com/modelsphere/modelsphere'}
                     </span>
                   </div>
                   <p className="font-body-sm text-sm text-slate-600 leading-relaxed">
@@ -918,7 +918,7 @@ export function CommunityContent() {
                 <div className="community-channel-footer pt-5 border-t border-slate-100 mt-4">
                   <a
                     className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-sky-600 text-white hover:bg-sky-700 transition-all font-body-sm text-xs font-semibold shadow-sm"
-                    href="https://github.com/modelsphere"
+                    href="https://github.com/modelsphere/modelsphere"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -931,7 +931,7 @@ export function CommunityContent() {
                     <span className="">
                       {translate({
                         id: 'site.5581608eea5e',
-                        message: '前往 GitHub 组织',
+                        message: '前往 GitHub 仓库',
                       })}
                     </span>
                   </a>
@@ -1143,7 +1143,7 @@ export function CommunityFooter() {
                 {translate({ id: 'site.01cca2c2836f', message: '社区生态' })}
               </Link>
               <a
-                href="https://github.com/modelsphere"
+                href="https://github.com/modelsphere/modelsphere"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={translate({
