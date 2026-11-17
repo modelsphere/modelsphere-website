@@ -174,7 +174,7 @@ export default function Navbar() {
           <SiteSearch />
           <a
             className="header-github"
-            href="https://github.com/modelsphere"
+            href="https://github.com/modelsphere/modelsphere"
             target="_blank"
             rel="noopener noreferrer"
             aria-label={translate({
@@ -232,7 +232,7 @@ export default function Navbar() {
               {quickstart}
               <a
                 className="header-github"
-                href="https://github.com/modelsphere"
+                href="https://github.com/modelsphere/modelsphere"
                 target="_blank"
                 rel="noopener noreferrer"
               >

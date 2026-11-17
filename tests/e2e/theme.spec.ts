@@ -98,7 +98,7 @@ test('header keeps full navigation and a compact theme control across layouts', 
   );
   await expect(page.locator('.header-actions .header-github')).toHaveAttribute(
     'href',
-    'https://github.com/modelsphere',
+    'https://github.com/modelsphere/modelsphere',
   );
   await expect(page.locator('.header-search')).toBeEnabled();
   for (const width of [

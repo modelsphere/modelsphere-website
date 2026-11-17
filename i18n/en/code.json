@@ -662,8 +662,8 @@
     "description": "\n            Star 关注主干仓库，提交 Issue 报告环境问题，发起 PR 贡献代码或在 Discussions 规划下代算子。\n          "
   },
   "site.5581608eea5e": {
-    "message": "Visit our GitHub organization",
-    "description": "前往 GitHub 组织"
+    "message": "Visit our GitHub repository",
+    "description": "前往 GitHub 仓库"
   },
   "site.b0237d6403f1": {
     "message": " is an open source production inference infrastructure community co-founded by Phancy and RiseUnion. It connects heterogeneous hardware, cloud-native scheduling, and performance tuning to bring LLMs from the lab into production.",
