@@ -72,6 +72,27 @@ test.describe('browser language defaults', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
   });
 
+  test('never shows the Chinese page before redirecting', async ({ page }) => {
+    await page.addInitScript(() => {
+      document.addEventListener('DOMContentLoaded', () => {
+        if (document.documentElement.lang !== 'zh-CN') return;
+        sessionStorage.setItem(
+          'chinese-page-visibility',
+          getComputedStyle(document.documentElement).visibility,
+        );
+      });
+    });
+    await page.goto(site('docs'));
+    await page.waitForURL(new RegExp(`${site('en/docs')}$`));
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    // Either the Chinese document never finished parsing, or it stayed hidden.
+    expect(
+      await page.evaluate(() =>
+        sessionStorage.getItem('chinese-page-visibility'),
+      ),
+    ).not.toBe('visible');
+  });
+
   test('uses session storage when persistent storage is blocked', async ({
     page,
   }) => {

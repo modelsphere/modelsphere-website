@@ -7,24 +7,55 @@ function isSiteLocale(locale: string | null): locale is SiteLocale {
   return locale === 'zh-CN' || locale === 'en';
 }
 
-export function defaultLocale(
-  browserLanguage: string,
-  preference: string | null,
-): SiteLocale {
-  if (isSiteLocale(preference)) return preference;
-  return /^zh(?:-|$)/i.test(browserLanguage) ? 'zh-CN' : 'en';
-}
-
-export function readLocalePreference(): SiteLocale | null {
-  for (const storage of ['sessionStorage', 'localStorage'] as const) {
+/**
+ * Inline script for the head of Chinese pages. It runs before the body is
+ * painted, so English readers go straight to /en/ without first seeing the
+ * Chinese page. A saved choice wins over the browser language; without any
+ * storage it stays put so automatic redirects cannot undo a manual choice.
+ */
+export function localeRedirectScript(baseUrl: string): string {
+  return `(function () {
+  var key = ${JSON.stringify(localePreferenceKey)};
+  var base = ${JSON.stringify(baseUrl)};
+  var root = document.documentElement;
+  var locale = null;
+  ['sessionStorage', 'localStorage'].some(function (storage) {
     try {
-      const locale = window[storage].getItem(localePreferenceKey);
-      if (isSiteLocale(locale)) return locale;
-    } catch {
-      // Try the other storage when browser policy blocks this one.
-    }
+      var saved = window[storage].getItem(key);
+      if (saved === 'zh-CN' || saved === 'en') locale = saved;
+    } catch (error) {}
+    return locale !== null;
+  });
+  if (!locale) {
+    var language =
+      navigator.language || (navigator.languages || [])[0] || 'zh-CN';
+    locale = /^zh(?:-|$)/i.test(language) ? 'zh-CN' : 'en';
   }
-  return null;
+  var remembered = false;
+  ['localStorage', 'sessionStorage'].forEach(function (storage) {
+    try {
+      window[storage].setItem(key, locale);
+      remembered = true;
+    } catch (error) {}
+  });
+  if (!remembered || locale !== 'en') return;
+  var path = location.pathname;
+  var local =
+    path === base.slice(0, -1)
+      ? '/'
+      : path.indexOf(base) === 0
+        ? path.slice(base.length - 1)
+        : path;
+  function show() {
+    root.style.visibility = '';
+  }
+  root.style.visibility = 'hidden';
+  addEventListener('pageshow', function (event) {
+    if (event.persisted) show();
+  });
+  setTimeout(show, 3000);
+  location.replace(base + 'en' + local + location.search + location.hash);
+})();`;
 }
 
 export function rememberLocale(locale: string): boolean {
