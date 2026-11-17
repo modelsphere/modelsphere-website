@@ -287,7 +287,7 @@ export default function BlogList() {
                             value={draft}
                             placeholder={translate({
                               id: 'site.7fc5b6f873c7',
-                              message: '标题、作者、技术关键词或 PR 编号',
+                              message: '标题、技术关键词或 PR 编号',
                             })}
                             onChange={(event) => setDraft(event.target.value)}
                             onCompositionStart={() => {

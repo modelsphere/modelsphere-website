@@ -274,6 +274,37 @@ describe('blog publication boundary', () => {
       ).rejects.toThrow();
     });
   });
+  it('stages images and a cover that only the English translation references', async () => {
+    await withArticle(async (root, file) => {
+      const dir = path.dirname(file);
+      await copyFile(
+        path.join(dir, 'cover.png'),
+        path.join(dir, 'cover.en.png'),
+      );
+      const translation = path.join(
+        root,
+        'i18n/en/blog/example-blog-platform.md',
+      );
+      await mkdir(path.dirname(translation), { recursive: true });
+      await writeFile(
+        translation,
+        `---\n${stringify({ title: 'Platform', summary: 'English summary', cover: { src: 'cover.en.png', alt: 'English cover', width: 1600, height: 900 } })}---\n\n![English figure](cover.en.png)\n`,
+      );
+      const index = await prepareBlog(root, release);
+      const english = index.posts[0].translatedCovers?.en;
+      expect(english?.alt).toBe('English cover');
+      expect(english?.src).toMatch(/^\/blog-media\/example-blog-platform\//);
+      await readFile(
+        path.join(root, '.generated/blog/example-blog-platform/cover.en.png'),
+      );
+      await assertPreparedBlog(root, release);
+      await writeFile(
+        translation,
+        '---\ntitle: Platform\nsummary: English summary\n---\n\n![Missing](missing.png)\n',
+      );
+      await expect(prepareBlog(root, release)).rejects.toThrow();
+    });
+  });
   it.each([
     'javascript:alert%281%29',
     '//example.test',

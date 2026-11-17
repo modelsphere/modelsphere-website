@@ -106,6 +106,8 @@ export async function prepareTranslations(
   const blogOutput = path.join(output, 'docusaurus-plugin-content-blog');
   await cp(path.join(root, '.generated/blog'), blogOutput, { recursive: true });
   for (const post of localized.posts) {
+    const englishCover = post.translatedCovers?.en;
+    delete post.translatedCovers;
     const translated = await translation(root, 'blog', `${post.id}.md`);
     if (!translated) continue;
     if (
@@ -117,7 +119,9 @@ export async function prepareTranslations(
       );
     post.title = translated.meta.title;
     post.summary = translated.meta.summary;
-    if (post.cover) {
+    // A cover declared by the translation carries its own English alt text.
+    if (englishCover) post.cover = englishCover;
+    else if (post.cover) {
       post.cover.alt = `${post.title} — illustrative cover, not measured data`;
       if (post.cover.preview) post.cover.preview.alt = post.cover.alt;
     }

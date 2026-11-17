@@ -214,7 +214,7 @@ test('vendor and chip filters narrow recipes, survive reload and history, and re
   ).toHaveAttribute('aria-pressed', 'true');
   await expect(
     page
-      .getByRole('group', { name: 'Hardware models', exact: true })
+      .getByRole('group', { name: 'Hardware', exact: true })
       .getByRole('checkbox'),
   ).toHaveCount(1);
 });

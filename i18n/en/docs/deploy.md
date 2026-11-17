@@ -82,7 +82,7 @@ From a row's actions in the list, or the top of the detail page:
 
 ## Nodes and activity
 
-- Model Serving → Nodes: the cluster's GPU inventory — free GPUs, the largest free slot on one node, models in stock, and unavailable nodes. Check here before deploying.
+- Model Serving → Nodes: the cluster's GPU inventory — free GPUs, the largest free slot on one node, a breakdown by GPU model, and unavailable nodes. Check here before deploying.
 - Model Serving → Activity: every install, upgrade, rollback and uninstall swissd has run; expand a row for its full output.
 
 ## Read-only mode

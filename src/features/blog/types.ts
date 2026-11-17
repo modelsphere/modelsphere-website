@@ -36,6 +36,8 @@ export interface BlogPost {
   technicalKeywords: string[];
   pullRequestRefs: { repository: string; number: number; href: string }[];
   cover?: BlogMedia;
+  /** Locale-specific covers declared by translations; the localized index swaps them in. */
+  translatedCovers?: { en?: BlogMedia };
   readingMinutes?: number;
   relatedIds: string[];
   evidenceIds: string[];

@@ -28,7 +28,7 @@
 | 博客 | 仓库中维护 Markdown、frontmatter 与图片；通过 PR 检查、预览和 Git 合并进入网站发布 |
 | 开发者文档 | 本仓库 `content/docs/` 维护，递归生成侧栏和搜索，与网站统一构建发布 |
 | 搜索 | Header 本地全文搜索覆盖已发布站内文档和博客；博客列表保留独立字段筛选 |
-| 部署 | Docusaurus 静态产物 → GitHub Actions → GitHub Pages；Nginx 用于浏览器验收 |
+| 部署 | main 发布 GitHub Pages；develop 发布阿里云 ACR 测试镜像，Nginx 提供静态服务 |
 | 内容存储 | Git 管理正文、元数据与图片；首期不引入 CMS、数据库、素材上传服务或自建任务队列 |
 | 数据更新 | Catalog 首期直接读取公开源，地址集中配置；博客、门户和文档同版发布与回滚 |
 | 资源依赖 | 字体、图片、脚本和搜索本地托管；Catalog 首期按用户决定直接依赖公开源 |
@@ -88,6 +88,55 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 运行 `pnpm dev:blog` 后打开 `http://localhost:3000/blog`，查看正式目录中的文章。搜索、分类、标签、文章目录、代码复制与浅深主题均可操作。正式构建默认排除 `example: true` 的旧示例，仅发布真实文章；未配置的微信与知乎卡片隐藏。原有 7 篇站内阅读示例和 1 条站外示例作为固定回归样本保留，用 `pnpm dev:blog-mock` 预览。
 
 真实文章放入 `content/blog/<id>/index.md`，分类、标签与推荐项在 `content/pages/blog.json` 配置；使用 `pnpm dev:blog` 预览真实内容。格式、发布边界、响应式图片及验证命令见[博客功能与内容维护](docs/development/blog-implementation.md)。
+
+## develop 测试镜像
+
+日常修改先合并到 `develop`，验收通过后再将 `develop` 合并到 `main`。
+
+| 触发方式 | 检查通过后的结果 |
+| --- | --- |
+| PR 或其他分支更新 | 只执行检查 |
+| 更新 `develop`，或手动运行该分支的 Website checks | 将测试镜像推送到阿里云 ACR |
+| 更新 `main`，或手动运行该分支的 Website checks | 自动部署 GitHub Pages 主站 |
+
+测试镜像地址为：
+
+```text
+crpi-m351n5ri6g6oankf.cn-beijing.personal.cr.aliyuncs.com/ct-modelsphere/modelsphere-website:develop
+```
+
+在阿里云个人版实例中创建命名空间 `ct-modelsphere` 及镜像仓库 `modelsphere-website`。在本 GitHub 仓库 Settings → Secrets and variables → Actions 配置：
+
+| Repository secret | 内容 |
+| --- | --- |
+| `ACR_REGISTRY` | 可选；默认 `crpi-m351n5ri6g6oankf.cn-beijing.personal.cr.aliyuncs.com`，只填域名 |
+| `ACR_USERNAME` | 阿里云镜像仓库的登录用户名 |
+| `ACR_PASSWORD` | 镜像仓库访问凭证中设置的 Registry 固定密码 |
+
+只有 `develop` 的非 PR 流水线读取凭据并推送镜像。格式、Lint、类型、内容、单测和两组浏览器验收全部通过后，复用已通过 Nginx 验收的 release/content 静态文件打包；推送阶段不重新构建网站。镜像支持 `linux/amd64` 和 `linux/arm64`，使用 Nginx 监听 `8080`，静态资源部署在根路径。测试候选沿用本地验收的 origin 元数据，不绑定主站域名；访问测试服务器的根路径即可。Catalog 仍会尝试访问公开数据源，失败时使用随站点构建的目录快照。
+
+每次成功推送同时更新 `develop` 标签和对应的 `sha-<完整提交 SHA>` 标签。发布任务串行运行，推送前检查候选仍为当前 `develop`。可在镜像运行后访问 `/version.json` 核对提交 SHA。
+
+服务器需要能访问阿里云仓库；首次部署时执行：
+
+```sh
+REGISTRY=crpi-m351n5ri6g6oankf.cn-beijing.personal.cr.aliyuncs.com
+IMAGE="$REGISTRY/ct-modelsphere/modelsphere-website:develop"
+docker login "$REGISTRY"
+docker pull "$IMAGE"
+docker run -d --name modelsphere-website-test --restart unless-stopped -p 8080:8080 "$IMAGE"
+```
+
+浏览器访问 `http://服务器IP:8080`。后续更新镜像不会自动替换现有容器，需要重新拉取并重建：
+
+```sh
+docker pull "$IMAGE"
+docker stop modelsphere-website-test
+docker rm modelsphere-website-test
+docker run -d --name modelsphere-website-test --restart unless-stopped -p 8080:8080 "$IMAGE"
+```
+
+这两组命令在同一 shell 中执行；新会话需要重新设置 `REGISTRY` 和 `IMAGE`。指定历史的 `sha-<完整提交 SHA>` 标签可部署已保留的对应版本。
 
 ## GitHub Pages 发布
 
