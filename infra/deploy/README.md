@@ -2,16 +2,34 @@
 
 生产服务器使用 Linux、rootful Docker、Bash、curl（系统 CA）、jq、flock 和 GNU coreutils。更新脚本由 root 运行。容器内的 Nginx 用 UID 101 读取只读挂载的证书。服务器需要能访问阿里云 ACR。官网容器只发布 `127.0.0.1:18443 → 8443/tcp`，运维管理同一台宿主机上的公网 80/443 入口。
 
-1. 在服务器上准备覆盖 `modelsphere.tech` 的可信证书链和私钥，默认读取 `/etc/letsencrypt/live/modelsphere.tech/fullchain.pem` 与 `privkey.pem`。已有 PEM 证书也可以放在自选目录，通过 `TLS_DIR` 指定。例如将域名证书包 `modelsphere.tech_bundle.pem` 和配套的 `modelsphere.tech.key` 分别以 `fullchain.pem` 和 `privkey.pem` 提供给脚本。由现有证书工具负责签发和续期。
-2. 从已验收的发布提交下载 `infra/deploy/update-production.sh`，在脚本所在目录执行以下命令。私有仓库通过 `sudo docker login` 交互输入拉取凭据；脚本与 cron 使用同一个 root Docker 配置。
+1. 安装更新脚本，并用具有镜像拉取权限的账号登录仓库。
 
 ```sh
-sudo docker login crpi-m351n5ri6g6oankf.cn-beijing.personal.cr.aliyuncs.com
 sudo install -m 0755 update-production.sh /usr/local/sbin/modelsphere-website-production-update
+sudo docker login crpi-m351n5ri6g6oankf.cn-beijing.personal.cr.aliyuncs.com
+```
+
+2. 运维首次登记两条**宿主机上的绝对路径**，分别指向覆盖 `modelsphere.tech` 的 PEM 证书链和配套私钥。将示例替换为统一证书系统里的真实路径，可以使用不同的目录、原始文件名和续期软链接。
+
+```sh
+# 证书链文件（PEM，含站点证书和中间证书）
+CERT_CHAIN_PATH='/统一证书目录/modelsphere.tech_bundle.pem'
+# 与该证书配对的私钥文件（PEM）
+PRIVATE_KEY_PATH='/统一私钥目录/modelsphere.tech.key'
+
+sudo /usr/local/sbin/modelsphere-website-production-update \
+  --configure-tls "$CERT_CHAIN_PATH" "$PRIVATE_KEY_PATH"
+```
+
+该命令只保存两个路径引用。入口 Nginx 和更新脚本均可通过 `/etc/modelsphere-website/tls-paths/fullchain.pem` 和 `privkey.pem` 读取当前证书。后续路径有变化时再执行此命令。旧安装在登记路径之前仍按原有的 `TLS_DIR` 或 Let's Encrypt 默认目录工作。登记后，手动运行和 cron 均优先使用已登记的路径。
+
+3. 首次更新执行以下命令。脚本在宿主机生成仅包含本站证书链与私钥的受限快照，作为只读挂载提供给容器内的 Nginx。快照用于候选检查和回退，私钥不会写入镜像层。
+
+```sh
 sudo /usr/local/sbin/modelsphere-website-production-update
 ```
 
-3. 首次成功后，将下列内容保存为 `/etc/cron.d/modelsphere-website-production`（root 所有，0644，文件末尾换行）。如使用自选证书目录，在首次命令及 cron 中都设置 `TLS_DIR`。
+4. 首次成功后，将下列内容保存为 `/etc/cron.d/modelsphere-website-production`（root 所有，0644，文件末尾换行）。证书续期仍由证书系统负责；入口按现有流程 reload，应用在下次定时检查时加载新证书。
 
 ```cron
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -33,32 +51,9 @@ curl --noproxy '*' --resolve 'modelsphere.tech:18443:127.0.0.1' https://modelsph
 
 ## 公网入口（运维配置）
 
-在现有入口 Nginx 中为官网增加独立的虚拟主机。以下示例假设入口运行在宿主机网络内；证书路径和系统 CA 路径由运维按实际环境填写。如果入口自身在独立容器网络内，它的 `127.0.0.1` 指向入口容器，需要先确认到宿主机回环端口的代理方式。
+在现有入口 Nginx 中为官网增加独立的虚拟主机。以下示例假设入口运行在宿主机网络内；示例中的证书引用由第 2 步创建，系统 CA 路径请按操作系统调整。如果入口自身在独立容器网络内，它的 `127.0.0.1` 指向入口容器，需要先确认到宿主机回环端口的代理方式。
 
-```nginx
-server {
-    listen 80;
-    server_name modelsphere.tech;
-    return 308 https://modelsphere.tech$request_uri;
-}
-
-server {
-    listen 443 ssl;
-    server_name modelsphere.tech;
-    ssl_certificate /path/to/edge/fullchain.pem;
-    ssl_certificate_key /path/to/edge/privkey.pem;
-
-    location / {
-        proxy_pass https://127.0.0.1:18443;
-        proxy_set_header Host $host;
-        proxy_ssl_server_name on;
-        proxy_ssl_name modelsphere.tech;
-        proxy_ssl_verify on;
-        proxy_ssl_verify_depth 4;
-        proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
-    }
-}
-```
+[下载入口 Nginx 配置](./modelsphere.tech.conf)。
 
 配置入口并验证后，由运维将域名解析指向公网入口。切 DNS 前可在客户端指定入口 IP 测试：
 
