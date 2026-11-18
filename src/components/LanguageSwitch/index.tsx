@@ -3,7 +3,11 @@ import * as Select from '@radix-ui/react-select';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import { useHistory, useLocation } from '@docusaurus/router';
-import { languageHref, rememberLocale } from '@site/src/lib/locale';
+import {
+  explicitChineseHref,
+  languageHref,
+  rememberLocale,
+} from '@site/src/lib/locale';
 import styles from './styles.module.css';
 
 const languages = [
@@ -30,14 +34,18 @@ export default function LanguageSwitch() {
       <Select.Root
         value={i18n.currentLocale}
         onValueChange={(locale) => {
-          rememberLocale(locale);
+          const hasCookie = rememberLocale(locale);
           if (locale !== i18n.currentLocale) {
+            const target =
+              locale === 'zh-CN' && !hasCookie
+                ? explicitChineseHref(href)
+                : href;
             if (location.state) {
               // A full reload is needed for translated bundles. Carry the current
               // entry's navigation context into the target locale before reloading.
-              history.push(href, location.state);
+              history.push(target, location.state);
               window.location.reload();
-            } else window.location.assign(href);
+            } else window.location.assign(target);
           }
         }}
       >
@@ -108,7 +116,7 @@ export default function LanguageSwitch() {
       <noscript>
         <a
           className={styles.fallback}
-          href={href}
+          href={english ? explicitChineseHref(href) : href}
           hrefLang={english ? 'zh-CN' : 'en'}
           lang={english ? 'zh-CN' : 'en'}
           aria-label={english ? '切换到简体中文' : 'Switch to English'}

@@ -3,6 +3,10 @@ import type { ThemeConfig } from '@docusaurus/preset-classic';
 import { resolveBuildMode } from './src/lib/build-mode';
 import { assertPrepared } from './src/lib/prepared-input';
 import { assertPreparedBlog } from './src/lib/prepared-blog';
+import {
+  localeRedirectScript,
+  reconcileDetectedEnglishScript,
+} from './src/lib/locale';
 import { mkdir } from 'node:fs/promises';
 import { readDocumentation } from './scripts/check-docs';
 import remarkFollowCard from './plugins/blog/remark-follow-card';
@@ -114,6 +118,13 @@ export default async function config(): Promise<Config> {
       ],
     ],
     headTags: [
+      {
+        tagName: 'script',
+        attributes: {},
+        innerHTML: english
+          ? reconcileDetectedEnglishScript(mode.baseUrl ?? '/')
+          : localeRedirectScript(mode.baseUrl ?? '/'),
+      },
       {
         tagName: 'script',
         attributes: {},

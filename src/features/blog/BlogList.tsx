@@ -459,7 +459,7 @@ export default function BlogList() {
                         })}
                   </p>
                   {!index.posts.length && (
-                    <a href="https://github.com/modelsphere">
+                    <a href="https://github.com/modelsphere/modelsphere">
                       {translate({
                         id: 'site.42b483023aa8',
                         message: '关注 ModelSphere 开源项目 ↗',

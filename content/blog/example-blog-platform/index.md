@@ -32,7 +32,7 @@ relatedIds:
   - example-blog-benchmark
 resources:
   - label: ModelSphere GitHub
-    href: https://github.com/modelsphere
+    href: https://github.com/modelsphere/modelsphere
 ---
 
 ## 先从一条请求开始
