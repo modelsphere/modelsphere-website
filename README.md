@@ -144,7 +144,7 @@ docker run -d --name modelsphere-website-test --restart unless-stopped -p 8080:8
 
 `develop → main` 发布 PR 合并后，Actions 使用 `SITE_ORIGIN=https://modelsphere.tech`、`SITE_BASE_URL=/` 验收过的 release/content 产物，在同一 ACR 仓库推送 `:production` 和 `:production-sha-<完整 main SHA>`。固定标签带有环境名，测试与正式构建即使来自同一提交也能分别取回。
 
-生产镜像用 Nginx 在 8443 提供 HTTPS，在 8080 将 HTTP 请求重定向到正式域名。证书由服务器挂载。安装、定时更新、续期和回滚见[正式服务器部署](infra/deploy/README.md)。
+生产容器挂载服务器证书，只发布 `127.0.0.1:18443 → 8443`。运维在现有公网入口配置 HTTPS 和 HTTP 跳转，按域名转发给本机 18443。安装、定时更新、续期和回滚见[正式服务器部署](infra/deploy/README.md)。
 
 迁移期间，`main` 也继续部署当前的 GitHub Pages，以便在公网服务器上独立验收。DNS 切换且官网版本验收通过后，可在仓库 Settings → Secrets and variables → Actions → Variables 设置 `DEPLOY_GITHUB_PAGES=false`，停止后续 Pages 发布。正式镜像的构建和发布独立运行。
 

@@ -8,6 +8,7 @@ image=${IMAGE:-$registry/ct-modelsphere/modelsphere-website:production}
 tls_dir=${TLS_DIR:-/etc/letsencrypt/live/modelsphere.tech}
 state=/var/lib/modelsphere-website-production
 site=modelsphere.tech
+backend_port=18443
 live=modelsphere-website-production
 previous=$live-previous
 probe=$live-check
@@ -15,6 +16,11 @@ owner=tech.modelsphere.production-updater
 cert_label=tech.modelsphere.tls-snapshot
 die() { echo "$*" >&2; exit 1; }
 exists() { docker container inspect "$1" >/dev/null 2>&1; }
+
+backend_only() {
+  docker inspect -f '{{json .HostConfig.PortBindings}}' "$1" |
+    jq -e --arg port "$backend_port" '. == {"8443/tcp": [{"HostIp":"127.0.0.1","HostPort":$port}]}' >/dev/null
+}
 
 (( EUID == 0 )) || die 'Run this updater as root.'
 install -d -m 0700 "$state"
@@ -31,13 +37,14 @@ done
 restore_previous() {
   if exists "$live"; then docker rm -f "$live" >/dev/null || return 1; fi
   docker rename "$previous" "$live" || return 1
-  docker start "$live" >/dev/null || return 1
+  # A legacy container retains its original running/stopped state during migration.
+  if backend_only "$live"; then docker start "$live" >/dev/null || return 1; fi
   echo 'Restored previous production container.' >&2
 }
 # Recover an interrupted switch before checking the registry or credentials.
 if exists "$previous"; then restore_previous; fi
 if exists "$probe"; then docker rm -f "$probe" >/dev/null; fi
-if exists "$live"; then docker start "$live" >/dev/null; fi
+if exists "$live" && backend_only "$live"; then docker start "$live" >/dev/null; fi
 
 # Local Docker image IDs also support offline rollback and the CI smoke test.
 if [[ ! $image =~ ^sha256:[0-9a-f]{64}$ ]]; then docker pull "$image"; fi
@@ -98,7 +105,7 @@ wait_healthy() {
   done
   healthy "$port"
 }
-if exists "$live" && [[ $(docker inspect -f "{{.Image}} {{index .Config.Labels \"$cert_label\"}}" "$live") == "$image_id $snapshot" ]] && healthy 443; then
+if exists "$live" && backend_only "$live" && [[ $(docker inspect -f "{{.Image}} {{index .Config.Labels \"$cert_label\"}}" "$live") == "$image_id $snapshot" ]] && healthy "$backend_port"; then
   exit 0
 fi
 options=(--label "$owner=yes" --label "$cert_label=$snapshot" --mount "type=bind,src=$certs,dst=/etc/modelsphere/tls,readonly")
@@ -110,13 +117,14 @@ docker rm -f "$probe" >/dev/null
 if exists "$live"; then
   docker rename "$live" "$previous"
   switching=1
-  docker stop "$previous" >/dev/null
+  # A legacy 80/443 container can coexist until the new backend is healthy.
+  if backend_only "$previous"; then docker stop "$previous" >/dev/null; fi
 else
   switching=1
 fi
 docker run -d --name "$live" --restart unless-stopped "${options[@]}" \
-  -p 80:8080 -p 443:8443 "$image_id" >/dev/null
-wait_healthy 443 || die 'Published port failed HTTPS/version check.'
+  -p "127.0.0.1:$backend_port:8443" "$image_id" >/dev/null
+wait_healthy "$backend_port" || die 'Published port failed HTTPS/version check.'
 switching=0
-if exists "$previous"; then docker rm "$previous" >/dev/null; fi
-echo "Serving https://$site at $revision"
+if exists "$previous"; then docker rm -f "$previous" >/dev/null; fi
+echo "Serving $site on https://127.0.0.1:$backend_port at $revision"
