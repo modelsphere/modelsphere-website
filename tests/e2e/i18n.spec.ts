@@ -72,6 +72,88 @@ test.describe('browser language defaults', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
   });
 
+  test('Nginx selects the first document before JavaScript runs', async ({
+    request,
+  }) => {
+    test.skip(
+      !process.env.TEST_BUILD_TARGET,
+      'The CI image serves these routes with Nginx.',
+    );
+    const path = site('model?id=glm5.3');
+    const headers = { 'Accept-Language': 'en-US,en;q=0.9' };
+    const english = await request.get(path, { headers, maxRedirects: 0 });
+    expect(english.status()).toBe(302);
+    expect(english.headers().location).toBe(
+      site('en/model?ms_auto=en&id=glm5.3'),
+    );
+    expect(english.headers()['cache-control']).toContain('no-store');
+    const chinese = await request.get(path, {
+      headers: { ...headers, Cookie: 'ms_locale=zh-CN' },
+      maxRedirects: 0,
+    });
+    expect(chinese.status()).toBe(200);
+    expect(await chinese.text()).toContain('lang="zh-CN"');
+    for (const [route, status] of [
+      ['en/model', 200],
+      ['version.json', 200],
+      ['missing-route', 404],
+    ] as const) {
+      expect(
+        (await request.get(site(route), { headers, maxRedirects: 0 })).status(),
+      ).toBe(status);
+    }
+  });
+
+  for (const storage of ['localStorage', 'sessionStorage'] as const) {
+    test(`recovers a pre-cookie Chinese preference in ${storage} on a fresh entry`, async ({
+      page,
+      context,
+    }) => {
+      // Seed only the old storage value, without visiting a Chinese document.
+      await page.goto(site('en/'));
+      await page.evaluate(
+        (name) => window[name].setItem('modelsphere.locale', 'zh-CN'),
+        storage,
+      );
+      await page.goto(site('docs?source=old#details'));
+      await expect(page).toHaveURL(
+        (url) =>
+          url.pathname === site('docs') &&
+          url.search === '?source=old' &&
+          url.hash === '#details',
+      );
+      await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
+      if (process.env.TEST_BUILD_TARGET) {
+        expect(
+          (await context.cookies()).find(
+            (cookie) => cookie.name === 'ms_locale',
+          )?.value,
+        ).toBe('zh-CN');
+      }
+      await page.goto(site('en/docs'));
+      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    });
+  }
+
+  test('remembers manual Chinese on a later bare entry when cookies are blocked', async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(document, 'cookie', {
+        get: () => '',
+        set: () => undefined,
+      });
+    });
+    await page.goto(site('en/'));
+    await chooseLanguage(page, '简体中文');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
+    await page.goto(site('docs'));
+    await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
+    await expect(page).toHaveURL((url) => url.pathname === site('docs'));
+    await page.goto(site('en/docs'));
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  });
+
   test('never shows the Chinese page before redirecting', async ({ page }) => {
     await page.addInitScript(() => {
       document.addEventListener('DOMContentLoaded', () => {
@@ -118,6 +200,10 @@ test.describe('browser language defaults', () => {
     page,
   }) => {
     await page.addInitScript(() => {
+      Object.defineProperty(document, 'cookie', {
+        get: () => '',
+        set: () => undefined,
+      });
       for (const storage of ['localStorage', 'sessionStorage'])
         Object.defineProperty(window, storage, {
           get() {
@@ -125,11 +211,13 @@ test.describe('browser language defaults', () => {
           },
         });
     });
-    await page.goto(site());
-    await chooseLanguage(page, 'English');
-    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await page.goto(site('en/'));
     await chooseLanguage(page, '简体中文');
     await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
+    await chooseLanguage(page, 'English');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   });
 });
 
