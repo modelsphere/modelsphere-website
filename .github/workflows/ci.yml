@@ -153,8 +153,20 @@ jobs:
           TEST_DOCS_MODE: ${{ matrix.mode == 'preview' && 'mock' || 'content' }}
           TEST_BLOG_SOURCE: ${{ matrix.mode == 'preview' && 'mock' || 'content' }}
           TEST_BUILD_TARGET: ${{ matrix.mode }}
-      - name: Package the verified release
+      - name: Test production HTTPS image and updater
+        if: matrix.mode == 'release'
+        run: bash infra/deploy/test-production.sh
+      - name: Save verified production site for the image
         if: matrix.mode == 'release' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-production-site-${{ github.sha }}
+          path: build/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+      - name: Package the verified release
+        if: vars.DEPLOY_GITHUB_PAGES != 'false' && matrix.mode == 'release' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: build
@@ -168,19 +180,21 @@ jobs:
             test-results/
       - run: docker rm -f pages-test
         if: always()
-  publish-test-image:
-    name: Publish develop image to Aliyun ACR
-    if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request'
+  publish-image:
+    name: Publish ${{ github.ref_name == 'main' && 'production' || 'develop' }} image to Aliyun ACR
+    if: (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main') && github.event_name != 'pull_request'
     needs: [quality, static-site, pages-site]
     runs-on: ubuntu-latest
     permissions:
       contents: read
     concurrency:
-      group: acr-develop
+      group: acr-${{ github.ref_name }}
       cancel-in-progress: false
     env:
       ACR_REGISTRY: ${{ secrets.ACR_REGISTRY || 'crpi-m351n5ri6g6oankf.cn-beijing.personal.cr.aliyuncs.com' }}
       ACR_REPOSITORY: ct-modelsphere/modelsphere-website
+      IMAGE_TAG: ${{ github.ref_name == 'main' && 'production' || 'develop' }}
+      REVISION_TAG: ${{ github.ref_name == 'main' && 'production-sha' || 'sha' }}-${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -196,7 +210,7 @@ jobs:
           fi
       - uses: actions/download-artifact@v4
         with:
-          name: docker-site-${{ github.sha }}
+          name: ${{ github.ref_name == 'main' && 'docker-production-site' || 'docker-site' }}-${{ github.sha }}
           path: build/
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
@@ -206,13 +220,13 @@ jobs:
           registry: ${{ env.ACR_REGISTRY }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-      - name: Ensure candidate is still develop
+      - name: Ensure candidate is still the branch head
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          DEVELOP_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/develop" --jq '.object.sha')
-          if [ "$DEVELOP_SHA" != "$GITHUB_SHA" ]; then
-            echo "A newer develop commit exists; refusing to publish the older candidate."
+          BRANCH_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$GITHUB_REF_NAME" --jq '.object.sha')
+          if [ "$BRANCH_SHA" != "$GITHUB_SHA" ]; then
+            echo "A newer $GITHUB_REF_NAME commit exists; refusing to publish the older candidate."
             exit 1
           fi
       - name: Push the verified site as a multi-platform image
@@ -220,6 +234,7 @@ jobs:
         with:
           context: .
           file: infra/docker/Dockerfile
+          target: ${{ github.ref_name == 'main' && 'production' || 'http' }}
           platforms: linux/amd64,linux/arm64
           build-args: |
             SITE_BASE_URL=/
@@ -228,18 +243,18 @@ jobs:
           sbom: false
           outputs: type=image,push=true,oci-mediatypes=false
           tags: |
-            ${{ env.ACR_REGISTRY }}/${{ env.ACR_REPOSITORY }}:develop
-            ${{ env.ACR_REGISTRY }}/${{ env.ACR_REPOSITORY }}:sha-${{ github.sha }}
+            ${{ env.ACR_REGISTRY }}/${{ env.ACR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+            ${{ env.ACR_REGISTRY }}/${{ env.ACR_REPOSITORY }}:${{ env.REVISION_TAG }}
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
       - name: Verify published image manifests
         run: |
-          docker buildx imagetools inspect "$ACR_REGISTRY/$ACR_REPOSITORY:develop"
-          docker buildx imagetools inspect "$ACR_REGISTRY/$ACR_REPOSITORY:sha-$GITHUB_SHA"
+          docker buildx imagetools inspect "$ACR_REGISTRY/$ACR_REPOSITORY:$IMAGE_TAG"
+          docker buildx imagetools inspect "$ACR_REGISTRY/$ACR_REPOSITORY:$REVISION_TAG"
   deploy-pages:
     name: Deploy GitHub Pages
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: vars.DEPLOY_GITHUB_PAGES != 'false' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: [quality, static-site, pages-site]
     runs-on: ubuntu-latest
     permissions:
