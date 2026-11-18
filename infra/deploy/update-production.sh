@@ -5,6 +5,8 @@ umask 077
 
 registry=crpi-m351n5ri6g6oankf.cn-beijing.personal.cr.aliyuncs.com
 image=${IMAGE:-$registry/ct-modelsphere/modelsphere-website:production}
+# These links preserve the certificate manager's original filenames and renewal symlinks.
+tls_paths=/etc/modelsphere-website/tls-paths
 tls_dir=${TLS_DIR:-/etc/letsencrypt/live/modelsphere.tech}
 state=/var/lib/modelsphere-website-production
 site=modelsphere.tech
@@ -25,6 +27,37 @@ backend_only() {
 (( EUID == 0 )) || die 'Run this updater as root.'
 install -d -m 0700 "$state"
 exec 9>"$state/update.lock"
+if [[ ${1:-} == --configure-tls ]]; then
+  [[ $# == 3 ]] || die 'Usage: update-production.sh --configure-tls /absolute/fullchain.pem /absolute/private.key'
+  flock 9
+  for source_path in "$2" "$3"; do
+    [[ $source_path == /* && -f $source_path && -r $source_path ]] || die "Expected a readable absolute file path: $source_path"
+    [[ $(realpath -ms -- "$source_path") != "$tls_paths/"* ]] || die 'Specify the original certificate manager paths.'
+  done
+  [[ ! -e $tls_paths || -L $tls_paths ]] || die "$tls_paths is reserved for the configured symlink."
+  if [[ $(readlink -- "$tls_paths/fullchain.pem") == "$2" && $(readlink -- "$tls_paths/privkey.pem") == "$3" ]]; then
+    echo 'TLS source paths are already configured.'
+    exit 0
+  fi
+  settings_dir=${tls_paths%/*}
+  mkdir -p -- "$settings_dir"
+  pair=$(mktemp -d "$settings_dir/.tls-pair.XXXXXXXX")
+  old_pair=$(readlink -- "$tls_paths" || true)
+  # Publish the pair as one unit. Keep the original paths intact so the
+  # certificate manager can rotate its own links during renewal.
+  trap 'if [[ $(readlink -- "$tls_paths") != "${pair##*/}" ]]; then rm -rf -- "$pair"; fi' EXIT
+  ln -s -- "$2" "$pair/fullchain.pem"
+  ln -s -- "$3" "$pair/privkey.pem"
+  ln -s -- "${pair##*/}" "$pair/current"
+  mv -Tf -- "$pair/current" "$tls_paths"
+  if [[ $old_pair =~ ^\.tls-pair\.[[:alnum:]]{8}$ ]]; then
+    rm -f -- "$settings_dir/$old_pair/fullchain.pem" "$settings_dir/$old_pair/privkey.pem"
+    rmdir -- "$settings_dir/$old_pair"
+  fi
+  echo 'Saved TLS source paths. Run the updater without arguments to deploy.'
+  exit 0
+fi
+[[ $# == 0 ]] || die 'Usage: update-production.sh [--configure-tls /absolute/fullchain.pem /absolute/private.key]'
 flock -n 9 || exit 0
 docker info >/dev/null
 for name in "$live" "$previous" "$probe"; do
@@ -45,6 +78,13 @@ restore_previous() {
 if exists "$previous"; then restore_previous; fi
 if exists "$probe"; then docker rm -f "$probe" >/dev/null; fi
 if exists "$live" && backend_only "$live"; then docker start "$live" >/dev/null; fi
+
+# A configured pair is authoritative for both manual runs and cron; never fall
+# back to another certificate when a renewal link is temporarily broken.
+if [[ -e $tls_paths || -L $tls_paths ]]; then tls_dir=$tls_paths; fi
+for pem in "$tls_dir/fullchain.pem" "$tls_dir/privkey.pem"; do
+  [[ -f $pem && -r $pem ]] || die "TLS source missing or unreadable: $pem"
+done
 
 # Local Docker image IDs also support offline rollback and the CI smoke test.
 if [[ ! $image =~ ^sha256:[0-9a-f]{64}$ ]]; then docker pull "$image"; fi
