@@ -1,204 +1,160 @@
 import { describe, expect, it } from 'vitest';
-import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { stringify } from 'yaml';
+import { readBlog, prepareBlog } from '../../scripts/prepare-blog';
+import type { BuildMode } from '../../src/lib/build-mode';
 
-const script = path.resolve('scripts/check-blog-bilingual.mjs');
-const chinese = (id: string) => `content/blog/${id}/index.md`;
-const english = (id: string) => `i18n/en/blog/${id}.md`;
-const body =
-  '---\ntitle: Example\nsummary: A summary\n---\n\n## Content\n\nArticle body.\n';
-async function fixture(
-  action: (ctx: {
-    root: string;
-    git: (...args: string[]) => string;
-    put: (file: string, text?: string) => Promise<void>;
-    commit: () => string;
-    check: (
-      base?: string,
-      event?: Record<string, unknown>,
-      name?: string,
-    ) => Promise<ReturnType<typeof spawnSync>>;
-  }) => Promise<void>,
-) {
-  const root = await mkdtemp(path.join(tmpdir(), 'blog-bilingual-'));
-  const git = (...args: string[]) =>
-    execFileSync('git', args, {
-      cwd: root,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-    }).trim();
-  const put = async (file: string, text = body) => {
-    await mkdir(path.dirname(path.join(root, file)), { recursive: true });
-    await writeFile(path.join(root, file), text);
-  };
-  const commit = () => {
-    git('add', '.');
-    git('commit', '--allow-empty', '-m', 'fixture');
-    return git('rev-parse', 'HEAD');
-  };
-  const check = async (
-    base?: string,
-    event?: Record<string, unknown>,
-    name = 'pull_request',
-  ) => {
-    const eventFile = path.join(root, '.event.json');
-    if (event) await writeFile(eventFile, JSON.stringify(event));
-    return spawnSync(process.execPath, [script, ...(base ? [base] : [])], {
-      cwd: root,
-      encoding: 'utf8',
-      env: {
-        ...process.env,
-        GITHUB_EVENT_NAME: name,
-        GITHUB_EVENT_PATH: event ? eventFile : '',
-      },
-    });
-  };
+const legacy = 'sglang-kimi-k31-pro-video-input';
+const mode: BuildMode = {
+  target: 'release',
+  source: 'none',
+  blogSource: 'content',
+  origin: 'https://example.test',
+};
+const translation =
+  '---\ntitle: Article\nsummary: English summary\n---\n\n## Article\n\nEnglish article body.\n';
+async function fixture(action: (root: string) => Promise<void>) {
+  const root = await mkdtemp(path.join(tmpdir(), 'blog-bilingual-content-'));
   try {
-    git('init', '--initial-branch=main');
-    git('config', 'user.name', 'Bilingual tests');
-    git('config', 'user.email', 'test@example.invalid');
-    commit();
-    await action({ root, git, put, commit, check });
+    await mkdir(path.join(root, 'content/pages'), { recursive: true });
+    await writeFile(
+      path.join(root, 'content/pages/blog.json'),
+      JSON.stringify({ categories: [], tags: [], channels: [], sources: [] }),
+    );
+    await action(root);
   } finally {
     await rm(root, { recursive: true, force: true });
   }
 }
+async function chinese(
+  root: string,
+  id = 'new-post',
+  flags = {},
+  body = '## Article\n\n文章正文。\n',
+) {
+  const directory = path.join(root, 'content/blog', id);
+  await mkdir(directory, { recursive: true });
+  await writeFile(
+    path.join(directory, 'index.md'),
+    `---\n${stringify({ id, title: '文章', summary: '文章摘要', kind: 'internal', slug: id, publishedAt: '2020-01-01', updatedAt: '2020-01-01T00:00:00Z', evidenceIds: [], ...flags })}---\n\n${body}`,
+  );
+}
+async function english(root: string, id = 'new-post', raw = translation) {
+  const directory = path.join(root, 'i18n/en/blog');
+  await mkdir(directory, { recursive: true });
+  await writeFile(path.join(directory, `${id}.md`), raw);
+}
 
-describe('new blog bilingual CI gate', () => {
-  it.each([chinese('new-post'), english('new-post')])(
-    'rejects a one-language addition: %s',
-    async (file) => {
-      await fixture(async ({ git, put, commit, check }) => {
-        const base = git('rev-parse', 'HEAD');
-        await put(file);
-        commit();
-        const result = await check(base);
-        expect(result.status).toBe(1);
-        expect(result.stderr).toContain(
-          file.startsWith('content/')
-            ? english('new-post')
-            : chinese('new-post'),
+describe('shared blog bilingual content policy (without Git history)', () => {
+  it.each(['local', 'preview', 'release'] as const)(
+    'rejects a new Chinese-only article in %s content mode',
+    async (target) => {
+      await fixture(async (root) => {
+        await chinese(root);
+        await expect(readBlog(root, { ...mode, target })).rejects.toThrow(
+          '缺少英文稿：i18n/en/blog/new-post.md',
         );
       });
     },
   );
-  it('accepts a complete pair across multiple commits, and uses the whole PR range', async () => {
-    await fixture(async ({ git, put, commit, check }) => {
-      const base = git('rev-parse', 'HEAD');
-      await put(chinese('new-post'));
-      commit();
-      await put(english('new-post'));
-      commit();
+  it('accepts both versions and stages them through the normal build entry', async () => {
+    await fixture(async (root) => {
+      await chinese(root);
+      await english(root);
+      expect((await readBlog(root, mode)).articles).toHaveLength(1);
       expect(
-        (await check(undefined, { pull_request: { base: { sha: base } } }))
-          .status,
-      ).toBe(0);
+        (await prepareBlog(root, mode)).posts.map((post) => post.id),
+      ).toEqual(['new-post']);
     });
   });
-  it.each(['', '---\ntitle: Example\nsummary: Example\n---\n<!-- no body -->'])(
-    'rejects an empty English placeholder',
-    async (text) => {
-      await fixture(async ({ git, put, commit, check }) => {
-        const base = git('rev-parse', 'HEAD');
-        await put(chinese('new-post'));
-        await put(english('new-post'), text);
-        commit();
-        const result = await check(base);
-        expect(result.status).toBe(1);
-        expect(result.stderr).toContain('正文为空');
+  it('rejects an English file without its Chinese source', async () => {
+    await fixture(async (root) => {
+      await english(root);
+      await expect(readBlog(root, mode)).rejects.toThrow(
+        '缺少中文稿：content/blog/new-post/index.md',
+      );
+    });
+  });
+  it.each(['', '---\ntitle: Article\nsummary: Summary\n---\n<!-- no body -->'])(
+    'rejects empty or comment-only English files',
+    async (raw) => {
+      await fixture(async (root) => {
+        await chinese(root);
+        await english(root, 'new-post', raw);
+        await expect(readBlog(root, mode)).rejects.toThrow();
       });
     },
   );
-  it('does not force translation of an unchanged historical article during ordinary edits', async () => {
-    await fixture(async ({ put, commit, check }) => {
-      await put(chinese('legacy'));
-      const base = commit();
-      await put(chinese('legacy'), body + '\nEdited.');
-      commit();
-      expect((await check(base)).status).toBe(0);
+  it.each(['title', 'summary'])(
+    'requires a nonblank English %s',
+    async (field) => {
+      await fixture(async (root) => {
+        await chinese(root);
+        await english(
+          root,
+          'new-post',
+          translation.replace(
+            new RegExp(`${field}: [^\n]*`),
+            `${field}: '   '`,
+          ),
+        );
+        await expect(readBlog(root, mode)).rejects.toThrow();
+      });
+    },
+  );
+  it('rejects empty Chinese bodies even when English exists', async () => {
+    await fixture(async (root) => {
+      await chinese(root, 'new-post', {}, '<!-- no body -->');
+      await english(root);
+      await expect(readBlog(root, mode)).rejects.toThrow('中文稿正文不能为空');
     });
   });
-  it('accepts adding English to an existing Chinese article', async () => {
-    await fixture(async ({ put, commit, check }) => {
-      await put(chinese('legacy'));
-      const base = commit();
-      await put(english('legacy'));
-      commit();
-      expect((await check(base)).status).toBe(0);
+  it('keeps the explicit historical single-language exception usable without Git', async () => {
+    await fixture(async (root) => {
+      await chinese(root, legacy);
+      expect((await readBlog(root, mode)).articles).toHaveLength(1);
+      await chinese(root, legacy, {}, '## Updated\n\n修正后的原文。\n');
+      expect((await readBlog(root, mode)).articles).toHaveLength(1);
     });
   });
-  it('does not let draft/example flags exempt a newly added article', async () => {
-    await fixture(async ({ git, put, commit, check }) => {
-      const base = git('rev-parse', 'HEAD');
-      await put(
-        chinese('draft-post'),
-        body.replace(
-          'title: Example',
-          'title: Example\ndraft: true\nexample: true',
-        ),
+  it('accepts adding English to the historical article but validates it once supplied', async () => {
+    await fixture(async (root) => {
+      await chinese(root, legacy);
+      await english(root, legacy);
+      expect((await readBlog(root, mode)).articles).toHaveLength(1);
+      await english(
+        root,
+        legacy,
+        '---\ntitle: Article\nsummary: Summary\n---\n',
       );
-      commit();
-      expect((await check(base)).status).toBe(1);
+      await expect(readBlog(root, mode)).rejects.toThrow('英文稿正文不能为空');
     });
   });
-  it('treats renamed articles as additions and requires the new counterpart', async () => {
-    await fixture(async ({ git, put, commit, check }) => {
-      await put(chinese('old-id'));
-      const base = commit();
-      await mkdir(
-        path.join(git('rev-parse', '--show-toplevel'), 'content/blog/new-id'),
-        { recursive: true },
-      );
-      git('mv', chinese('old-id'), chinese('new-id'));
-      commit();
-      const result = await check(base);
-      expect(result.status).toBe(1);
-      expect(result.stderr).toContain(english('new-id'));
+  it.each([{ draft: true }, { example: true }])(
+    'does not exempt new IDs based on flags: %j',
+    async (flags) => {
+      await fixture(async (root) => {
+        await chinese(root, 'new-post', flags);
+        await expect(readBlog(root, mode)).rejects.toThrow('缺少英文稿');
+      });
+    },
+  );
+  it('rejects draft promotion without English through the same build validation', async () => {
+    await fixture(async (root) => {
+      await chinese(root, 'new-post', { draft: true });
+      await english(root);
+      expect((await readBlog(root, mode)).articles).toHaveLength(0);
+      await chinese(root);
+      await rm(path.join(root, 'i18n/en/blog/new-post.md'));
+      await expect(prepareBlog(root, mode)).rejects.toThrow('缺少英文稿');
     });
   });
-  it('rejects a missing translation even when only the first push commit added the article', async () => {
-    await fixture(async ({ git, put, commit, check }) => {
-      const base = git('rev-parse', 'HEAD');
-      await put(chinese('new-post'));
-      commit();
-      await put('unrelated.md');
-      commit();
-      expect((await check(undefined, { before: base }, 'push')).status).toBe(1);
-    });
-  });
-  it('compares a new branch with develop instead of only its last commit', async () => {
-    await fixture(async ({ git, put, commit, check }) => {
-      const base = git('rev-parse', 'HEAD');
-      git('update-ref', 'refs/remotes/origin/develop', base);
-      await put(chinese('new-post'));
-      commit();
-      await put('unrelated.md');
-      commit();
-      expect(
-        (
-          await check(
-            undefined,
-            { before: '0'.repeat(40), repository: { default_branch: 'main' } },
-            'push',
-          )
-        ).status,
-      ).toBe(1);
-    });
-  });
-  it('fails closed when the comparison history is unavailable', async () => {
-    await fixture(async ({ check }) => {
-      expect((await check('missing-ref')).status).toBe(1);
-    });
-  });
-  it('ignores fixture and documentation files', async () => {
-    await fixture(async ({ git, put, commit, check }) => {
-      const base = git('rev-parse', 'HEAD');
-      await put('tests/fixtures/blog/posts/test/index.md');
-      await put('docs/test.md');
-      commit();
-      expect((await check(base)).status).toBe(0);
+  it('does not let a renamed article inherit the historical exception', async () => {
+    await fixture(async (root) => {
+      await chinese(root, 'renamed-article');
+      await expect(readBlog(root, mode)).rejects.toThrow('缺少英文稿');
     });
   });
 });

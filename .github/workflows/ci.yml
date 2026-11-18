@@ -6,20 +6,7 @@ on:
 permissions:
   contents: read
 jobs:
-  blog-bilingual:
-    name: New blog bilingual check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
-      - name: Require Chinese and English for new blog posts
-        run: node scripts/check-blog-bilingual.mjs
   quality:
-    needs: blog-bilingual
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +18,8 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Validate blog content and bilingual versions
+        run: pnpm blog:check
       - run: pnpm tokens:generate
       - run: git diff --exit-code -- src/css/tokens.css
       - run: pnpm format:check
@@ -39,7 +28,6 @@ jobs:
       - run: pnpm community:check
       - run: pnpm content:check
       - run: DOCS_SOURCE_MODE=mock pnpm content:check
-      - run: pnpm blog:check
       - run: BLOG_SOURCE_MODE=mock pnpm blog:check
       - name: Unit tests
         run: pnpm test

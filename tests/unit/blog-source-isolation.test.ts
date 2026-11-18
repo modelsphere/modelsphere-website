@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cp, mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { stringify } from 'yaml';
@@ -25,6 +25,13 @@ async function candidate(action: (root: string) => Promise<void>) {
       'tests/fixtures/blog/config.json',
       path.join(root, 'content/pages/blog.json'),
     );
+    await mkdir(path.join(root, 'i18n/en/blog'), { recursive: true });
+    for (const id of await readdir('tests/fixtures/blog/posts')) {
+      await writeFile(
+        path.join(root, 'i18n/en/blog', `${id}.md`),
+        '---\ntitle: Example\nsummary: Example summary\n---\n\n## Example\n\nEnglish fixture body.\n',
+      );
+    }
     await action(root);
   } finally {
     await rm(root, { recursive: true, force: true });
@@ -48,6 +55,12 @@ describe('blog source isolation regression', () => {
         await writeFile(
           path.join(directory, 'index.md'),
           `---\n${stringify({ id, title: id, summary: 'Independent publication regression', kind: 'internal', slug: id, publishedAt: '2020-01-01', updatedAt: '2020-01-01T00:00:00Z', evidenceIds: [], draft })}---\n\n## Article\n\nPublished without a cover.\n`,
+        );
+      }
+      for (const id of ['published-article', 'draft-article']) {
+        await writeFile(
+          path.join(root, 'i18n/en/blog', `${id}.md`),
+          '---\ntitle: Article\nsummary: Article summary\n---\n\n## Article\n\nEnglish article body.\n',
         );
       }
       const after = await prepareBlog(root, mock);

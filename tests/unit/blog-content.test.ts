@@ -88,6 +88,11 @@ async function withArticle(
       '测评条件示例',
     );
     await writeFile(file, serialize(article));
+    await mkdir(path.join(root, 'i18n/en/blog'), { recursive: true });
+    await writeFile(
+      path.join(root, 'i18n/en/blog/example-blog-platform.md'),
+      '---\ntitle: Platform\nsummary: Platform summary\n---\n\n## Platform\n\nEnglish body.\n',
+    );
     await action(root, file);
   });
 }
@@ -139,6 +144,13 @@ describe('blog publication boundary', () => {
       await cp('tests/fixtures/blog/posts', path.join(root, 'content/blog'), {
         recursive: true,
       });
+      await mkdir(path.join(root, 'i18n/en/blog'), { recursive: true });
+      for (const id of await readdir('tests/fixtures/blog/posts')) {
+        await writeFile(
+          path.join(root, 'i18n/en/blog', `${id}.md`),
+          '---\ntitle: Example\nsummary: Example summary\n---\n\n## Example\n\nEnglish fixture body.\n',
+        );
+      }
       for (const target of ['local', 'preview', 'release'] as const) {
         const result = await readBlog(root, {
           ...release,
