@@ -6,7 +6,20 @@ on:
 permissions:
   contents: read
 jobs:
+  blog-bilingual:
+    name: New blog bilingual check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - name: Require Chinese and English for new blog posts
+        run: node scripts/check-blog-bilingual.mjs
   quality:
+    needs: blog-bilingual
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
