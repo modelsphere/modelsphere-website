@@ -7,6 +7,60 @@ function isSiteLocale(locale: string | null): locale is SiteLocale {
   return locale === 'zh-CN' || locale === 'en';
 }
 
+// Both inline scripts must read manual choices in the same order.
+const readPreference = `  var locale = null;
+  try {
+    var cookie = /(?:^|;\\s*)ms_locale=(en|zh-CN)(?:;|$)/.exec(document.cookie);
+    if (cookie) locale = cookie[1];
+  } catch (error) {}
+  ['sessionStorage', 'localStorage'].some(function (storage) {
+    if (locale) return true;
+    try {
+      var saved = window[storage].getItem(key);
+      if (saved === 'zh-CN' || saved === 'en') locale = saved;
+    } catch (error) {}
+    return locale !== null;
+  });`;
+const hideUntilNavigation = `  var root = document.documentElement;
+  function show() {
+    root.style.visibility = '';
+  }
+  root.style.visibility = 'hidden';
+  addEventListener('pageshow', function (event) {
+    if (event.persisted) show();
+  });
+  setTimeout(show, 3000);`;
+
+/** Only Nginx redirects made without a language cookie carry this marker. */
+export function reconcileDetectedEnglishScript(baseUrl: string): string {
+  return `(function () {
+  var marker = '?ms_auto=en';
+  var search = location.search;
+  if (search !== marker && search.indexOf(marker + '&') !== 0) return;
+  var originalQuery = search.slice(marker.length + 1);
+  var cleanSearch = originalQuery ? '?' + originalQuery : '';
+  var key = ${JSON.stringify(localePreferenceKey)};
+${readPreference}
+  if (locale !== 'zh-CN') {
+    history.replaceState(history.state, '', location.pathname + cleanSearch + location.hash);
+    return;
+  }
+  var base = ${JSON.stringify(baseUrl)};
+  var prefix = base + 'en/';
+  if (location.pathname.indexOf(prefix) !== 0) return;
+  var targetPath = base + location.pathname.slice(prefix.length).replace(/^\\/+/, '');
+  var migrated = false;
+  try {
+    var secure = location.protocol === 'https:' ? '; Secure' : '';
+    document.cookie = 'ms_locale=zh-CN; Path=/; Max-Age=31536000; SameSite=Lax' + secure;
+    migrated = /(?:^|;\\s*)ms_locale=zh-CN(?:;|$)/.test(document.cookie);
+  } catch (error) {}
+  var query = migrated ? cleanSearch : '?ms_lang=zh-CN' + (originalQuery ? '&' + originalQuery : '');
+${hideUntilNavigation}
+  location.replace(targetPath + query + location.hash);
+})();`;
+}
+
 /**
  * Inline script for the head of Chinese pages. It runs before the body is
  * painted, so English readers go straight to /en/ without first seeing the
@@ -17,22 +71,9 @@ export function localeRedirectScript(baseUrl: string): string {
   return `(function () {
   var key = ${JSON.stringify(localePreferenceKey)};
   var base = ${JSON.stringify(baseUrl)};
-  var root = document.documentElement;
   if (/(?:^\\?|&)ms_lang=zh-CN(?:&|$)/.test(location.search)) return;
-  var locale = null;
-  try {
-    var cookie = /(?:^|;\\s*)ms_locale=(en|zh-CN)(?:;|$)/.exec(document.cookie);
-    if (cookie) locale = cookie[1];
-  } catch (error) {}
-  var remembered = locale !== null;
-  ['sessionStorage', 'localStorage'].some(function (storage) {
-    if (locale) return true;
-    try {
-      var saved = window[storage].getItem(key);
-      if (saved === 'zh-CN' || saved === 'en') locale = saved;
-    } catch (error) {}
-    return locale !== null;
-  });
+${readPreference}
+  var remembered = Boolean(cookie);
   if (!locale) {
     var language =
       navigator.language || (navigator.languages || [])[0] || 'zh-CN';
@@ -52,14 +93,7 @@ export function localeRedirectScript(baseUrl: string): string {
       : path.indexOf(base) === 0
         ? path.slice(base.length - 1)
         : path;
-  function show() {
-    root.style.visibility = '';
-  }
-  root.style.visibility = 'hidden';
-  addEventListener('pageshow', function (event) {
-    if (event.persisted) show();
-  });
-  setTimeout(show, 3000);
+${hideUntilNavigation}
   location.replace(base + 'en' + local + location.search + location.hash);
 })();`;
 }
