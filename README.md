@@ -14,7 +14,7 @@
 
 ## 当前阶段
 
-已确认采用 **Docusaurus + React + TypeScript 统一全站**，博客首期使用 **Markdown/Git 发布**。门户、博客和开发者文档构建为一个静态站点；Model Catalog 使用自定义 React 界面读取独立数据源。当前已建立 Docusaurus 应用、依赖锁文件和 CI 配置，实现首页、博客列表与阅读页、文档栏目及太阳／月亮主题切换。站内 Catalog 现已接入公开源；博客与文档在本仓库正式目录维护，独立文档仓库同步尚未接入。正式发布使用公开仓库与 GitHub Pages 自定义域名 `modelsphere.tech`；是否已上线以 Actions 发布结果和线上版本为准。
+已确认采用 **Docusaurus + React + TypeScript 统一全站**，博客首期使用 **Markdown/Git 发布**。门户、博客和开发者文档构建为一个静态站点；Model Catalog 使用自定义 React 界面读取独立数据源。当前已建立 Docusaurus 应用、依赖锁文件和 CI 配置，实现首页、博客列表与阅读页、文档栏目及太阳／月亮主题切换。站内 Catalog 现已接入公开源；博客与文档在本仓库正式目录维护，独立文档仓库同步尚未接入。正式镜像使用官网域名 `modelsphere.tech` 构建；以线上 `/version.json` 确认实际版本。
 
 首页实现八个区块：`hero`、`comparison`、`benchmarks`、`fault-tolerance`、`qos-scaling`、`dynamic-scaling`、`autotune-evolution`、`get-started`；`benchmarks` 保留锚点，作为核心特性首项展示 Day-0 部署与 Console 模型广场截图。完整架构与机制图、说明文字和真实链接均在初始 HTML 中静态输出；首页标题按 D13 整体翻起渐显，引导语与简介从左滑入渐显，架构拓扑正文按 D14 从上向下揭示。屏外能力卡与各机制直接子块分别在自身起点进入 85% 触发线时入场；并排时左右聚合，堆叠时逐卡上移渐显。首屏按钮、技术标签、拓扑标题及其上方三张卡静态可用；架构数据与布局保持稳定，减少动效、无脚本及历史恢复显示最终态。机制说明链接到已核对的项目资料及固定提交，示意曲线明确标注为机制示意。原设计稿实测表格已由用户提供的 Console 模型广场截图替换；截图完整展示模型、部署变体与调优收益标签，窄屏可横向滚动。模型入口进入站内 `/models`，目录读取公开 Catalog 数据；正式 `/docs` 读取 `content/docs/`，当前发布 Console 使用文档。
 
@@ -30,7 +30,7 @@
 | 博客 | 仓库中维护 Markdown、frontmatter 与图片；通过 PR 检查、预览和 Git 合并进入网站发布 |
 | 开发者文档 | 本仓库 `content/docs/` 维护，递归生成侧栏和搜索，与网站统一构建发布 |
 | 搜索 | Header 本地全文搜索覆盖已发布站内文档和博客；博客列表保留独立字段筛选 |
-| 部署 | main 发布 GitHub Pages；develop 发布阿里云 ACR 测试镜像，Nginx 提供静态服务 |
+| 部署 | main 发布 HTTPS 正式镜像，develop 发布 HTTP 测试镜像，两者推送到同一阿里云 ACR 仓库 |
 | 内容存储 | Git 管理正文、元数据与图片；首期不引入 CMS、数据库、素材上传服务或自建任务队列 |
 | 数据更新 | Catalog 首期直接读取公开源，地址集中配置；博客、门户和文档同版发布与回滚 |
 | 资源依赖 | 字体、图片、脚本和搜索本地托管；Catalog 首期按用户决定直接依赖公开源 |
@@ -45,7 +45,7 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 
 | 维度 | 要求 |
 | --- | --- |
-| 维护与交付 | 用户与 AI 共同维护，公开仓库通过 GitHub Actions 发布到 GitHub Pages |
+| 维护与交付 | 用户与 AI 共同维护，公开仓库通过 GitHub Actions 验证并发布镜像 |
 | 发布 | 可以接受几分钟构建；检查实际合并提交，验证同一静态候选后发布；发布前失败保留旧站 |
 | 内容规模 | 按千位数验证，具体业务量待确定，不用测试样例冒充真实内容 |
 | 访问地区 | 中国大陆与海外；支持中文与英文，跨地区可用不等于承诺统一延迟 |
@@ -91,7 +91,7 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 
 真实文章放入 `content/blog/<id>/index.md`，分类、标签与推荐项在 `content/pages/blog.json` 配置；使用 `pnpm dev:blog` 预览真实内容。格式、发布边界、响应式图片及验证命令见[博客功能与内容维护](docs/development/blog-implementation.md)。
 
-## develop 测试镜像
+## 测试与正式镜像
 
 日常修改先合并到 `develop`，验收通过后再将 `develop` 合并到 `main`。
 
@@ -99,7 +99,7 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 | --- | --- |
 | PR 或其他分支更新 | 只执行检查 |
 | 更新 `develop`，或手动运行该分支的 Website checks | 将测试镜像推送到阿里云 ACR |
-| 更新 `main`，或手动运行该分支的 Website checks | 自动部署 GitHub Pages 主站 |
+| 更新 `main`，或手动运行该分支的 Website checks | 发布 `:production` 正式镜像；迁移期间同步发布 Pages |
 
 测试镜像地址为：
 
@@ -115,9 +115,9 @@ crpi-m351n5ri6g6oankf.cn-beijing.personal.cr.aliyuncs.com/ct-modelsphere/modelsp
 | `ACR_USERNAME` | 阿里云镜像仓库的登录用户名 |
 | `ACR_PASSWORD` | 镜像仓库访问凭证中设置的 Registry 固定密码 |
 
-只有 `develop` 的非 PR 流水线读取凭据并推送镜像。格式、Lint、类型、内容、单测和两组浏览器验收全部通过后，复用已通过 Nginx 验收的 release/content 静态文件打包；推送阶段不重新构建网站。镜像支持 `linux/amd64` 和 `linux/arm64`，使用 Nginx 监听 `8080`，静态资源部署在根路径。测试候选沿用本地验收的 origin 元数据，不绑定主站域名；访问测试服务器的根路径即可。Catalog 仍会尝试访问公开数据源，失败时使用随站点构建的目录快照。
+仅 `develop` 和 `main` 的非 PR 发布任务读取凭据并推送镜像。以下命令用于测试环境。格式、Lint、类型、内容、单测和两组浏览器验收全部通过后，复用已通过 Nginx 验收的 release/content 静态文件打包；推送阶段不重新构建网站。镜像支持 `linux/amd64` 和 `linux/arm64`，使用 Nginx 监听 `8080`，静态资源部署在根路径。测试候选沿用本地验收的 origin 元数据，不绑定主站域名；访问测试服务器的根路径即可。Catalog 仍会尝试访问公开数据源，失败时使用随站点构建的目录快照。
 
-每次成功推送同时更新 `develop` 标签和对应的 `sha-<完整提交 SHA>` 标签。发布任务串行运行，推送前检查候选仍为当前 `develop`。可在镜像运行后访问 `/version.json` 核对提交 SHA。
+每次成功推送测试镜像时同时更新 `develop` 标签和对应的 `sha-<完整提交 SHA>` 标签。发布任务串行运行，推送前检查候选仍为当前 `develop`。可在镜像运行后访问 `/version.json` 核对提交 SHA。
 
 服务器需要能访问阿里云仓库；首次部署时执行：
 
@@ -140,35 +140,13 @@ docker run -d --name modelsphere-website-test --restart unless-stopped -p 8080:8
 
 这两组命令在同一 shell 中执行；新会话需要重新设置 `REGISTRY` 和 `IMAGE`。指定历史的 `sha-<完整提交 SHA>` 标签可部署已保留的对应版本。
 
-## GitHub Pages 发布
+## 正式服务器发布
 
-正式地址：[ModelSphere 官网](https://modelsphere.tech/)。仓库设为公开后，源码与提交历史均公开。仓库 Settings → Pages 的 Source 使用 **GitHub Actions**，Custom domain 设置为 `modelsphere.tech`，证书就绪后开启 **Enforce HTTPS**；`github-pages` 环境只允许 `main` 分支发布。Actions 发布不依赖 `CNAME` 文件，域名绑定由 Pages 设置管理。
+`develop → main` 发布 PR 合并后，Actions 使用 `SITE_ORIGIN=https://modelsphere.tech`、`SITE_BASE_URL=/` 验收过的 release/content 产物，在同一 ACR 仓库推送 `:production` 和 `:production-sha-<完整 main SHA>`。固定标签带有环境名，测试与正式构建即使来自同一提交也能分别取回。
 
-`.github/workflows/ci.yml` 对分支和 PR 执行格式、Lint、类型、内容检查及单测，随后分别使用本地 origin 和正式 HTTPS origin 验证根路径的 preview/mock、release/content 构建。候选通过 Nginx 浏览器检查后，只有 `main` 才上传已验证的正式产物并部署；发布阶段不重新构建，并在发布前核对 Pages 绑定的域名。正式文档读取 `content/docs/`，博客读取 `content/blog/` 和 `content/pages/blog.json`，保留已允许公开的示例；站点继续保留验证期的 noindex。
+生产镜像用 Nginx 在 8443 提供 HTTPS，在 8080 将 HTTP 请求重定向到正式域名。证书由服务器挂载。安装、定时更新、续期和回滚见[正式服务器部署](infra/deploy/README.md)。
 
-发布参数固定为 `SITE_ORIGIN=https://modelsphere.tech`、`SITE_BASE_URL=/`。`SITE_ORIGIN` 只含协议和域名；测试配置仍支持通过 `SITE_BASE_URL` 指定以 `/` 开始和结束的子目录。
-
-```sh
-SITE_ORIGIN=https://modelsphere.tech SITE_BASE_URL=/ pnpm build
-SITE_BASE_URL=/ pnpm serve
-SITE_ORIGIN=https://modelsphere.tech SITE_BASE_URL=/ E2E_BASE_URL=http://localhost:4173 TEST_DOCS_MODE=content pnpm test:pages
-```
-
-域名切换前先在 ModelSphere 组织 Settings → Pages 验证域名，并在 DNSPod 保留 GitHub 提供的 `_github-pages-challenge-modelsphere` TXT 记录。仓库保存 Custom domain 后，再添加以下 DNS 记录，初始 TTL 可设为 600 秒：
-
-| 主机 | 类型 | 记录值 |
-| --- | --- | --- |
-| `@` | A | `185.199.108.153` |
-| `@` | A | `185.199.109.153` |
-| `@` | A | `185.199.110.153` |
-| `@` | A | `185.199.111.153` |
-| `www` | CNAME | `modelsphere.github.io` |
-
-解析生效后由 GitHub 自动签发 HTTPS 证书；如有 CAA 限制，需允许 `letsencrypt.org`。切换需将 Pages 设置、DNS 和根路径产物发布安排在同一窗口，验收 HTTPS 主域名、HTTP 跳转、`www` 跳转、旧项目地址跳转及中英文路由；不要将 DNS 更新视为上线成功。证书配置见 [GitHub Pages HTTPS 文档](https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https)。
-
-每次合并后流水线重新验证合并提交，部署串行执行且检查候选仍是当前 `main`。发布后核对 `version.json` 的完整提交 SHA、代表路由、静态资源与真实 HTTP 404。线上代码版本与 Catalog 实时数据版本分别记录。
-
-可在 Actions 的 **Website checks** 使用 **Run workflow**，选择 `main` 重试发布。回滚通过 PR 撤销问题提交，待检查通过后合并并重新发布；发布前失败不会替换现有站点，发布后验收失败需要修复或回滚，尚无自动回滚。域名迁移提交的回滚还需同步恢复 Pages 域名与对应 DNS，不能只回退构建路径。后续更换域名或迁移 Kubernetes 时再调整发布配置。
+迁移期间，`main` 也继续部署当前的 GitHub Pages，以便在公网服务器上独立验收。DNS 切换且官网版本验收通过后，可在仓库 Settings → Secrets and variables → Actions → Variables 设置 `DEPLOY_GITHUB_PAGES=false`，停止后续 Pages 发布。正式镜像的构建和发布独立运行。
 
 ## 本地运行文档
 
