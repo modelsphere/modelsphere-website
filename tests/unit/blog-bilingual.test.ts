@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { stringify } from 'yaml';
@@ -69,6 +69,66 @@ describe('shared blog bilingual content policy (without Git history)', () => {
       ).toEqual(['new-post']);
     });
   });
+  describe.each(['local', 'preview', 'release'] as const)(
+    'existing content changes in %s mode',
+    (target) => {
+      const buildMode = { ...mode, target };
+      it('allows editing only Chinese while English remains unchanged', async () => {
+        await fixture(async (root) => {
+          await chinese(root);
+          await english(root);
+          expect((await readBlog(root, buildMode)).articles).toHaveLength(1);
+          const englishFile = path.join(root, 'i18n/en/blog/new-post.md');
+          const originalEnglish = await readFile(englishFile, 'utf8');
+          await chinese(
+            root,
+            'new-post',
+            {},
+            '## Article\n\n仅更新中文正文。\n',
+          );
+          const checked = await readBlog(root, buildMode);
+          expect(checked.articles[0].body).toContain('仅更新中文正文');
+          expect((await prepareBlog(root, buildMode)).posts).toHaveLength(1);
+          expect(await readFile(englishFile, 'utf8')).toBe(originalEnglish);
+        });
+      });
+      it('allows editing only English while Chinese remains unchanged', async () => {
+        await fixture(async (root) => {
+          await chinese(root);
+          await english(root);
+          const before = await readBlog(root, buildMode);
+          const chineseFile = path.join(root, 'content/blog/new-post/index.md');
+          const originalChinese = await readFile(chineseFile, 'utf8');
+          const updatedEnglish = translation.replace(
+            'English article body.',
+            'Updated English article body only.',
+          );
+          await english(root, 'new-post', updatedEnglish);
+          expect(await readBlog(root, buildMode)).toEqual(before);
+          expect((await prepareBlog(root, buildMode)).posts).toHaveLength(1);
+          expect(await readFile(chineseFile, 'utf8')).toBe(originalChinese);
+          expect(
+            await readFile(path.join(root, 'i18n/en/blog/new-post.md'), 'utf8'),
+          ).toBe(updatedEnglish);
+        });
+      });
+      it('allows unrelated code changes without any blog changes', async () => {
+        await fixture(async (root) => {
+          await chinese(root);
+          await english(root);
+          await chinese(root, legacy);
+          const before = await readBlog(root, buildMode);
+          await mkdir(path.join(root, 'src'), { recursive: true });
+          await writeFile(
+            path.join(root, 'src/unrelated.ts'),
+            'export const unrelated = true;\n',
+          );
+          expect(await readBlog(root, buildMode)).toEqual(before);
+          expect((await prepareBlog(root, buildMode)).posts).toHaveLength(2);
+        });
+      });
+    },
+  );
   it('rejects an English file without its Chinese source', async () => {
     await fixture(async (root) => {
       await english(root);
