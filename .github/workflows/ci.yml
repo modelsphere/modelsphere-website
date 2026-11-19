@@ -263,7 +263,8 @@ jobs:
       pages: write
       id-token: write
     concurrency:
-      group: github-pages
+      # Retire the concurrency group held by the orphaned deployment in run 44281378151.
+      group: github-pages-main-v2
       cancel-in-progress: false
     environment:
       name: github-pages
