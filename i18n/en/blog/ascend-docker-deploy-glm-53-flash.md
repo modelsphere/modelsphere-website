@@ -68,21 +68,13 @@ docker info | grep -i runtimes
 The output should include `ascend`. If the runtime is installed but has not been registered, **merge** the following fields into the existing `/etc/docker/daemon.json`, keeping the existing configuration. Use the path that matches the actual installation on your machine:
 
 ```json
-
 {
-
   "runtimes": {
-
     "ascend": {
-
       "path": "/usr/local/Ascend/Ascend-Docker-Runtime/ascend-docker-runtime"
-
     }
-
   }
-
 }
-
 ```
 
 After making the change, restart Docker with a user that has the required permissions, then check the registered runtimes again. If the machine is already running containers, schedule the restart accordingly:
