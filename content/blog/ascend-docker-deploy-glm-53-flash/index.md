@@ -89,21 +89,13 @@ docker info | grep -i runtimes
 输出应包含 `ascend`。如果 Runtime 已安装但未注册，将下面字段**合并到**现有 `/etc/docker/daemon.json`，保留原有配置，路径以本机实际安装位置为准：
 
 ```json
-
 {
-
-"runtimes": {
-
-"ascend": {
-
-"path": "/usr/local/Ascend/Ascend-Docker-Runtime/ascend-docker-runtime"
-
+  "runtimes": {
+    "ascend": {
+      "path": "/usr/local/Ascend/Ascend-Docker-Runtime/ascend-docker-runtime"
+    }
+  }
 }
-
-}
-
-}
-
 ```
 
 修改后，以具备权限的用户重启 Docker，再次检查运行时。已有容器业务的机器，应安排好这次重启：
