@@ -5,7 +5,7 @@ summary: '为方便社区开发者快速上手，ModelSphere 提供基于 Docker
 kind: internal
 slug: ascend-docker-deploy-glm-53-flash
 publishedAt: '2026-11-19'
-updatedAt: '2026-11-19T15:54:00+08:00'
+updatedAt: '2026-11-19T17:42:00+08:00'
 author: '张浩'
 cover:
   src: cover.png
@@ -440,7 +440,7 @@ RATE_LIMIT=true
 
 动手过程中遇到问题，欢迎到 GitHub 提 Issue，也欢迎分享你的部署经验和改进建议，一起把这条上手路径打磨得更顺畅。
 
-如果这篇指南对你有帮助，也欢迎给 **ModelSphere 点个 Star ⭐ **支持项目，让更多开发者发现它。
+如果这篇指南对你有帮助，也欢迎给 **ModelSphere 点个 Star ⭐** 支持项目，让更多开发者发现它。
 
 👉 **ModelSphere GitHub 仓库：**
 
