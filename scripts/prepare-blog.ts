@@ -304,19 +304,39 @@ async function validateMedia(directory: string, value: BlogMedia) {
  * cover. Those files live next to the source article and are validated and
  * staged here, before the blog manifest is written.
  */
-async function englishTranslation(root: string, id: string) {
+// Only this already-published article lacked English before the bilingual rule.
+// Keep the exception explicit: draft/example flags and publication dates do not
+// exempt new IDs, and an existing translation must still be valid.
+const legacySingleLanguageIds = new Set(['sglang-kimi-k31-pro-video-input']);
+async function englishTranslation(root: string, id: string, required = false) {
   let raw: string;
   try {
-    raw = await readFile(path.join(root, 'i18n/en/blog', `${id}.md`), 'utf8');
+    const file = path.join(root, 'i18n/en/blog', `${id}.md`);
+    await plainFile(file);
+    raw = await readFile(file, 'utf8');
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined;
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      if (required && !legacySingleLanguageIds.has(id))
+        throw new Error(
+          `博文必须提供中英文两版本，缺少英文稿：i18n/en/blog/${id}.md`,
+        );
+      return undefined;
+    }
     throw error;
   }
   const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)([\s\S]*)$/.exec(raw);
   if (!match) throw new Error(`英文译文缺少 YAML 元数据：${id}`);
   const yaml = parseDocument(match[1], { uniqueKeys: true });
   if (yaml.errors.length) throw new Error(yaml.errors[0].message);
-  const meta = yaml.toJS({ maxAliasCount: 0 }) as Record<string, unknown>;
+  const meta = z
+    .object({
+      title: z.string().trim().min(1),
+      summary: z.string().trim().min(1),
+    })
+    .passthrough()
+    .parse(yaml.toJS({ maxAliasCount: 0 }));
+  if (!match[2].replace(/<!--[\s\S]*?-->/g, '').trim())
+    throw new Error(`英文稿正文不能为空：i18n/en/blog/${id}.md`);
   return {
     images: inspectMarkdown(match[2]).images,
     cover: meta.cover === undefined ? undefined : media.parse(meta.cover),
@@ -368,6 +388,27 @@ export async function readBlog(
   );
   if (entries.length && (await lstat(sourceDir)).isSymbolicLink())
     throw new Error('拒绝内容目录符号链接');
+  if (!preview) {
+    const translationDirectory = path.join(root, 'i18n/en/blog');
+    const translations = await readdir(translationDirectory).catch(
+      (error: NodeJS.ErrnoException) => {
+        if (error.code === 'ENOENT') return [];
+        throw error;
+      },
+    );
+    if (
+      translations.length &&
+      (await lstat(translationDirectory)).isSymbolicLink()
+    )
+      throw new Error('拒绝英文内容目录符号链接');
+    const sourceIds = new Set(entries.map((entry) => entry.name));
+    for (const file of translations) {
+      if (file.endsWith('.md') && !sourceIds.has(file.slice(0, -3)))
+        throw new Error(
+          `博文必须提供中英文两版本，缺少中文稿：content/blog/${file.slice(0, -3)}/index.md`,
+        );
+    }
+  }
   const articles: PreparedArticle[] = [];
   const excludedExamples = new Set<string>();
   for (const entry of entries) {
@@ -377,6 +418,14 @@ export async function readBlog(
     const file = path.join(directory, 'index.md');
     await plainFile(file);
     const parsed = parseArticle(await readFile(file, 'utf8'));
+    if (parsed.meta.id !== entry.name) throw new Error('文章 id 与目录名不符');
+    if (!preview && parsed.meta.kind === 'internal') {
+      if (!parsed.body.replace(/<!--[\s\S]*?-->/g, '').trim())
+        throw new Error(
+          `中文稿正文不能为空：content/blog/${entry.name}/index.md`,
+        );
+      await englishTranslation(root, parsed.meta.id, true);
+    }
     if (parsed.meta.draft) continue;
     if (
       !preview &&
@@ -387,7 +436,6 @@ export async function readBlog(
       excludedExamples.add(parsed.meta.id);
       continue;
     }
-    if (parsed.meta.id !== entry.name) throw new Error('文章 id 与目录名不符');
     if (!parsed.meta.publishedAt || parsed.meta.publishedAt > today)
       throw new Error('已发布文章需要有效且非未来的发布日期');
     if (

@@ -99,7 +99,7 @@ Catalog 需覆盖现有 [Model Catalog](https://modelsphere.github.io/model-cata
 | --- | --- |
 | PR 或其他分支更新 | 只执行检查 |
 | 更新 `develop`，或手动运行该分支的 Website checks | 将测试镜像推送到阿里云 ACR |
-| 更新 `main`，或手动运行该分支的 Website checks | 发布 `:production` 正式镜像；迁移期间同步发布 Pages |
+| 更新 `main`，或手动运行该分支的 Website checks | 部署 GitHub Pages 静态官网，同时发布 `:production` 正式镜像 |
 
 测试镜像地址为：
 
@@ -146,7 +146,7 @@ docker run -d --name modelsphere-website-test --restart unless-stopped -p 8080:8
 
 生产容器挂载服务器证书，只发布 `127.0.0.1:18443 → 8443`。运维在现有公网入口配置 HTTPS 和 HTTP 跳转，按域名转发给本机 18443。安装、定时更新、续期和回滚见[正式服务器部署](infra/deploy/README.md)。
 
-迁移期间，`main` 也继续部署当前的 GitHub Pages，以便在公网服务器上独立验收。DNS 切换且官网版本验收通过后，可在仓库 Settings → Secrets and variables → Actions → Variables 设置 `DEPLOY_GITHUB_PAGES=false`，停止后续 Pages 发布。正式镜像的构建和发布独立运行。
+`main` 固定通过 GitHub Pages 发布静态官网 `https://modelsphere.tech/`，不再读取 `DEPLOY_GITHUB_PAGES` 变量。仓库 Settings → Pages 的 Source 应为 GitHub Actions，自定义域名应为 `modelsphere.tech`，`github-pages` 环境允许 `main` 部署。只有质量检查、单测、预览和正式构建验收通过后才上传及部署同一份已验证产物；PR 和 `develop` 不发布 Pages。Pages 与正式镜像发布分别执行，镜像发布失败不会阻止已通过验收的 Pages 部署。
 
 ## 本地运行文档
 
