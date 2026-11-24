@@ -5,6 +5,7 @@ summary: '面向关注硬件投入的大模型推理场景，ModelSphere 完成�
 kind: internal
 slug: rtx-6000d-deployment-guide
 publishedAt: '2026-11-24'
+updatedAt: '2026-11-24T16:05:00+08:00'
 author: '张浩'
 cover:
   src: cover.png
